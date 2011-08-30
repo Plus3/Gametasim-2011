@@ -66,10 +66,16 @@ def printLvl(level, player=None):
 			for i2 in i1:
 				print "0",
 
-def loop():
+def init():
+	CLS()
+	titles.main()
 	L1 = Level(reqs.level1,reqs.level1_hit,reqs.level1_obj,reqs.level1_limit)
 	G = Game("The Game",L1)
 	P = Player(G, "Joe", [1,1])
+	raw_input("PRESS ENTER TO CONTINUE!  ")
+	loop(L1,G,P)
+
+def loop(L1,G,P):
 	printLvl(G.lvl.map,P)
 	print ""
 	while True:
@@ -94,4 +100,5 @@ def loop():
 				P.move(y=-1)
 			else:
 				badc()
-loop()
+if __name__ == "__main__":
+	init()
