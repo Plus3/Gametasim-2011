@@ -6,8 +6,7 @@ mup = lambda P, y: P.move(y=y)
 mdown = lambda P, y: P.move(y=y)
 mright = lambda P, y: P.move(x=y)
 mleft = lambda P, y: P.move(x=y)
-# mright
-# mleft
+play = True
 
 def hitcheck(level,x,y):
     for i in level:
@@ -19,12 +18,8 @@ def hitcheck(level,x,y):
             pass
     return False
 
-def handle(level,pos):
-    act = { "nextlevel":sys.exit}
-    y = level.actions['hit']
-    if pos.pop() in y:
-        if y[pos] in Acts:
-            act[y[pos]]()
+def handle(level,pos,G):
+    G.lvl = G.lvl2
 
 def badc():
     print "XXXXXX"
@@ -39,9 +34,11 @@ def CLS(numlines=100):
         print '\n' * numlines
 
 class Game():
-    def __init__(self, name, level):
+    def __init__(self, name, *levels):
         self.name = name
-        self.lvl = level
+        self.lvl = levels[0] #Current level
+        self.lvl1 = levels[0]
+        self.lvl2 = levels[1]
         #self.lvln = levelname
 
 class Level():
@@ -72,10 +69,10 @@ class Player():
             _blank = Map[new_y]
             if hitcheck(self.game.lvl.hmap,new_x,new_y): KeyError("")
             elif goto in self.game.lvl.omap: 
-                handle(self.game.lvl,goto)
-                self.x = new_x
-                self.y = new_y
-                self.pos = goto
+                handle(self.game.lvl,goto,self.game)
+                self.x = 1
+                self.y = 1
+                self.pos = [1,1]
             elif new_x in _blank:
                 self.x = new_x
                 self.y = new_y
@@ -85,16 +82,6 @@ class Player():
         except KeyError, e:
             print e
             go = False
-        # elif map
-        # if goto[0] > self.game.lvl.xlim: badc()
-        # elif goto[1] > self.game.lvl.ylim: badc()
-        # elif goto[0] < 0: badc()
-        # # if x == -1 and self.x == 1: badc()
-        # # elif y == -1 and self.y == 1: badc()
-        # # elif x == 1 and self.x == self.game.lvl.xlim: badc()
-        # # elif y == 1 and self.y == self.game.lvl.ylim: badc()
-        # elif goto.append("0") or goto.append("1") in self.game.lvl.hmap: pass
-        # elif goto.append("0") or goto.append("1") in self.game.lvl.omap: handle(goto)
         return go
             
     def set(self, x, y):
@@ -102,18 +89,18 @@ class Player():
         self.y = y
         self.pos = [self.x, self.y]
 
-def printLvl(level, player=None):
+def printLvl(G, player=None):
     if player:
-        for y in level.map:
+        for y in G.lvl.map:
             print ""
-            for x in level.map[y]:
+            for x in G.lvl.map[y]:
                 if player.pos == [x,y]:
                     print "X",
-                elif [x,y,1] in level.hmap:
+                elif [x,y,1] in G.lvl.hmap:
                     print "-",
-                elif [x,y,0] in level.hmap:
+                elif [x,y,0] in G.lvl.hmap:
                     print "|",
-                elif [x,y] in level.omap:
+                elif [x,y] in G.lvl.omap:
                     print "+",
                 else:
                     print "0",                
@@ -127,17 +114,18 @@ def init():
     CLS()
     titles.main()
     L1 = Level(reqs.level1,reqs.level1_hit,reqs.level1_obj,reqs.level1_limit,reqs.level1_actions)
-    G = Game("The Game",L1)
+    L2 = Level(reqs.level2,reqs.level2_hit,reqs.level2_obj,reqs.level2_limit,reqs.level2_actions)
+    G = Game("The Game",L1,L2)
     P = Player(G, "Joe", [1,1])
     raw_input("PRESS ENTER TO CONTINUE!  ")
-    loop(L1,G,P)
+    loop(G,P)
 
-def loop(L1,G,P):
-    printLvl(G.lvl,P)
+def loop(G,P):
+    printLvl(G,P)
     print ""
-    while True:
+    while play == True:
         CLS()
-        printLvl(G.lvl,P)
+        printLvl(G,P)
         print " "
         inp = raw_input("=> ")
         if inp:
