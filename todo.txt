@@ -1,21 +1,10 @@
-Engine()
-- levels
-- currentlevel
-- player
-- objects
+- Fix changemap setpos()
+- Add more events
+- Add "portals"
 
-Level()
-- map (of form [[1,"blah","blah"],[2,"blah","blah"]])
-- objmap 
-- actions
+- Add inventory
+- Add dialog
+- Add items
 
-Player()
-- name
-- data
-- pos (of form [x,y])
-
-Object()
-- name
-- actions
-- pos
-- etc
+- Work on story
+- Add basic story
