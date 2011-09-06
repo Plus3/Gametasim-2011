@@ -3,11 +3,19 @@ import subprocess
 import reqs
 
 EVENTS = {}
+def pBetween(pa, pb):
+    pa1 = pa[0]+pa[1]
+    pa2 = pb[0]+pb[1]
+    if pa1 < pa2:
+        p1 = pa
+        p2 = pb
+    else:
+        p1 = pb
+        p2 = pa
+    xs = range(p1[0] + 1, p2[0]) or [p1[0]]
+    ys = range(p1[1] + 1, p2[1]) or [p1[1]]
+    return [(x,y) for x in xs for y in ys]
 
-#Levels: {level1: obj,level2:obj}
-#Current Level: exec (object)
-#Player: player obj
-#Objects: dict of objs: {"name":exec}
 def eventCheck(Mp,pos):
     if pos in Mp.em:
         TYPE = Mp.em[pos]['event']
@@ -57,10 +65,12 @@ class Event():
     
     def cMap(self, pos, data):
         global currentmap
+        global resetpos
         if data[0] in MAPS:
             currentmap = MAPS[data[0]]
+            p1.clevel = MAPS[data[0]]
             if data[1] is True:
-                p1.pos = data[2]
+                resetpos = True
         else:
             pass
 
@@ -87,7 +97,7 @@ class Map():
         ya = 0
         xa = 0
         print "DEBUG:"
-        print "Player Position [x,y]: ",self.player.pos
+        print "Player Position [x,y]: ", self.player.pos
         for y in self.m:
             print ""
             for x in self.m[y]:
@@ -106,13 +116,17 @@ class Player():
         self.data = data
     
     def move(self, x=0, y=0):
+        go = True
         nPos = [self.pos[0]+x, self.pos[1]+y]
         x = nPos[0]
         y = nPos[1]
         eventCheck(self.clevel,(x,y))
         if (x,y) in self.clevel.hitmap.keys():
-            pass
-        else:
+            go = False
+        for i in pBetween((x,y),(self.pos[0],self.pos[1])):
+            if i in self.clevel.hitmap.keys():
+                go = False
+        if go is True:
             if y in self.clevel.m.keys():
                 if x in self.clevel.m[y]:
                     self.pos = nPos
@@ -124,37 +138,51 @@ m1 = Map(reqs.level1_map1, reqs.level1_hitmap1, reqs.level1_objmap1, player=p1)
 m2 = Map(reqs.level1_map2, reqs.level1_hitmap2, reqs.level1_objmap1, player=p1)
 MAPS = {"m1":m1,"m2":m2}
 currentmap = m1
+resetpos = False
 p1.clevel = currentmap
 
-def gLoop():
+def tick(count=1):
     global currentmap
-    while True:
+    global resetpos
+    CLS()
+    for i in range(count):
         CLS()
         currentmap.pMap()
-        inp = raw_input("\n=> ")
-        if inp == "exit" or inp == "quit":
-            sys.exit()
-        elif inp == "nextmap":
-            print "Next Map []"
-            currentmap = m2
-        elif inp.startswith("down"):
-            new = inp.split(" ")
-            if len(new) <= 1: n = 1
-            else: n = int(new[1])
-            p1.move(y=n)
-        elif inp.startswith("up"):
-            new = inp.split(" ")
-            if len(new) <= 1: n = -1
-            else: n = int(new[1])*int(-1)
-            p1.move(y=n)
-        elif inp.startswith('left'):
-            new = inp.split(" ")
-            if len(new) <= 1: n = -1
-            else: n = int(new[1])*int(-1)
-            p1.move(x=n)
-        elif inp.startswith('right'):
-            new = inp.split(" ")
-            if len(new) <= 1: n = 1
-            else: n = int(new[1])
-            p1.move(x=n)
+        if resetpos is True:
+            p1.pos = [1,1]
+            resetpos = False
+            print "HEADER"
+        else:
+            inp = raw_input("\n=> ")
+            if inp == "exit" or inp == "quit":
+                sys.exit()
+            elif inp == "nextmap":
+                print "Next Map []"
+                currentmap = m2
+            elif inp.startswith("down"):
+                new = inp.split(" ")
+                if len(new) <= 1: n = 1
+                else: n = int(new[1])
+                p1.move(y=n)
+            elif inp.startswith("up"):
+                new = inp.split(" ")
+                if len(new) <= 1: n = -1
+                else: n = int(new[1])*int(-1)
+                p1.move(y=n)
+            elif inp.startswith('left'):
+                new = inp.split(" ")
+                if len(new) <= 1: n = -1
+                else: n = int(new[1])*int(-1)
+                p1.move(x=n)
+            elif inp.startswith('right'):
+                new = inp.split(" ")
+                if len(new) <= 1: n = 1
+                else: n = int(new[1])
+                p1.move(x=n)
+            elif inp.startswith('sett'):
+                p1.pos = [1,1]
+
+def gLoop():
+    while True:
+        tick()
 gLoop()
