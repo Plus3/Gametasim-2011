@@ -18,7 +18,7 @@ level1_hitmap1 = {
 }
 
 level1_objmap1 = {
-	(10,10):{"event":"msg","data":"Hello You!"}
+	(10,10):{"event":"cmap","data":["m2",True,[1,1]]}
 	}
 
 level1_map2= {
@@ -38,5 +38,5 @@ level1_hitmap2 = {
 }
 
 level1_objmap2 = {
-	(10,10):{"event":"msg","data":"Hello You!"}
+	(10,10):{"event":"end","data":""}
 	}

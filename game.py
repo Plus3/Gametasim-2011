@@ -34,8 +34,8 @@ class Event():
         types = {
             "msg":self.msg,
             "exe":self.exe,
-            "end":self.end
-
+            "end":self.end,
+            "cmap":self.cMap
         }
         if self.type in types:
             if inp:
@@ -54,6 +54,15 @@ class Event():
 
     def end(self, pos, data):
         sys.exit()
+    
+    def cMap(self, pos, data):
+        global currentmap
+        if data[0] in MAPS:
+            currentmap = MAPS[data[0]]
+            if data[1] is True:
+                p1.pos = data[2]
+        else:
+            pass
 
 class Engine():
     def __init__(self, maps, currentmap, player, objects):
@@ -98,18 +107,23 @@ class Player():
     
     def move(self, x=0, y=0):
         nPos = [self.pos[0]+x, self.pos[1]+y]
-        eventCheck(self.clevel,(nPos[0],nPos[1]))
-        if (nPos[0],nPos[1]) in self.clevel.hitmap.keys():
+        x = nPos[0]
+        y = nPos[1]
+        eventCheck(self.clevel,(x,y))
+        if (x,y) in self.clevel.hitmap.keys():
             pass
         else:
-            if nPos[0] in self.clevel.m.keys():
-                if nPos[1] in self.clevel.m[nPos[0]]:
+            if y in self.clevel.m.keys():
+                if x in self.clevel.m[y]:
                     self.pos = nPos
+    def set(self, pos):
+        self.pos = pos
 
 p1 = Player("Joe",[1,1],"1",{})
-m = Map(reqs.level1_map1, reqs.level1_hitmap1, reqs.level1_objmap1, player=p1)
+m1 = Map(reqs.level1_map1, reqs.level1_hitmap1, reqs.level1_objmap1, player=p1)
 m2 = Map(reqs.level1_map2, reqs.level1_hitmap2, reqs.level1_objmap1, player=p1)
-currentmap = m
+MAPS = {"m1":m1,"m2":m2}
+currentmap = m1
 p1.clevel = currentmap
 
 def gLoop():
