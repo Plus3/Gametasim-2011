@@ -19,7 +19,7 @@ level1_hitmap1 = {
 }
 
 level1_objmap1 = {
-	(10,10):{"event":"cmap","data":["m2",True,[1,1]]}
+	(10,10):{"event":"ipickup","data":1,"once":True}
 	}
 
 level1_map2= {
@@ -39,5 +39,5 @@ level1_hitmap2 = {
 }
 
 level1_objmap2 = {
-	(10,10):{"event":"end","data":""}
+	(10,10):{"event":"ipickup","data":1,"once":True}
 	}
