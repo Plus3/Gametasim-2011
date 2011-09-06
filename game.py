@@ -1,29 +1,21 @@
-from pprint import *
-import sys,os,time
-import reqs, titles
+import sys, os, time
+import subprocess
+import reqs
 
-mup = lambda P, y: P.move(y=y) 
-mdown = lambda P, y: P.move(y=y)
-mright = lambda P, y: P.move(x=y)
-mleft = lambda P, y: P.move(x=y)
-play = True
+EVENTS = {}
 
-def hitcheck(level,x,y):
-    for i in level:
-        if [x,y,1] == i:
-            return True
-        elif [x,y,0] == i:
-            return True
-        else:
-            pass
-    return False
-
-def handle(level,pos,G):
-    G.lvl = G.lvl2
-
-def badc():
-    print "XXXXXX"
-    time.sleep(.2)
+#Levels: {level1: obj,level2:obj}
+#Current Level: exec (object)
+#Player: player obj
+#Objects: dict of objs: {"name":exec}
+def eventCheck(Mp,pos):
+    if pos in Mp.em:
+        TYPE = Mp.em[pos]['event']
+        DATA = Mp.em[pos]['data']
+        EVENT = Event(pos, TYPE, DATA)
+        EVENT.go()
+    else:
+        pass
 
 def CLS(numlines=100):
     if os.name == "posix":
@@ -33,131 +25,122 @@ def CLS(numlines=100):
     else:
         print '\n' * numlines
 
-class Game():
-    def __init__(self, name, *levels):
-        self.name = name
-        self.lvl = levels[0] #Current level
-        self.lvl1 = levels[0]
-        self.lvl2 = levels[1]
-        #self.lvln = levelname
+class Event():
+    def __init__(self, location, etype, data):
+        self.pos = location
+        self.type = etype
+        self.data = data
+    def go(self, *inp):
+        types = {
+            "msg":self.msg,
+            "exe":self.exe,
+            "end":self.end
 
-class Level():
-    def __init__(self, Map, hitmap, objmap, limit, actions):
-        self.map = Map
-        self.hmap = hitmap
-        self.omap = objmap
-        self.xlim = limit[0]
-        self.ylim = limit[1]
-        self.lim = limit
-        self.actions = actions
-
-class Player():
-    def __init__(self, game, name, pos):
-        self.name = name
-        self.game = game
-        self.x = pos[0]
-        self.y = pos[1]
-        self.pos = [self.x,self.y]
-
-    def move(self, x=0, y=0):
-        new_x = self.x+int(x)
-        new_y = self.y+int(y)
-        goto = [self.x+int(x),self.y+int(y)]
-        Map = self.game.lvl.map
-        go = True
-        try:
-            _blank = Map[new_y]
-            if hitcheck(self.game.lvl.hmap,new_x,new_y): KeyError("")
-            elif goto in self.game.lvl.omap: 
-                handle(self.game.lvl,goto,self.game)
-                self.x = 1
-                self.y = 1
-                self.pos = [1,1]
-            elif new_x in _blank:
-                self.x = new_x
-                self.y = new_y
-                self.pos = goto
+        }
+        if self.type in types:
+            if inp:
+                Pos = inp[0]
+                Data = inp[1]
             else:
-                raise KeyError("")
-        except KeyError, e:
-            print e
-            go = False
-        return go
-            
-    def set(self, x, y):
-        self.x = x
-        self.y = y
-        self.pos = [self.x, self.y]
+                Pos = self.pos
+                Data = self.data
+            types[self.type](Pos,Data)
+    def msg(self, pos, data):
+        print data
+        time.sleep(5)
 
-def printLvl(G, player=None):
-    if player:
-        for y in G.lvl.map:
+    def exe(self, pos, data):
+        data()
+
+    def end(self, pos, data):
+        sys.exit()
+
+class Engine():
+    def __init__(self, maps, currentmap, player, objects):
+        self.maps = maps
+        self.cmap = currentmap
+        self.player = player
+        self.objects = objects
+    
+    def onEvent(self, pos):
+        x = self.cmap.em[pos]
+        print x
+
+class Map():
+    def __init__(self, zMap, hitmap, eventmap, data={}, player=None):
+        self.m = zMap #Map format
+        self.hitmap = hitmap
+        self.em = eventmap
+        self.data = data
+        self.player = player
+    
+    def pMap(self):
+        ya = 0
+        xa = 0
+        print "DEBUG:"
+        print "Player Position [x,y]: ",self.player.pos
+        for y in self.m:
             print ""
-            for x in G.lvl.map[y]:
-                if player.pos == [x,y]:
+            for x in self.m[y]:
+                if [x,y] == self.player.pos:
                     print "X",
-                elif [x,y,1] in G.lvl.hmap:
-                    print "-",
-                elif [x,y,0] in G.lvl.hmap:
-                    print "|",
-                elif [x,y] in G.lvl.omap:
+                elif (x,y) in self.hitmap:
                     print "+",
                 else:
-                    print "0",                
-    if not player:
-        for i1 in level.values():
-            print ""
-            for i2 in i1:
-                print "0",
+                    print "0",
 
-def init():
-    CLS()
-    titles.main()
-    L1 = Level(reqs.level1,reqs.level1_hit,reqs.level1_obj,reqs.level1_limit,reqs.level1_actions)
-    L2 = Level(reqs.level2,reqs.level2_hit,reqs.level2_obj,reqs.level2_limit,reqs.level2_actions)
-    G = Game("The Game",L1,L2)
-    P = Player(G, "Joe", [1,1])
-    raw_input("PRESS ENTER TO CONTINUE!  ")
-    loop(G,P)
+class Player():
+    def __init__(self, name, pos, currentlevel, data):
+        self.name = name
+        self.pos = pos
+        self.clevel = currentlevel
+        self.data = data
+    
+    def move(self, x=0, y=0):
+        nPos = [self.pos[0]+x, self.pos[1]+y]
+        eventCheck(self.clevel,(nPos[0],nPos[1]))
+        if (nPos[0],nPos[1]) in self.clevel.hitmap.keys():
+            pass
+        else:
+            if nPos[0] in self.clevel.m.keys():
+                if nPos[1] in self.clevel.m[nPos[0]]:
+                    self.pos = nPos
 
-def loop(G,P):
-    printLvl(G,P)
-    print ""
-    while play == True:
+p1 = Player("Joe",[1,1],"1",{})
+m = Map(reqs.level1_map1, reqs.level1_hitmap1, reqs.level1_objmap1, player=p1)
+m2 = Map(reqs.level1_map2, reqs.level1_hitmap2, reqs.level1_objmap1, player=p1)
+currentmap = m
+p1.clevel = currentmap
+
+def gLoop():
+    global currentmap
+    while True:
         CLS()
-        printLvl(G,P)
-        print " "
-        inp = raw_input("=> ")
-        if inp:
-            if inp.startswith("quit") or inp.startswith("exit"):
-                print "G'BYE!"
-                time.sleep(.2)
-                sys.exit()
-            elif inp.startswith("reset"):
-                N = inp.split(" ")
-                P.set(1,1)
-            elif inp.startswith("left"):
-                N = inp.split(" ")
-                if len(N) <= 1: n = -1
-                else: n = int(N[1])*int(-1)
-                mleft(P,n)
-            elif inp.startswith("right"):
-                N = inp.split(" ")
-                if len(N) <= 1: n = 1
-                else: n = N[1]
-                mright(P,int(n))
-            elif inp.startswith("down"):
-                N = inp.split(" ")
-                if len(N) <= 1: n = 1
-                else: n = N[1]
-                mdown(P,int(n))
-            elif inp.startswith("up"):
-                N = inp.split(" ")
-                if len(N) <= 1: n = -1
-                else: n = int(N[1])*int(-1)
-                mup(P,n)
-            else:
-                badc()
-            
-if __name__ == "__main__":
-    init()
+        currentmap.pMap()
+        inp = raw_input("\n=> ")
+        if inp == "exit" or inp == "quit":
+            sys.exit()
+        elif inp == "nextmap":
+            print "Next Map []"
+            currentmap = m2
+        elif inp.startswith("down"):
+            new = inp.split(" ")
+            if len(new) <= 1: n = 1
+            else: n = int(new[1])
+            p1.move(y=n)
+        elif inp.startswith("up"):
+            new = inp.split(" ")
+            if len(new) <= 1: n = -1
+            else: n = int(new[1])*int(-1)
+            p1.move(y=n)
+        elif inp.startswith('left'):
+            new = inp.split(" ")
+            if len(new) <= 1: n = -1
+            else: n = int(new[1])*int(-1)
+            p1.move(x=n)
+        elif inp.startswith('right'):
+            new = inp.split(" ")
+            if len(new) <= 1: n = 1
+            else: n = int(new[1])
+            p1.move(x=n)
+gLoop()

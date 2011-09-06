@@ -1,0 +1,21 @@
+Engine()
+- levels
+- currentlevel
+- player
+- objects
+
+Level()
+- map (of form [[1,"blah","blah"],[2,"blah","blah"]])
+- objmap 
+- actions
+
+Player()
+- name
+- data
+- pos (of form [x,y])
+
+Object()
+- name
+- actions
+- pos
+- etc
