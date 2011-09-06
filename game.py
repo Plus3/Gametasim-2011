@@ -57,6 +57,12 @@ class Item():
         self.data = data
         self.type = tp
     
+class Enemy():
+    def __init__(self, name, data):
+        self.name = name
+        self.health = data["health"]
+        self.attack = data["attack"]
+        self.attacktick = 1
 
 class Event():
     def __init__(self, location, etype, data, once):
@@ -82,6 +88,7 @@ class Event():
             "end":self.end,
             "cmap":self.cMap,
             "ipickup":self.pickupitem,
+            "spawnenemy":self.spawnenemy
         }
         self.fired = True
         if self.type in types:
@@ -126,7 +133,9 @@ class Event():
         if _stored != True:
             print "No space!"
         raw_input()
-
+    
+    def spawnenemy(self, pos, data):
+        pass
 
 class Engine():
     def __init__(self, maps, currentmap, player, objects):
