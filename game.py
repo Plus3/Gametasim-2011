@@ -101,7 +101,7 @@ class Enemy():
         if r == 1 and g == 1:
             self.atk()
         else:
-            nPos = list(ai.ai(self.pos,p1.pos,p1.clevel.m))[1]
+            nPos = list(ai.ai(self.pos, p1.pos, p1.clevel.m, p1.clevel.hitmap))[1]
             self.pos = list(nPos)
 
 class Event():

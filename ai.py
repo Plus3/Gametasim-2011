@@ -13,7 +13,7 @@ def genPossibles(point, dia=False):
 		li.append((x-1,y-1))
 	return li
 
-def ai(me,you,Map):
+def ai(me,you,Map, hMap):
 	x1 = me[0]
 	y1 = me[1]
 
@@ -42,8 +42,9 @@ def ai(me,you,Map):
 	f = list(set(f))
 	#print Map
 	for i in f:
-		if i[1][1] in Map.keys():
-			if i[1][0] in Map[i[1][1]]:
-				fin.append(i)
+		if i[1] not in hMap:
+			if i[1][1] in Map.keys():
+				if i[1][0] in Map[i[1][1]]:
+					fin.append(i)
 	return min(fin)
 
