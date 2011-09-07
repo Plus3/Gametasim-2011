@@ -1,14 +1,29 @@
 import sys, os, time
 import subprocess
-import reqs
+import reqs, ai
 
 EVENTS = {}
 ITEMS = {}
+BOTS = {}
+botPos = []
 
+def checkGen():
+    if p1.health != 0:
+        pass
+    else:
+        print "YOU DIED!"
+        raw_input()
+        sys.exit()
+
+def botTick():
+    for i in BOTS:
+        if BOTS[i].enabled is True:
+            BOTS[i].move()
 def invChange(slot, change):
     p1.inv[slot] = change
 
 def invHandle(inp, p):
+    print "Health: "+str(p.health)+"/50"
     print "Your Inventory: "
     for i in p.inv:
         if p.inv[i] != None:
@@ -60,9 +75,25 @@ class Item():
 class Enemy():
     def __init__(self, name, data):
         self.name = name
+        self.enabled = False
         self.health = data["health"]
         self.attack = data["attack"]
         self.attacktick = 1
+        self.pos = data["pos"]
+    
+    def atk(self):
+        p1.health -= self.attack
+        print "Ouch! "+self.name+" attacked you!"
+        raw_input()
+
+    def move(self):
+        r = self.pos[0] - p1.pos[0]
+        g = self.pos[1] - p1.pos[1]
+        if r == 1 and g == 1:
+            self.atk()
+        else:
+            nPos = list(ai.ai(self.pos,p1.pos,p1.clevel.m))[1]
+            self.pos = list(nPos)
 
 class Event():
     def __init__(self, location, etype, data, once):
@@ -155,10 +186,14 @@ class Map():
         self.data = data
     
     def pMap(self):
+        botPos = []
+        for i in BOTS:
+            botPos.append(BOTS[i].pos)
         ya = 0
         xa = 0
         print "DEBUG:"
         print "Player Position [x,y]: ", p1.pos
+        print "Bot Position [x,y: ", botPos
         for y in self.m:
             print ""
             for x in self.m[y]:
@@ -166,6 +201,8 @@ class Map():
                     print "X",
                 elif (x,y) in self.hitmap:
                     print "+",
+                elif [x,y] in botPos:
+                    print "$",
                 else:
                     print "0",
 
@@ -178,6 +215,7 @@ class Player():
         self.inv = {}
         self.items = {}
         self.itemlist = []
+        self.health = 50
 
     def move(self, x=0, y=0):
         go = True
@@ -187,6 +225,10 @@ class Player():
         eventCheck(self.clevel,(x,y))
         if (x,y) in self.clevel.hitmap.keys():
             go = False
+        if (x,y) in BOTS:
+            go = True
+            nPos[0] -= 1
+            BOTS[(x,y)].atk()
         for i in pBetween((x,y),(self.pos[0],self.pos[1])):
             if i in self.clevel.hitmap.keys():
                 go = False
@@ -200,6 +242,9 @@ class Player():
 p1 = Player("Joe",[1,1],"1",{})
 m1 = Map(reqs.level1_map1, reqs.level1_hitmap1, reqs.level1_objmap1)
 m2 = Map(reqs.level1_map2, reqs.level1_hitmap2, reqs.level1_objmap1)
+b1 = Enemy("Botty",{"health":5,"attack":3,"pos":[9,9]})
+b1.enabled = True
+BOTS[tuple(b1.pos)] = b1
 MAPS = {"m1":m1,"m2":m2}
 currentmap = m1
 resetpos = False
@@ -209,9 +254,7 @@ for i in range(1,10):
     p1.inv[i] = None
 
 def tick(count=1, pr="map"):
-    global currentmap
-    global resetpos
-    global p1
+    global currentmap, resetpos, p1
     CLS()
     for i in range(count):
         CLS()
@@ -231,22 +274,22 @@ def tick(count=1, pr="map"):
             elif inp == "nextmap":
                 print "Next Map []"
                 currentmap = m2
-            elif inp.startswith("down"):
+            elif inp.startswith("down") or inp.startswith("s"):
                 new = inp.split(" ")
                 if len(new) <= 1: n = 1
                 else: n = int(new[1])
                 p1.move(y=n)
-            elif inp.startswith("up"):
+            elif inp.startswith("up") or inp.startswith("w"):
                 new = inp.split(" ")
                 if len(new) <= 1: n = -1
                 else: n = int(new[1])*int(-1)
                 p1.move(y=n)
-            elif inp.startswith('left'):
+            elif inp.startswith('left') or inp.startswith("a"):
                 new = inp.split(" ")
                 if len(new) <= 1: n = -1
                 else: n = int(new[1])*int(-1)
                 p1.move(x=n)
-            elif inp.startswith('right'):
+            elif inp.startswith('right') or inp.startswith("d"):
                 new = inp.split(" ")
                 if len(new) <= 1: n = 1
                 else: n = int(new[1])
@@ -255,6 +298,8 @@ def tick(count=1, pr="map"):
                 p1.pos = [1,1]
             elif inp.startswith('inv'):
                 invHandle(inp, p1)
+        botTick()
+        checkGen()
 
 def gLoop():
     while True:
