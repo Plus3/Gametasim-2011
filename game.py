@@ -5,9 +5,11 @@ import reqs, ai
 EVENTS = {}
 ITEMS = {}
 BOTS = {}
+COMMANDS = {}
 botPos = []
 
 def checkGen():
+    '''Events to check on each tick'''
     if p1.health != 0:
         pass
     else:
@@ -16,13 +18,17 @@ def checkGen():
         sys.exit()
 
 def botTick():
+    '''Move bots on each tick...'''
     for i in BOTS:
         if BOTS[i].enabled is True:
             BOTS[i].move()
+
 def invChange(slot, change):
+    '''Scoped inventory changeing of player (by slot)'''
     p1.inv[slot] = change
 
 def invHandle(inp, p):
+    '''Print inventory, and other info...'''
     print "Health: "+str(p.health)+"/50"
     print "Your Inventory: "
     for i in p.inv:
@@ -32,6 +38,7 @@ def invHandle(inp, p):
     raw_input()
 
 def pBetween(pa, pb):
+    '''Get the points between two points'''
     pa1 = pa[0]+pa[1]
     pa2 = pb[0]+pb[1]
     if pa1 < pa2:
@@ -45,6 +52,7 @@ def pBetween(pa, pb):
     return [(x,y) for x in xs for y in ys]
 
 def eventCheck(Mp,pos):
+    '''Check if event already exsists, and fire it if so, otherwise create a new event'''
     if pos in EVENTS:
         EVENTS[pos].go()
     elif pos in Mp.em:
@@ -58,6 +66,7 @@ def eventCheck(Mp,pos):
         pass
 
 def CLS(numlines=100):
+    '''Clear the screen in an os friendly way'''
     if os.name == "posix":
         os.system('clear')
     elif os.name in ("nt", "dos", "ce"):
@@ -216,6 +225,8 @@ class Player():
         self.items = {}
         self.itemlist = []
         self.health = 50
+        for i in range(1,10):
+            self.inv[i] = None
 
     def move(self, x=0, y=0):
         go = True
@@ -250,8 +261,7 @@ currentmap = m1
 resetpos = False
 p1.clevel = currentmap
 ITEMS[1] = Item(1, "Wood Sword", {"damage":1, "health":30, "maxhealth":30}, "weapon")
-for i in range(1,10):
-    p1.inv[i] = None
+
 
 def tick(count=1, pr="map"):
     global currentmap, resetpos, p1
@@ -298,6 +308,10 @@ def tick(count=1, pr="map"):
                 p1.pos = [1,1]
             elif inp.startswith('inv'):
                 invHandle(inp, p1)
+            else:
+                new = inp.split(" ")
+                if new[0] in COMMANDS:
+                    COMMANDS[new[0]](inp)
         botTick()
         checkGen()
 

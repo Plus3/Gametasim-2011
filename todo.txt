@@ -1,10 +1,13 @@
-- Fix changemap setpos()
-- Add more events
 - Add "portals"
+- Add custom commands
 
-- Add inventory
 - Add dialog
 - Add items
 
 - Work on story
 - Add basic story
+
+FIXMES:
+Fixup move()
+Bots clip through walls (add hitchecking to ai)
+Fix ai
