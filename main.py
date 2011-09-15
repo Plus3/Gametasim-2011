@@ -17,12 +17,17 @@ def genDebug():
    return {'tick':TICK}
 
 def _tick_loop():
+    def resPos():
+        print "Player position is BAD. (Hackz?)"
+        raw_input()
+        PLAYER.pos = [2,2]
     if PLAYER.health < 0:
        print "You died! DEBUG:"
-    elif tuple(PLAYER.pos) not in CURRENT_MAP.hMap:
-       print "Player position is BAD. (Hackz?)"
-       raw_input()
-       PLAYER.pos = [2,2]
+    if tuple(PLAYER.pos) in CURRENT_MAP.hMap:
+       if CURRENT_MAP.hMap[tuple(PLAYER.pos)][1] == "0":
+           resPos()
+    else:
+        resPos()
 
 def _tick(count=1, c=0):
    global TICK
@@ -35,19 +40,19 @@ def _handle(inp):
     inp2 = inp.split(" ")
     if inp.startswith("quit") or inp.startswith("exit"):
         sys.exit()
-    elif inp.startswith("w ") or inp.startswith("up"):
+    elif inp2[0]=="w" or inp.startswith("up"):
         if len(inp2) <= 1: n = 1
         else: n = int(inp2[1]) 
         PLAYER.move(y=int(n)*int(-1))
-    elif inp.startswith("s ") or inp.startswith("down"):
+    elif inp2[0]=="s" or inp.startswith("down"):
         if len(inp2) <= 1: n = 1
         else: n = int(inp2[1])
         PLAYER.move(y=int(n))
-    elif inp.startswith("a ") or inp.startswith("left"):
+    elif inp2[0]=="a" or inp.startswith("left"):
         if len(inp2) <= 1: n = 1
         else: n = int(inp2[1])
         PLAYER.move(x=int(n)*int(-1))
-    elif inp.startswith("d ") or inp.startswith("right"):
+    elif inp2[0]=="d" or inp.startswith("right"):
         if len(inp2) <= 1: n = 1
         else: n = int(inp2[1])
         PLAYER.move(x=int(n))
