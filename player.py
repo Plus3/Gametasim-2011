@@ -32,3 +32,6 @@ class Player():
 			pass
 		elif go == True:
 			self.pos = newPos
+	def setPos(self, pos):
+		if pos:
+			self.pos = pos
