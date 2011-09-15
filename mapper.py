@@ -1,17 +1,17 @@
 import reqs
 
 class Map():
-	def __init__(self, Map, clean, hit, pos, data={}):
+	def __init__(self, Map, clean, hit, player, data={}):
 		self.Map = Map
 		self.cMap = clean
 		self.hMap = hit
 		self.data = data
-		self.pos = pos
+		self.player = player
 	def render(self):
 		for y in self.cMap:
 			print ""
 			for x in self.cMap[y]:
-				if [x,y] == self.pos:
+				if [x,y] == self.player.pos:
 					print "X",
 				else:
 					print self.Map[y][x-1],

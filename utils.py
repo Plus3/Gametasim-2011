@@ -8,3 +8,17 @@ def CLS(numlines=100):
         os.system('CLS')
     else:
         print '\n' * numlines
+
+def pB(pa, pb):
+    '''Get the points between two points'''
+    pa1 = pa[0]+pa[1]
+    pa2 = pb[0]+pb[1]
+    if pa1 < pa2:
+        p1f = pa
+        p2f = pb
+    else:
+        p1f = pb
+        p2f = pa
+    xs = range(p1f[0] + 1, p2f[0]) or [p1f[0]]
+    ys = range(p1f[1] + 1, p2f[1]) or [p1f[1]]
+    return [(x,y) for x in xs for y in ys]
