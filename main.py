@@ -17,9 +17,8 @@ def genDebug():
    return {'tick':TICK}
 
 def _tick_loop():
-   #if p.health < 0:
-   #   print "You died! DEBUG:"
-   pass
+   if PLAYER.health < 0:
+       print "You died! DEBUG:"
 
 def _tick(count=1, c=0):
    global TICK
