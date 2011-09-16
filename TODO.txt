@@ -1,3 +1,9 @@
 - Add multimaps
 - Add portals
 - Add damage, bots
+
+Updates:
+- Allow slot choice when picking up items
+
+Fixes:
+- Text for "You picked up" needs fixing

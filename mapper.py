@@ -7,6 +7,7 @@ class Map():
 		self.hMap = hit
 		self.data = data
 		self.player = player
+
 	def render(self):
 		for y in self.cMap:
 			print ""
@@ -55,11 +56,7 @@ def load(Mapy, player):
 	hMap = hitMap(Mapy)
 	eves = {}
 	x = 0
-	for i in reqs.testlevel_events:
-		print i
-		eves[i] = ([i for i in reqs.testlevel_events[i]])
-
-	return (Map(Mapy, cMap, hMap, player), eves)
+	return Map(Mapy, cMap, hMap, player)
 
 
 # hmap = hitMap(reqs.testlevel)

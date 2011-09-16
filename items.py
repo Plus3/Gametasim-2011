@@ -47,4 +47,3 @@ class Item():
 		}
 		types[self.id](self)
 		self.pickedup = True
-		

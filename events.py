@@ -17,7 +17,10 @@ class Event():
 			print self.data['msg']
 			sys.exit()
 		elif self.type == "pickup":
+			#print ":", self.data['player']
 			self.data['player'].pickupItem(self.data['item'])
+		elif self.type == "changemap":
+			pass
 
 
 	def fire(self):
