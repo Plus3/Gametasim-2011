@@ -1,6 +1,6 @@
 #IMPORTS
 import sys, os, time
-import mapper, utils, reqs, player
+import mapper, utils, reqs, player, events
 from player import Player
 
 #VARS AS FUNCS
@@ -12,11 +12,13 @@ TICK = 0
 USR_INP = ""
 CURRENT_MAP = ""
 PLAYER = ""
-    
+EVENTS = {}
+
 def genDebug():
    return {'tick':TICK}
 
 def _tick_loop():
+    global EVENTS
     def resPos():
         print "Player position is BAD. (Hackz?)"
         raw_input()
@@ -28,6 +30,8 @@ def _tick_loop():
            resPos()
     else:
         resPos()
+    if tuple(PLAYER.pos) in EVENTS.keys():
+      EVENTS[tuple(PLAYER.pos)].fire()
 
 def _tick(count=1, c=0):
    global TICK
@@ -63,9 +67,11 @@ def _handle(inp):
 def init():
    global PLAYER
    global CURRENT_MAP
+   global EVENTS
    CURRENT_MAP = _loadmap(reqs.testlevel, None)
    PLAYER = Player("Jimmy", [2,2], CURRENT_MAP)
    CURRENT_MAP.player = PLAYER
+   EVENTS[(3,3)] = events.Event([3,3], "msg", {"msg":"You found an EVENT!"}, True)
 
 init()
 while True:
