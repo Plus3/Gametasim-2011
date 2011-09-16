@@ -13,6 +13,12 @@ USR_INP = ""
 CURRENT_MAP = ""
 PLAYER = ""
 EVENTS = {}
+ITEMS = {}
+
+def printInv():
+    print "HEALTH:", str(PLAYER.health[0])+"/"+str(PLAYER.health[1])
+    print "INVENTORY:", [PLAYER.inv[i].name for i in PLAYER.inv if PLAYER.inv[i] != None]
+    raw_input()
 
 def genDebug():
    return {'tick':TICK}
@@ -62,6 +68,8 @@ def _handle(inp):
         PLAYER.move(x=int(n))
     elif inp.startswith("set"):
         PLAYER.setPos(eval(inp2[1]))
+    elif inp.startswith("inv"):
+        printInv()
 
 
 def init():
@@ -72,6 +80,7 @@ def init():
    PLAYER = Player("Jimmy", [2,2], CURRENT_MAP)
    CURRENT_MAP.player = PLAYER
    EVENTS[(3,3)] = events.Event([3,3], "msg", {"msg":"You found an EVENT!"}, True)
+   EVENTS[(8,2)] = events.Event([8,2], "pickup", {"item":1, "player":PLAYER}, True)
 
 init()
 while True:
