@@ -72,15 +72,25 @@ def _handle(inp):
         printInv()
 
 
+def loadMap(Map):
+    pass
+
 def init():
-   global PLAYER
-   global CURRENT_MAP
-   global EVENTS
-   CURRENT_MAP = _loadmap(reqs.testlevel, None)
-   PLAYER = Player("Jimmy", [2,2], CURRENT_MAP)
-   CURRENT_MAP.player = PLAYER
-   EVENTS[(3,3)] = events.Event([3,3], "msg", {"msg":"You found an EVENT!"}, True)
-   EVENTS[(8,2)] = events.Event([8,2], "pickup", {"item":1, "player":PLAYER}, True)
+    global PLAYER
+    global CURRENT_MAP
+    global EVENTS
+    load = _loadmap(reqs.testlevel, None)
+    CURRENT_MAP = load[0]
+    EVENTSz = load[1]
+    PLAYER = Player("Jimmy", [2,2], CURRENT_MAP)
+    CURRENT_MAP.player = PLAYER
+    for i in EVENTSz:
+        i = EVENTSz[i]
+        r = i[2]
+        r["player"] = PLAYER
+        EVENTS[i[0]] = events.Event(i[0], i[1], r, i[3])
+   
+
 
 init()
 while True:

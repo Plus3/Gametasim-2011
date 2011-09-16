@@ -53,7 +53,13 @@ def renderMap(Map, pos=[1,1]):
 def load(Mapy, player):
 	cMap = clean(Mapy)
 	hMap = hitMap(Mapy)
-	return Map(Mapy, cMap, hMap, player)
+	eves = {}
+	x = 0
+	for i in reqs.testlevel_events:
+		print i
+		eves[i] = ([i for i in reqs.testlevel_events[i]])
+
+	return (Map(Mapy, cMap, hMap, player), eves)
 
 
 # hmap = hitMap(reqs.testlevel)

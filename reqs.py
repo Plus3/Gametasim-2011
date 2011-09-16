@@ -7,3 +7,5 @@ testlevel = {
 4:"###     ########",
 5:"################"
 }
+
+testlevel_events = {(3,3): [(3,3), "pickup", {"item":1}, True]}
