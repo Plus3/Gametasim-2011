@@ -2,6 +2,7 @@
 import sys, os, time
 import mapper, utils, reqs, player, events
 from player import Player
+from utils import GlobalVar
 
 #VARS AS FUNCS
 _loadmap = mapper.load
@@ -10,10 +11,11 @@ _cls = utils.CLS
 #GLOBALS
 TICK = 0
 USR_INP = ""
-CURRENT_MAP = ""
+CURRENT_MAP = GlobalVar("CURRENT_MAP", "")
 PLAYER = ""
 EVENTS = {}
 ITEMS = {}
+
 
 def printInv():
     print "HEALTH:", str(PLAYER.health[0])+"/"+str(PLAYER.health[1])
@@ -29,10 +31,12 @@ def _tick_loop():
         print "Player position is BAD. (Hackz?)"
         raw_input()
         PLAYER.pos = [2,2]
-    if PLAYER.health < 0:
+    if PLAYER.health[0] < 1:
        print "You died! DEBUG:"
-    if tuple(PLAYER.pos) in CURRENT_MAP.hMap:
-       if CURRENT_MAP.hMap[tuple(PLAYER.pos)][1] == "0":
+       raw_input("[Exit]")
+       sys.exit()
+    if tuple(PLAYER.pos) in CURRENT_MAP.e.hMap:
+       if CURRENT_MAP.e.hMap[tuple(PLAYER.pos)][1] == "0":
            resPos()
     else:
         resPos()
@@ -70,6 +74,8 @@ def _handle(inp):
         PLAYER.setPos(eval(inp2[1]))
     elif inp.startswith("inv"):
         printInv()
+    elif inp.startswith("health"):
+        PLAYER.health[0] = int(inp2[1])
 
 
 def loadMap(Map, eventz):
@@ -84,16 +90,18 @@ def loadMap(Map, eventz):
 
 def initEvents():
     global PLAYER
+    global CURRENT_MAP
     for i in EVENTS:
         EVENTS[i].data["player"] = PLAYER
+        EVENTS[i].data["cmap"] = CURRENT_MAP
 
 def init():
     global PLAYER
     global CURRENT_MAP
     global EVENTS
-    CURRENT_MAP = loadMap(reqs.testlevel, reqs.testlevel_events)
-    PLAYER = Player("Jimmy", [2,2], CURRENT_MAP)
-    CURRENT_MAP.player = PLAYER
+    CURRENT_MAP.e =loadMap(reqs.testlevel, reqs.testlevel_events)
+    PLAYER = Player("Jimmy", [2,2], CURRENT_MAP.e)
+    CURRENT_MAP.e.player = PLAYER
     initEvents()
 
 init()
@@ -103,7 +111,7 @@ while True:
    print "DEBUG:"
    print "Position: ",PLAYER.pos
    print "Tick #: ", TICK
-   CURRENT_MAP.render()
+   CURRENT_MAP.e.render()
    USR_INP = raw_input("\n=> ")
    _handle(USR_INP)
 

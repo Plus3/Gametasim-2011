@@ -1,4 +1,4 @@
-import sys, os
+import sys, os, reqs
 
 class Event():
 	def __init__(self, pos, type, data, once):
@@ -21,7 +21,7 @@ class Event():
 			self.data['player'].pickupItem(self.data['item'])
 		elif self.type == "changemap":
 			pass
-
+			#self.data["cmap"].e = loadMap(self.data['map'], self.data['e'])
 
 	def fire(self):
 		if self.once is True:

@@ -1,5 +1,10 @@
 import os
 
+class GlobalVar():
+    def __init__(self, Type, e):
+        self.t = Type
+        self.e  = e
+
 def CLS(numlines=100):
     '''Clear the screen in an os friendly way'''
     if os.name == "posix":
