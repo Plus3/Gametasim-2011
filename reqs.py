@@ -24,7 +24,7 @@ testlevel = {
 
 testlevel_events = {
 (3,3): [(3,3), "pickup", {"item":1}, True],
-(12,2): [(12,2), "changemap", {"map":testlevel2, "events":testlevel2_events}, False]
+(12,2): [(12,2), "changemap", {"map":1}, False]
 }
 
 

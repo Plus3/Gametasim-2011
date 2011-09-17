@@ -2,7 +2,7 @@
 import sys, os, time
 import mapper, utils, reqs, player, events
 from player import Player
-from utils import GlobalVar
+from utils import GlobalVar, Game
 
 #VARS AS FUNCS
 _loadmap = mapper.load
@@ -11,6 +11,8 @@ _cls = utils.CLS
 #GLOBALS
 TICK = 0
 USR_INP = ""
+GAME = ""
+MAPS = {}
 CURRENT_MAP = GlobalVar("CURRENT_MAP", "")
 PLAYER = ""
 EVENTS = {}
@@ -78,30 +80,37 @@ def _handle(inp):
         PLAYER.health[0] = int(inp2[1])
 
 
-def loadMap(Map, eventz):
-    eM = _loadmap(Map, None)
+def loadMap(ID, Map, Eventz):
+    eM = _loadmap(ID, Map, None, Eventz)
+    return eM
+
+def initMap(eventz):
+    global EVENTS
     for i in eventz:
         r = eventz[i]
         l = r[2]
         l['player'] = ''
         x = events.Event(r[0], r[1], l, r[3])
-        EVENTS[r[0]] = x
-    return eM
+        EVENTS[r[0]] = x   
 
 def initEvents():
-    global PLAYER
-    global CURRENT_MAP
+    global PLAYER, CURRENT_MAP, EVENTS
     for i in EVENTS:
         EVENTS[i].data["player"] = PLAYER
         EVENTS[i].data["cmap"] = CURRENT_MAP
 
 def init():
-    global PLAYER
-    global CURRENT_MAP
-    global EVENTS
-    CURRENT_MAP.e =loadMap(reqs.testlevel, reqs.testlevel_events)
-    PLAYER = Player("Jimmy", [2,2], CURRENT_MAP.e)
+    global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS
+    MAPS[1] = loadMap(1, reqs.testlevel, reqs.testlevel_events)
+    MAPS[2] = loadMap(2, reqs.testlevel2, reqs.testlevel2_events)
+    CURRENT_MAP.e = MAPS[1]
+    initMap(CURRENT_MAP.e.events)
+    print EVENTS
+    raw_input()
+
+    PLAYER = Player("Jimmy", [2,2], CURRENT_MAP)
     CURRENT_MAP.e.player = PLAYER
+    Game("Gametasim", PLAYER, MAPS, MAPS[1])
     initEvents()
 
 init()

@@ -1,14 +1,17 @@
 import reqs
 
 class Map():
-	def __init__(self, Map, clean, hit, player, data={}):
+	def __init__(self, ID, Map, clean, hit, player, events, data={}):
+		self.id = ID
 		self.Map = Map
 		self.cMap = clean
 		self.hMap = hit
 		self.data = data
 		self.player = player
+		self.events = events
 
 	def render(self):
+		print self.cMap
 		for y in self.cMap:
 			print ""
 			for x in self.cMap[y]:
@@ -20,7 +23,7 @@ class Map():
 def clean(inp, new={}, _y=0, _x=0):
 	for i in inp:
 		_y += 1
-		_x = 0
+		_x = -1
 		app = []
 		for n in inp[i]:
 			_x += 1
@@ -51,12 +54,12 @@ def renderMap(Map, pos=[1,1]):
 			else:
 				print reqs.testlevel[y][x-1],
 
-def load(Mapy, player):
+def load(ID, Mapy, player, Eventz):
 	cMap = clean(Mapy)
 	hMap = hitMap(Mapy)
 	eves = {}
 	x = 0
-	return Map(Mapy, cMap, hMap, player)
+	return Map(ID, Mapy, cMap, hMap, player, Eventz)
 
 
 # hmap = hitMap(reqs.testlevel)

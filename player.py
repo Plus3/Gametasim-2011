@@ -4,7 +4,7 @@ class Player():
 	def __init__(self, name, pos, level, data={}):
 		self.name = name
 		self.pos = pos
-		self.level = level
+		self.level = level.e
 		self.data = data
 		self.inv = {
 			1:None,
@@ -64,4 +64,3 @@ class Player():
 	
 	def looseHealth(self, amount):
 		self.health[0] += int(amount)*int(-1)
-		

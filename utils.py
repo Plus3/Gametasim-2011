@@ -1,5 +1,12 @@
 import os
 
+class Game():
+    def __init__(self, name, player, maps, currentmap):
+        self.name = name
+        self.player = player
+        self.maps = maps
+        self.currentmap = currentmap
+
 class GlobalVar():
     def __init__(self, Type, e):
         self.t = Type
