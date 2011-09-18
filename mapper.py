@@ -11,7 +11,7 @@ class Map():
 		self.events = events
 
 	def render(self):
-		print self.cMap
+		#print self.cMap
 		for y in self.cMap:
 			print ""
 			for x in self.cMap[y]:
@@ -21,21 +21,23 @@ class Map():
 					print self.Map[y][x-1],
 
 def clean(inp, new={}, _y=0, _x=0):
+	print inp
 	for i in inp:
 		_y += 1
-		_x = -1
+		_x = 0
 		app = []
 		for n in inp[i]:
 			_x += 1
 			app.append(_x)
 		new[_y] = app
+	print new
 	return new
 
-def hitMap(Map, dic={}, _y=0, _x=0):
-	for y in Map:
+def hitMap(Mapz, dic={}, _y=0, _x=0):
+	for y in Mapz:
 		_x = 0
 		_y += 1
-		for x in Map[y]:
+		for x in Mapz[y]:
 			_x += 1
 			if x == "#":
 				dic[(_x,_y)] = ["#", 0, 'wall']
@@ -43,7 +45,9 @@ def hitMap(Map, dic={}, _y=0, _x=0):
 				dic[(_x,_y)] = ["#", 1, '']
 			else:
 				pass
+	print dic
 	return dic
+
 
 def renderMap(Map, pos=[1,1]):
 	for y in Map:
@@ -54,12 +58,12 @@ def renderMap(Map, pos=[1,1]):
 			else:
 				print reqs.testlevel[y][x-1],
 
-def load(ID, Mapy, player, Eventz):
-	cMap = clean(Mapy)
-	hMap = hitMap(Mapy)
-	eves = {}
-	x = 0
-	return Map(ID, Mapy, cMap, hMap, player, Eventz)
+def loader(Map):
+	print "CLEAN:"
+	print clean(Map)
+	raw_input()
+	print "HITMAP:"
+	print hitMap(Map)
 
 
 # hmap = hitMap(reqs.testlevel)

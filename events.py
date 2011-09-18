@@ -20,7 +20,8 @@ class Event():
 			#print ":", self.data['player']
 			self.data['player'].pickupItem(self.data['item'])
 		elif self.type == "changemap":
-			pass
+			from main import setMap
+			self.data['setter'](self.data['map'])
 			#self.data["cmap"].e = loadMap(self.data['map'], self.data['e'])
 
 	def fire(self):

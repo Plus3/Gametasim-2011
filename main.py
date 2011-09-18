@@ -5,7 +5,6 @@ from player import Player
 from utils import GlobalVar, Game
 
 #VARS AS FUNCS
-_loadmap = mapper.load
 _cls = utils.CLS
 
 #GLOBALS
@@ -79,11 +78,6 @@ def _handle(inp):
     elif inp.startswith("health"):
         PLAYER.health[0] = int(inp2[1])
 
-
-def loadMap(ID, Map, Eventz):
-    eM = _loadmap(ID, Map, None, Eventz)
-    return eM
-
 def initMap(eventz):
     global EVENTS
     for i in eventz:
@@ -91,36 +85,48 @@ def initMap(eventz):
         l = r[2]
         l['player'] = ''
         x = events.Event(r[0], r[1], l, r[3])
-        EVENTS[r[0]] = x   
-
+        EVENTS[r[0]] = x  
+        
 def initEvents():
-    global PLAYER, CURRENT_MAP, EVENTS
+    global PLAYER, CURRENT_MAP, EVENTS, MAPS
     for i in EVENTS:
         EVENTS[i].data["player"] = PLAYER
         EVENTS[i].data["cmap"] = CURRENT_MAP
+        EVENTS[i].data['setter'] = setMap 
+
+def setMap(ID, rPlayer=True, pos=[2,2]):
+    global CURRENT_MAP, MAPS, PLAYER, EVENTS
+    if CURRENT_MAP.e.id != ID:
+
+        CURRENT_MAP.e = MAPS[int(ID)]
+        PLAYER.level = CURRENT_MAP.e
+        EVENTS = {}
+        initMap(CURRENT_MAP.e.events)
+        initEvents()
+        if rPlayer is True:
+            PLAYER.pos = pos
 
 def init():
     global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS
-    MAPS[1] = loadMap(1, reqs.testlevel, reqs.testlevel_events)
-    MAPS[2] = loadMap(2, reqs.testlevel2, reqs.testlevel2_events)
+    MAPS[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_clean, reqs.testlevel_hit, PLAYER, reqs.testlevel_events)
+    MAPS[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_clean, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events)
     CURRENT_MAP.e = MAPS[1]
     initMap(CURRENT_MAP.e.events)
-    print EVENTS
-    raw_input()
-
     PLAYER = Player("Jimmy", [2,2], CURRENT_MAP)
-    CURRENT_MAP.e.player = PLAYER
+    MAPS[1].player = PLAYER
+    MAPS[2].player = PLAYER
     Game("Gametasim", PLAYER, MAPS, MAPS[1])
     initEvents()
 
-init()
-while True:
-   _tick()
-   _cls()
-   print "DEBUG:"
-   print "Position: ",PLAYER.pos
-   print "Tick #: ", TICK
-   CURRENT_MAP.e.render()
-   USR_INP = raw_input("\n=> ")
-   _handle(USR_INP)
-
+if __name__ == "__main__":
+    init()
+    while True:
+       _tick()
+       _cls()
+       print "DEBUG:"
+       print "Position: ",PLAYER.pos
+       print "Tick #: ", TICK
+       print "Map ID: ", CURRENT_MAP.e.id
+       CURRENT_MAP.e.render()
+       USR_INP = raw_input("\n=> ")
+       _handle(USR_INP)
