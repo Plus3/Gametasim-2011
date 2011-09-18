@@ -16,7 +16,13 @@ CURRENT_MAP = GlobalVar("CURRENT_MAP", "")
 PLAYER = ""
 EVENTS = {}
 ITEMS = {}
+S_FILE = "save.dat"
+SAVE_FILE = open(S_FILE, "rw")
 
+def Exit():
+    global GAME, S_FILE
+    GAME.writeSave(S_FILE)
+    sys.exit()
 
 def printInv():
     print "HEALTH:", str(PLAYER.health[0])+"/"+str(PLAYER.health[1])
@@ -33,7 +39,7 @@ def _tick_loop():
         raw_input()
         PLAYER.pos = [2,2]
     if PLAYER.health[0] < 1:
-       print "You died! DEBUG:"
+       print "You died! DEBUG: ", PLAYER.health
        raw_input("[Exit]")
        sys.exit()
     if tuple(PLAYER.pos) in CURRENT_MAP.e.hMap:
@@ -54,7 +60,7 @@ def _tick(count=1, c=0):
 def _handle(inp):
     inp2 = inp.split(" ")
     if inp.startswith("quit") or inp.startswith("exit"):
-        sys.exit()
+        Exit()
     elif inp2[0]=="w" or inp.startswith("up"):
         if len(inp2) <= 1: n = 1
         else: n = int(inp2[1]) 
@@ -115,11 +121,79 @@ def init():
     PLAYER = Player("Jimmy", [2,2], CURRENT_MAP)
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
-    Game("Gametasim", PLAYER, MAPS, MAPS[1])
+    GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1])
     initEvents()
+
+def handleSave(inp):
+    global GAME
+    split = inp.split("=")
+    if len(split) > 2:
+        print "Error on len(split): ", len(split)
+    key = split[0].strip().strip(":")
+    value = split[1].strip()
+    write = True
+    if key in GAME.savedata:
+        if GAME.savedata[key] == value:
+            print "DEBUG: Not writing config, value already set"
+            write = False
+        elif GAME.savedata[key] != value:
+            write = True
+    if write == True:
+        GAME.savedata[key] = value
+        print "Wrote key: ", key, "Value: ", value
+
+def handleSetting(inp):
+    pass
+
+def menu():
+    global SAVE_FILE, GAME
+
+    def Use():
+        GAME.regSave()
+
+    def noUse():
+        pass
+
+    for line in SAVE_FILE.readlines():
+        if line.startswith(":"):
+            print "Going to handle"
+            handleSave(line)
+        elif line.startswith("#") or line.startswith("//"):
+            pass
+        elif line.startswith("!"):
+            handleSetting(line)
+        else:
+            print "Unknown line in config: ", line
+    if GAME.savedata["new"] == '0':
+        _cls()
+        print "Game save detected for:", GAME.savedata['name'], "!!"
+        useF = raw_input("[U]se or [N]ew \n=> ").lower()
+        if useF == "u":
+            print "Using save data..."
+            GAME.regSave()
+        elif useF == "n":
+            print "Deleteing save data and creating a new file..."
+        else:
+            print "Huh? Didnt get that!"
+            menu()
+
+            
+
+def title():
+    _cls()
+    print "Welcome to GAMETASIM - 2011"
+    print "By: Andrei Z"
+    print "Status: In Development"
+    print "Online @ github.com/b1naryth1ef/Gametasim-2011"
+    print ""
+    raw_input()
+
 
 if __name__ == "__main__":
     init()
+    title()
+    menu()
+    raw_input()
     while True:
        _tick()
        _cls()

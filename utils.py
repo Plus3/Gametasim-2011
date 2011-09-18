@@ -6,6 +6,21 @@ class Game():
         self.player = player
         self.maps = maps
         self.currentmap = currentmap
+        self.savedata = {}
+        self.configdata = {}
+    
+    def regSave(self):
+        self.name = self.savedata['name']
+        self.player.health = eval(self.savedata['health'])
+        if self.savedata['inv'] != 'None':
+            self.player.inv = self.savedata['inv']
+    
+    def writeSave(self, File):
+        f = open(File, "w")
+        for i in self.savedata.keys():
+            line = ":"+i+"="+str(self.savedata[i])+"\n"
+            f.write(line)
+        f.close()
 
 class GlobalVar():
     def __init__(self, Type, e):
