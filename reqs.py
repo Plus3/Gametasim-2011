@@ -5,7 +5,7 @@ testlevel2 = {
 2:"#@ ##########   #",
 3:"#  ##     ###   #",
 4:"#  ##     ###   #",
-5:"#  ###### ###  ##",
+5:"#  ######-###  ##",
 6:"#              ##",
 7:"#################"
 }
@@ -104,7 +104,7 @@ testlevel2_hit = {
 (6, 5): ['#', 0, 'wall'],
 (5, 3): ['#', 0, 'wall'],
 (11, 7): ['#', 0, 'wall'],
-(10, 5): ['#', 1, ''],
+(10, 5): ['-', 1, 'door'],
 (16, 5): ['#', 0, 'wall'],
 (14, 7): ['#', 0, 'wall'],
 (13, 5): ['#', 0, 'wall'],
@@ -142,7 +142,7 @@ testlevel2_hit = {
 (10, 2): ['#', 0, 'wall']}
 
 testlevel2_events = {
-(10,5): [(10,5), "door", {"msg":"A door stands in your way!", "msg2":"You unlock the door with your small key!", "req":4}, False],
+(10,5): [(10,5), "door", {"msg":"A door stands in your way!", "msg2":"You unlock the door with your small key!", "req":4, "changeChar":(True," ", 2)}, False],
 (2,2): [(2,2), "changemap", {"map":1, "pos":[12,2]}, False]
 }
 

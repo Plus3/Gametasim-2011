@@ -1,22 +1,21 @@
 import os, pickle
 
 class Game():
-    def __init__(self, name, player, maps, currentmap):
+    def __init__(self, name, player, maps, currentmap, data={}):
         self.name = name
         self.player = player
         self.maps = maps
         self.currentmap = currentmap
         self.savedata = {}
         self.configdata = {}
+        self.data = data
     
     def regSave(self, dat):
         self.name = dat['name']
         self.player.health = dat['health']
-        self.player.pos = dat['pos']
+        #self.player.pos = dat['pos']
         self.player.inv = dat['inv']
-        self.player.lvlid = dat['lvl']
-        self.player.level = self.player.data['retMap'](dat['lvl'])
-        self.player.data['setMap'](dat['lvl'], pos=dat['pos'])
+        #self.data['setMap'](int(dat['lvl']), pos=dat['pos'])
 
     def writeSave(self, File):
         d = {

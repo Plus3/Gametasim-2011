@@ -57,10 +57,13 @@ class Player():
 	
 	def pickupItem(self, iid, notify=True, slot=None):
 		for i in self.inv:
-			if self.inv[i] == None:
+			if self.inv[i] == None:				
 				self.inv[i] = items.Item(iid)
 				self.inv[i].init()
 				slot = i
+				break
+			elif self.inv[i].id == iid:
+				notify = False
 				break
 
 		if notify is True:

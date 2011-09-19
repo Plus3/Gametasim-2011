@@ -35,9 +35,13 @@ class Event():
 				raw_input(self.data['msg2'])
 				p.inv[im] = None
 				self.once = True
+				if self.data['changeChar'][0] is True:
+					self.data['setChar'](self.data['changeChar'][2], self.pos, self.data['changeChar'][1])
 			else:	
 				p.pos = p.lastPos
 				raw_input(self.data['msg'])
+			
+			
 
 	def fire(self):
 		if self.once is True:

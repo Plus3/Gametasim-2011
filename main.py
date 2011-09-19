@@ -96,13 +96,28 @@ def initMap(eventz):
         l['player'] = ''
         x = events.Event(r[0], r[1], l, r[3])
         EVENTS[r[0]] = x  
-        
+  
+def setChar(Map, pos, char):
+    global MAPS  
+    r = MAPS[Map]
+    line = []
+    itr = 0
+    for i in r.Map[pos[1]]:
+        itr += 1
+        if itr == pos[0]:
+            line.append(char)
+        else:
+            line.append(i)
+    r.Map[pos[1]] = "".join(line)
+
+      
 def initEvents():
     global PLAYER, CURRENT_MAP, EVENTS, MAPS
     for i in EVENTS:
         EVENTS[i].data["player"] = PLAYER
         EVENTS[i].data["cmap"] = CURRENT_MAP
         EVENTS[i].data['setter'] = setMap 
+        EVENTS[i].data['setChar'] = setChar
 
 def setMap(ID, rPlayer=True, pos=[2,2]):
     global CURRENT_MAP, MAPS, PLAYER, EVENTS
@@ -128,8 +143,9 @@ def init():
     PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
-    GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1])
+    GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1], {'setMap':setMap})
     initEvents()
+    return None
 
 def title():
     _cls()
@@ -161,11 +177,10 @@ def menu():
             menu()
             #FIXME Should loop back to menu?
     except:
-        pass
+        return None
 
-if __name__ == "__main__":
-    init()
-    menu()
+def loop():
+    global PLAYER, TICK, CURRENT_MAP, USR_INP
     while True:
        _tick()
        _cls()
@@ -176,3 +191,10 @@ if __name__ == "__main__":
        CURRENT_MAP.e.render()
        USR_INP = raw_input("\n=> ")
        _handle(USR_INP)
+
+if __name__ == "__main__":
+    _blank = init()
+    _blank = menu()
+    _blank = loop()
+
+    
