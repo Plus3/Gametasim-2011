@@ -17,12 +17,9 @@ class Event():
 			print self.data['msg']
 			sys.exit()
 		elif self.type == "pickup":
-			#print ":", self.data['player']
 			self.data['player'].pickupItem(self.data['item'])
 		elif self.type == "changemap":
-			from main import setMap
 			self.data['setter'](self.data['map'])
-			#self.data["cmap"].e = loadMap(self.data['map'], self.data['e'])
 
 	def fire(self):
 		if self.once is True:

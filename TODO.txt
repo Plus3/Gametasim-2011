@@ -13,4 +13,4 @@ Updates:
 
 Fixes:
 - Text for "You picked up" needs fixing
-
+- Saving on an event spot refires the eventspot when you rejoin the game.

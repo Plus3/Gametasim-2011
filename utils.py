@@ -1,4 +1,4 @@
-import os
+import os, pickle
 
 class Game():
     def __init__(self, name, player, maps, currentmap):
@@ -9,17 +9,25 @@ class Game():
         self.savedata = {}
         self.configdata = {}
     
-    def regSave(self):
-        self.name = self.savedata['name']
-        self.player.health = eval(self.savedata['health'])
-        if self.savedata['inv'] != 'None':
-            self.player.inv = self.savedata['inv']
-    
+    def regSave(self, dat):
+        self.name = dat['name']
+        self.player.health = dat['health']
+        self.player.pos = dat['pos']
+        self.player.inv = dat['inv']
+        self.player.lvlid = dat['lvl']
+        self.player.level = self.player.data['retMap'](dat['lvl'])
+        self.player.data['setMap'](dat['lvl'], pos=dat['pos'])
+
     def writeSave(self, File):
+        d = {
+            'name':self.name,
+            'health':self.player.health,
+            'pos':self.player.pos,
+            'inv':self.player.inv,
+            'lvlid':self.player.lvlid
+        }
         f = open(File, "w")
-        for i in self.savedata.keys():
-            line = ":"+i+"="+str(self.savedata[i])+"\n"
-            f.write(line)
+        pickle.dump(d, f)
         f.close()
 
 class GlobalVar():

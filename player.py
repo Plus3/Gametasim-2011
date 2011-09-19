@@ -1,11 +1,13 @@
 import utils, items
 
 class Player():
-	def __init__(self, name, pos, level, data={}):
+	def __init__(self, name, pos, level, lvlid, data={}):
 		self.name = name
 		self.pos = pos
 		self.level = level.e
+		self.lvlid = lvlid
 		self.data = data
+		self.health = [50,50]
 		self.inv = {
 			1:None,
 			2:None,
@@ -18,49 +20,50 @@ class Player():
 			9:None,
 			10:None
 		}
-		self.health = [50,50]
+		
+	def hitCheck(self, point, inb={}):
+		'''@returns FALSE if point is non-passable, TRUE if passable'''
+		r = True
+		if type(point) is list:
+			point = tuple(point)
+		for item in self.level.hMap:
+			if item == point and self.level.hMap[item][1] == 0:
+				r = False
 
-	def move(self, x=0, y=0):
-		go = True
-		newPos = [self.pos[0]+x, self.pos[1]+y]
-		pwa = utils.pB(self.pos, newPos)
-		#print self.level.hMap
-		for i in self.level.hMap:
-			if tuple(newPos) == i:
-				if self.level.hMap[i][1] == 0:
-					go = False
-				else:
-					go = True
-			else:
-				pass
-		for b in pwa:
+		for item in inb:
 			try:
-				if self.level.hMap[b][1] == 0:
-					go = False
+				if self.level.hMap[item][1] == 0:
+					r = False
 			except:
 				pass
+
+		return r
+
+	def move(self, x=0, y=0):
+		newPos = [self.pos[0]+x, self.pos[1]+y]
+		pwa = utils.pB(self.pos, newPos)
+		go = self.hitCheck(newPos, pwa)
 		if go == False:
 			pass
 		elif go == True:
 			self.pos = newPos
 
 	def setPos(self, pos):
-		if pos:
+		if type(pos) is list:
 			self.pos = pos
 	
-	def pickupItem(self, iid, notify=True):
-		slot = None
+	def pickupItem(self, iid, notify=True, slot=None):
 		for i in self.inv:
 			if self.inv[i] == None:
 				self.inv[i] = items.Item(iid)
 				self.inv[i].init()
 				slot = i
 				break
+
 		if notify is True:
 			print "You picked up a", self.inv[slot].name, "it's been stored in Slot #"+str(slot)
 			raw_input("[OK]")
-		else:
-			pass
 	
 	def looseHealth(self, amount):
 		self.health[0] += int(amount)*int(-1)
+	

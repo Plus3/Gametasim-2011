@@ -1,6 +1,6 @@
 #IMPORTS
-import sys, os, time
-import mapper, utils, reqs, player, events
+import sys, os, time, pickle
+import mapper, utils, reqs, player, events, menu
 from player import Player
 from utils import GlobalVar, Game
 
@@ -19,9 +19,10 @@ ITEMS = {}
 S_FILE = "save.dat"
 SAVE_FILE = open(S_FILE, "rw")
 
-def Exit():
+def Exit(clean=True):
     global GAME, S_FILE
-    GAME.writeSave(S_FILE)
+    if clean == True:
+        GAME.writeSave(S_FILE)
     sys.exit()
 
 def printInv():
@@ -103,14 +104,17 @@ def initEvents():
 def setMap(ID, rPlayer=True, pos=[2,2]):
     global CURRENT_MAP, MAPS, PLAYER, EVENTS
     if CURRENT_MAP.e.id != ID:
-
         CURRENT_MAP.e = MAPS[int(ID)]
         PLAYER.level = CURRENT_MAP.e
+        PLAYER.lvlid = ID
         EVENTS = {}
         initMap(CURRENT_MAP.e.events)
         initEvents()
         if rPlayer is True:
             PLAYER.pos = pos
+
+def retMap(ID):
+    return MAPS[ID]
 
 def init():
     global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS
@@ -118,66 +122,11 @@ def init():
     MAPS[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_clean, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events)
     CURRENT_MAP.e = MAPS[1]
     initMap(CURRENT_MAP.e.events)
-    PLAYER = Player("Jimmy", [2,2], CURRENT_MAP)
+    PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
     GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1])
     initEvents()
-
-def handleSave(inp):
-    global GAME
-    split = inp.split("=")
-    if len(split) > 2:
-        print "Error on len(split): ", len(split)
-    key = split[0].strip().strip(":")
-    value = split[1].strip()
-    write = True
-    if key in GAME.savedata:
-        if GAME.savedata[key] == value:
-            print "DEBUG: Not writing config, value already set"
-            write = False
-        elif GAME.savedata[key] != value:
-            write = True
-    if write == True:
-        GAME.savedata[key] = value
-        print "Wrote key: ", key, "Value: ", value
-
-def handleSetting(inp):
-    pass
-
-def menu():
-    global SAVE_FILE, GAME
-
-    def Use():
-        GAME.regSave()
-
-    def noUse():
-        pass
-
-    for line in SAVE_FILE.readlines():
-        if line.startswith(":"):
-            print "Going to handle"
-            handleSave(line)
-        elif line.startswith("#") or line.startswith("//"):
-            pass
-        elif line.startswith("!"):
-            handleSetting(line)
-        else:
-            print "Unknown line in config: ", line
-    if GAME.savedata["new"] == '0':
-        _cls()
-        print "Game save detected for:", GAME.savedata['name'], "!!"
-        useF = raw_input("[U]se or [N]ew \n=> ").lower()
-        if useF == "u":
-            print "Using save data..."
-            GAME.regSave()
-        elif useF == "n":
-            print "Deleteing save data and creating a new file..."
-        else:
-            print "Huh? Didnt get that!"
-            menu()
-
-            
 
 def title():
     _cls()
@@ -186,14 +135,34 @@ def title():
     print "Status: In Development"
     print "Online @ github.com/b1naryth1ef/Gametasim-2011"
     print ""
-    raw_input()
 
+def menu():
+    global SAVE_FILE, GAME
+    title()
+    try:
+        dat = pickle.load(SAVE_FILE)
+        print "Save data for player "+dat['name']+" has been found!"
+        cho = raw_input("[U]se [N]ew [D]elete\n=> ").lower()
+        if cho == "u":
+            print "Using data..."
+            GAME.regSave(dat)
+        elif cho == "n":
+            print "Dumping data..."
+        elif cho == "d":
+            f = open(SAVE_FILE, "w")
+            f.close()
+            #FIXME Exit here?
+        else:
+            print "Unknown input!"
+            time.sleep(.5)
+            menu()
+            #FIXME Should loop back to menu?
+    except:
+        pass
 
 if __name__ == "__main__":
     init()
-    title()
     menu()
-    raw_input()
     while True:
        _tick()
        _cls()
