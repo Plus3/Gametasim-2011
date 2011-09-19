@@ -8,6 +8,7 @@ class Player():
 		self.lvlid = lvlid
 		self.data = data
 		self.health = [50,50]
+		self.lastPos = []
 		self.inv = {
 			1:None,
 			2:None,
@@ -46,10 +47,12 @@ class Player():
 		if go == False:
 			pass
 		elif go == True:
+			self.lastPos = self.pos
 			self.pos = newPos
 
 	def setPos(self, pos):
 		if type(pos) is list:
+			self.lastPos = self.pos
 			self.pos = pos
 	
 	def pickupItem(self, iid, notify=True, slot=None):

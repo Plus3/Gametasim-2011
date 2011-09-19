@@ -17,7 +17,10 @@ PLAYER = ""
 EVENTS = {}
 ITEMS = {}
 S_FILE = "save.dat"
-SAVE_FILE = open(S_FILE, "rw")
+try:
+    SAVE_FILE = open(S_FILE, "rw")
+except:
+    SAVE_FILE = open(S_FILE, "w")
 
 def Exit(clean=True):
     global GAME, S_FILE
@@ -167,7 +170,7 @@ if __name__ == "__main__":
        _tick()
        _cls()
        print "DEBUG:"
-       print "Position: ",PLAYER.pos
+       print "Position: ",PLAYER.pos,"Last:",PLAYER.lastPos
        print "Tick #: ", TICK
        print "Map ID: ", CURRENT_MAP.e.id
        CURRENT_MAP.e.render()

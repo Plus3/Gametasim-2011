@@ -1,12 +1,5 @@
-- Add multimaps 
-	To do this we probably should shove the "game" into a class and then add changeMap() and loadMap() as subfunctions of the class. That way we can trade around
-	the GAME object, and just work off of it.
-- Add portals
-	This should be a simple event "portal" with a map and position. 
 - Add damage, bots
 	Simple enough?
-- Add doors
-	Need a object class, from there we check if any objects are on the map (printing the correct character (obj.char) if needed, and hitcheck). Maybe do something like go = OBJECTS[nPos].check() which would return True if it's okay to pass through/enter, and False otherwise. Maybe add a messagin system?
 
 Updates:
 - Allow slot choice when picking up items
@@ -14,3 +7,12 @@ Updates:
 Fixes:
 - Text for "You picked up" needs fixing
 - Saving on an event spot refires the eventspot when you rejoin the game.
+
+DONE:
+- Add doors
+	Need a object class, from there we check if any objects are on the map (printing the correct character (obj.char) if needed, and hitcheck). Maybe do something like go = OBJECTS[nPos].check() which would return True if it's okay to pass through/enter, and False otherwise. Maybe add a messagin system?
+- Add portals
+	This should be a simple event "portal" with a map and position. 
+- Add multimaps 
+	To do this we probably should shove the "game" into a class and then add changeMap() and loadMap() as subfunctions of the class. That way we can trade around
+	the GAME object, and just work off of it.

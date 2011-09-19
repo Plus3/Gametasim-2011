@@ -19,7 +19,25 @@ class Event():
 		elif self.type == "pickup":
 			self.data['player'].pickupItem(self.data['item'])
 		elif self.type == "changemap":
-			self.data['setter'](self.data['map'])
+			self.data['setter'](self.data['map'], pos=self.data['pos'])
+		elif self.type == "door":
+			p = self.data['player']
+			im = None
+			go = False
+			for i in p.inv:
+				if p.inv[i] == None:
+					pass
+				elif p.inv[i].id == self.data['req']:
+					im = i
+					go = True
+
+			if go is True:
+				raw_input(self.data['msg2'])
+				p.inv[im] = None
+				self.once = True
+			else:	
+				p.pos = p.lastPos
+				raw_input(self.data['msg'])
 
 	def fire(self):
 		if self.once is True:
