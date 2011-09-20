@@ -18,6 +18,7 @@ EVENTS = {}
 ITEMS = {}
 BOTS = GlobalVar("BOTS", {})
 S_FILE = "save.dat"
+
 try:
     SAVE_FILE = open(S_FILE, "rw")
 except:
@@ -32,32 +33,32 @@ def Exit(clean=True):
 def printInv():
     print "HEALTH:", str(PLAYER.health[0])+"/"+str(PLAYER.health[1])
     print "INVENTORY:", [PLAYER.inv[i].name for i in PLAYER.inv if PLAYER.inv[i] != None]
-    print "BOT:", BOTS.e[(3,3)].pos
     raw_input()
-
-def genDebug():
-   return {'tick':TICK}
 
 def _tick_loop():
     global EVENTS, BOTS, CURRENT_LEVEL, PLAYER
+
     def resPos():
         print "Player position is BAD. (Hackz?)"
         raw_input()
         PLAYER.pos = [2,2]
+
     if PLAYER.health[0] < 1:
        print "You died! DEBUG: ", PLAYER.health
        raw_input("[Exit]")
        sys.exit()
+
     if tuple(PLAYER.pos) in CURRENT_MAP.e.hMap:
        if CURRENT_MAP.e.hMap[tuple(PLAYER.pos)][1] == "0":
            resPos()
     else:
         resPos()
+
     if tuple(PLAYER.pos) in EVENTS.keys():
       EVENTS[tuple(PLAYER.pos)].fire()
+
     for i in BOTS.e:
         BOTS.e[i].move()
-        #print "Sent move request"
         if BOTS.e[i].level == CURRENT_MAP.e.id:
             if PLAYER.pos in ai.getPoss(BOTS.e[i].pos):
                 if BOTS.e[i].atk is True:

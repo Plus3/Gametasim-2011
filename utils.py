@@ -13,9 +13,7 @@ class Game():
     def regSave(self, dat):
         self.name = dat['name']
         self.player.health = dat['health']
-        #self.player.pos = dat['pos']
         self.player.inv = dat['inv']
-        #self.data['setMap'](int(dat['lvl']), pos=dat['pos'])
 
     def writeSave(self, File):
         d = {

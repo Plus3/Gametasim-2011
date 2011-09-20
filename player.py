@@ -6,6 +6,7 @@ class Player():
 		self.pos = pos
 		self.level = level.e
 		self.lvlid = lvlid
+		self.xp = 0
 		self.data = data
 		self.health = [50,50]
 		self.lastPos = []

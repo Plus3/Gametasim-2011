@@ -41,8 +41,6 @@ class Event():
 				p.pos = p.lastPos
 				raw_input(self.data['msg'])
 			
-			
-
 	def fire(self):
 		if self.once is True:
 			if self.fired is False:

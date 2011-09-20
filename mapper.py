@@ -11,8 +11,6 @@ class Map():
 		self.events = events
 
 	def render(self):
-		#print self.cMap
-		#print self.data['BOTS'][(3,3)].data
 		print "Bot pos:", self.data['BOTS'][(3,3)].pos
 		for y in self.cMap:
 			print ""
@@ -26,7 +24,6 @@ class Map():
 						else:
 							print self.Map[y][x-1],
 				
-
 def clean(inp, new={}, _y=0, _x=0):
 	print inp
 	for i in inp:
@@ -55,7 +52,6 @@ def hitMap(Mapz, dic={}, _y=0, _x=0):
 	print dic
 	return dic
 
-
 def renderMap(Map, pos=[1,1]):
 	for y in Map:
 		print ""
@@ -71,8 +67,3 @@ def loader(Map):
 	raw_input()
 	print "HITMAP:"
 	print hitMap(Map)
-
-
-# hmap = hitMap(reqs.testlevel)
-# mapy = clean(reqs.testlevel)
-# posys = [[2,3],[3,3],[4,3],[4,4],[5,4]]

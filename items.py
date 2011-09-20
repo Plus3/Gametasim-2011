@@ -9,7 +9,6 @@ class Item():
 		self.weapon = False
 		self.type = None
 
-	
 	def init(self):
 		def woodSword(self):
 			self.name = "Wood Sword"

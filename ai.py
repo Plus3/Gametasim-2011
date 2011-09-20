@@ -1,8 +1,6 @@
 import utils
 import random
 
-
-
 def getPoss(point):
 	li = []
 
@@ -30,7 +28,6 @@ def temp(myPos, Map, Player):
 		except:
 			pass
 	
-
 class Bot():
 	def __init__(self, name, player, pos, level, attack=True, data={}):
 		self.name = name
@@ -41,12 +38,8 @@ class Bot():
 		self.atk = attack
 	
 	def move(self):
-		#print "Moveing..."
-		#print self.data
-		#print self.player
 		nPos = temp(self.pos, self.data['maps'][self.level], self.player)
 		if nPos != None:
-			#print "Not none!"
 			self.pos = list(nPos)
 
 class Enemy(Bot):
