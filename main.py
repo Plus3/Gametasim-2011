@@ -1,6 +1,6 @@
 #IMPORTS
 import sys, os, time, pickle
-import mapper, utils, reqs, player, events, menu
+import mapper, utils, reqs, player, events, menu, ai
 from player import Player
 from utils import GlobalVar, Game
 
@@ -16,6 +16,7 @@ CURRENT_MAP = GlobalVar("CURRENT_MAP", "")
 PLAYER = ""
 EVENTS = {}
 ITEMS = {}
+BOTS = GlobalVar("BOTS", {})
 S_FILE = "save.dat"
 try:
     SAVE_FILE = open(S_FILE, "rw")
@@ -31,13 +32,14 @@ def Exit(clean=True):
 def printInv():
     print "HEALTH:", str(PLAYER.health[0])+"/"+str(PLAYER.health[1])
     print "INVENTORY:", [PLAYER.inv[i].name for i in PLAYER.inv if PLAYER.inv[i] != None]
+    print "BOT:", BOTS.e[(3,3)].pos
     raw_input()
 
 def genDebug():
    return {'tick':TICK}
 
 def _tick_loop():
-    global EVENTS
+    global EVENTS, BOTS, CURRENT_LEVEL, PLAYER
     def resPos():
         print "Player position is BAD. (Hackz?)"
         raw_input()
@@ -53,6 +55,13 @@ def _tick_loop():
         resPos()
     if tuple(PLAYER.pos) in EVENTS.keys():
       EVENTS[tuple(PLAYER.pos)].fire()
+    for i in BOTS.e:
+        BOTS.e[i].move()
+        #print "Sent move request"
+        if BOTS.e[i].level == CURRENT_MAP.e.id:
+            if PLAYER.pos in ai.getPoss(BOTS.e[i].pos):
+                if BOTS.e[i].atk is True:
+                    BOTS.e[i].attack()
 
 def _tick(count=1, c=0):
    global TICK
@@ -135,12 +144,13 @@ def retMap(ID):
     return MAPS[ID]
 
 def init():
-    global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS
-    MAPS[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_clean, reqs.testlevel_hit, PLAYER, reqs.testlevel_events)
-    MAPS[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_clean, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events)
+    global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS
+    MAPS[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_clean, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, {'BOTS':BOTS.e})
+    MAPS[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_clean, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, {'BOTS':BOTS.e})
     CURRENT_MAP.e = MAPS[1]
     initMap(CURRENT_MAP.e.events)
     PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
+    BOTS.e[(3,3)] = ai.Enemy("Ogre", PLAYER, [3,3], 1, data={'attack':1, 'char':"$", "maps":MAPS})
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
     GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1], {'setMap':setMap})
