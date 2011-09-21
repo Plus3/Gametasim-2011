@@ -90,7 +90,8 @@ def temp(myPos, Map, Player):
 			pass
 	
 class Bot():
-	def __init__(self, name, player, pos, level, health, attack=True, bat=True, data={}):
+	def __init__(self, iid, name, player, pos, level, health, attack=True, bat=True, data={}):
+		self.id = iid
 		self.name = name
 		self.pos = pos
 		self.level = level

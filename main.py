@@ -24,6 +24,19 @@ try:
 except:
     SAVE_FILE = open(S_FILE, "w")
 
+def delBot(name, iid=False):
+    global BOTS
+    if name is not False:
+        for i in BOTS.e:
+            if BOTS.e[i].name == name:
+                del BOTS.e[i]
+                break
+    elif iid is not False:
+        for i in BOTS.e:
+            if BOTS.e[i].id == iid:
+                del BOTS.e[i]
+                break
+
 def Exit(clean=True):
     global GAME, S_FILE
     if clean == True:
@@ -43,7 +56,7 @@ def attackr(inp):
             for z in m:
                 #print z, BOTS.e[i].pos
                 if list(z) == BOTS.e[i].pos:
-                    combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, False, {'printInv':printInv})
+                    combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, False, {'printInv':printInv, 'delBot':delBot})
 
 
 def _tick_after():
@@ -52,7 +65,9 @@ def _tick_after():
         if BOTS.e[i].level == CURRENT_MAP.e.id:
             if tuple(PLAYER.pos) in ai.getPoss(BOTS.e[i].pos):
                 if BOTS.e[i].atk is True:
-                    combat.mode(PLAYER, BOTS.e[i], CURRENT_MAP.e)
+                    combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':printInv, 'delBot':delBot})
+                    break
+    return ""
 
 
 def _tick_loopA():
@@ -169,7 +184,7 @@ def init():
     CURRENT_MAP.e = MAPS[1]
     initMap(CURRENT_MAP.e.events)
     PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
-    BOTS.e[(6,4)] = ai.Bunny("Bunny", PLAYER, [6,4], 1, [5,5], False, True, data={'char':".", "maps":MAPS})
+    BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS})
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
     GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1], {'setMap':setMap})

@@ -12,12 +12,13 @@ class Map():
 
 	def render(self):
 		#print "Bot pos:", self.data['BOTS'][(3,3)].pos
+
 		for y in self.cMap:
 			print ""
 			for x in self.cMap[y]:
 				if [x,y] == self.player.pos:
 					print "X",
-				else:
+				elif self.data['BOTS'] != {}:
 					for m in self.data['BOTS']:
 						if self.data['BOTS'][m].level == self.id:
 							if self.data['BOTS'][m].pos == [x,y]:
@@ -29,6 +30,8 @@ class Map():
 								print self.Map[y][x-1],
 						else:
 							print self.Map[y][x-1],
+				else:
+					print self.Map[y][x-1],
 				
 def clean(inp, new={}, _y=0, _x=0):
 	print inp

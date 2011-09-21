@@ -31,14 +31,12 @@ class Player():
 		for item in self.level.hMap:
 			if item == point and self.level.hMap[item][1] == 0:
 				r = False
-
 		for item in inb:
 			try:
 				if self.level.hMap[item][1] == 0:
 					r = False
 			except:
 				pass
-
 		return r
 
 	def move(self, x=0, y=0):
