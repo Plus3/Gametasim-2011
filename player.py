@@ -74,3 +74,12 @@ class Player():
 	def looseHealth(self, amount):
 		self.health[0] += int(amount)*int(-1)
 	
+	def attacked(self, bot):
+		self.health[0] -= bot.data['attack']
+		for i in self.inv:
+			if self.inv[i] != None:
+				if self.inv[i].weapon == True:
+					print "You attack back!!"
+					bot.health[0] -= self.inv[i].damage
+					self.inv[i].hits -= 1
+	

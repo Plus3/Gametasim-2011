@@ -58,9 +58,9 @@ def _tick_loop():
       EVENTS[tuple(PLAYER.pos)].fire()
 
     for i in BOTS.e:
-        BOTS.e[i].move()
         if BOTS.e[i].level == CURRENT_MAP.e.id:
-            if PLAYER.pos in ai.getPoss(BOTS.e[i].pos):
+            BOTS.e[i].move()
+            if tuple(PLAYER.pos) in ai.getPoss(BOTS.e[i].pos):
                 if BOTS.e[i].atk is True:
                     BOTS.e[i].attack()
 
@@ -151,7 +151,7 @@ def init():
     CURRENT_MAP.e = MAPS[1]
     initMap(CURRENT_MAP.e.events)
     PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
-    BOTS.e[(3,3)] = ai.Enemy("Ogre", PLAYER, [3,3], 1, data={'attack':1, 'char':"$", "maps":MAPS})
+    BOTS.e[(6,4)] = ai.Enemy("Ogre", PLAYER, [6,4], 1, [30/30], data={'attack':1, 'atkmsg':"The ogre attacks you taking 1 hit of damage! Rarr!", 'char':"$", "maps":MAPS})
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
     GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1], {'setMap':setMap})

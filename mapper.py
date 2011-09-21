@@ -11,7 +11,7 @@ class Map():
 		self.events = events
 
 	def render(self):
-		print "Bot pos:", self.data['BOTS'][(3,3)].pos
+		#print "Bot pos:", self.data['BOTS'][(3,3)].pos
 		for y in self.cMap:
 			print ""
 			for x in self.cMap[y]:
@@ -19,8 +19,11 @@ class Map():
 					print "X",
 				else:
 					for m in self.data['BOTS']:
-						if self.data['BOTS'][m].pos == [x,y]:
-							print self.data['BOTS'][m].data['char'],
+						if self.data['BOTS'][m].level == self.id:
+							if self.data['BOTS'][m].pos == [x,y]:
+								print self.data['BOTS'][m].data['char'],
+							else:
+								print self.Map[y][x-1],
 						else:
 							print self.Map[y][x-1],
 				
