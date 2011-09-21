@@ -35,8 +35,17 @@ def printInv():
     print "INVENTORY:", [PLAYER.inv[i].name for i in PLAYER.inv if PLAYER.inv[i] != None]
     raw_input()
 
-def _tick_loop():
-    global EVENTS, BOTS, CURRENT_LEVEL, PLAYER
+def _tick_after():
+    global BOTS, CURRENT_MAP
+    for i in BOTS.e:
+        if BOTS.e[i].level == CURRENT_MAP.e.id:
+            if tuple(PLAYER.pos) in ai.getPoss(BOTS.e[i].pos):
+                if BOTS.e[i].atk is True:
+                    BOTS.e[i].attack()
+
+
+def _tick_loopA():
+    global EVENTS, BOTS, CURRENT_MAP, PLAYER
 
     def resPos():
         print "Player position is BAD. (Hackz?)"
@@ -60,16 +69,13 @@ def _tick_loop():
     for i in BOTS.e:
         if BOTS.e[i].level == CURRENT_MAP.e.id:
             BOTS.e[i].move()
-            if tuple(PLAYER.pos) in ai.getPoss(BOTS.e[i].pos):
-                if BOTS.e[i].atk is True:
-                    BOTS.e[i].attack()
 
 def _tick(count=1, c=0):
    global TICK
    while count > c:
       c+=1
       TICK+=1
-      _tick_loop()
+      _tick_loopA()
       
 def _handle(inp):
     inp2 = inp.split(" ")
@@ -119,7 +125,6 @@ def setChar(Map, pos, char):
         else:
             line.append(i)
     r.Map[pos[1]] = "".join(line)
-
       
 def initEvents():
     global PLAYER, CURRENT_MAP, EVENTS, MAPS
@@ -151,7 +156,7 @@ def init():
     CURRENT_MAP.e = MAPS[1]
     initMap(CURRENT_MAP.e.events)
     PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
-    BOTS.e[(6,4)] = ai.Enemy("Ogre", PLAYER, [6,4], 1, [30/30], data={'attack':1, 'atkmsg':"The ogre attacks you taking 1 hit of damage! Rarr!", 'char':"$", "maps":MAPS})
+    BOTS.e[(6,4)] = ai.Bunny("Bunny", PLAYER, [6,4], 1, [30/30], data={'char':".", "maps":MAPS})
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
     GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1], {'setMap':setMap})
@@ -200,6 +205,7 @@ def loop():
        print "Tick #: ", TICK
        print "Map ID: ", CURRENT_MAP.e.id
        CURRENT_MAP.e.render()
+       _tick_after()
        USR_INP = raw_input("\n=> ")
        _handle(USR_INP)
 

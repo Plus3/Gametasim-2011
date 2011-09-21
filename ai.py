@@ -75,8 +75,6 @@ def ai(me,you,Map):
 	return None
 	#youP = getPOss(you)
 
-
-
 def temp(myPos, Map, Player):
 	l = getPoss(myPos)
 	random.shuffle(l)
@@ -108,9 +106,26 @@ class Bot():
 
 class Enemy(Bot):
 	def attack(self):
+		print ""
 		print self.data['atkmsg']
 		self.player.attacked(self)
 		raw_input()
 
+class Passive(Bot):
+	def move(self):
+		pass
+	
+	def attack(self):
+		pass
+		
 class NPC(Bot):
 	pass
+
+class Bunny(Bot):
+	def move(self):
+		nPos = temp(self.pos, self.data['maps'][self.level], self.player)
+		if nPos != None:
+			self.pos = list(nPos)
+	
+	def attack(self):
+		pass
