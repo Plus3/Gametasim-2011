@@ -21,7 +21,10 @@ class Map():
 					for m in self.data['BOTS']:
 						if self.data['BOTS'][m].level == self.id:
 							if self.data['BOTS'][m].pos == [x,y]:
-								print self.data['BOTS'][m].data['char'],
+								if self.data['BOTS'][m].pr is True:
+									print self.data['BOTS'][m].data['char'],
+								else:
+									print self.Map[y][x-1],
 							else:
 								print self.Map[y][x-1],
 						else:

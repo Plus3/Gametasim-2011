@@ -90,19 +90,22 @@ def temp(myPos, Map, Player):
 			pass
 	
 class Bot():
-	def __init__(self, name, player, pos, level, health, attack=True, data={}):
+	def __init__(self, name, player, pos, level, health, attack=True, bat=True, data={}):
 		self.name = name
 		self.pos = pos
 		self.level = level
 		self.player = player
 		self.data = data
 		self.atk = attack
+		self.bat = bat
 		self.health = health
+		self.pr = True
 	
 	def move(self):
-		nPos = ai(self.pos, self.player.pos, self.data['maps'][self.level])
-		if nPos != None:
-			self.pos = list(nPos)
+		if self.pr is True:
+			nPos = ai(self.pos, self.player.pos, self.data['maps'][self.level])
+			if nPos != None:
+				self.pos = list(nPos)
 
 class Enemy(Bot):
 	def attack(self):
@@ -117,15 +120,16 @@ class Passive(Bot):
 	
 	def attack(self):
 		pass
-		
+
 class NPC(Bot):
 	pass
 
 class Bunny(Bot):
 	def move(self):
-		nPos = temp(self.pos, self.data['maps'][self.level], self.player)
-		if nPos != None:
-			self.pos = list(nPos)
+		if self.pr is True:
+			nPos = temp(self.pos, self.data['maps'][self.level], self.player)
+			if nPos != None:
+				self.pos = list(nPos)
 	
 	def attack(self):
 		pass

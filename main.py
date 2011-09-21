@@ -1,6 +1,6 @@
 #IMPORTS
 import sys, os, time, pickle
-import mapper, utils, reqs, player, events, menu, ai
+import mapper, utils, reqs, player, events, menu, ai, combat
 from player import Player
 from utils import GlobalVar, Game
 
@@ -35,13 +35,24 @@ def printInv():
     print "INVENTORY:", [PLAYER.inv[i].name for i in PLAYER.inv if PLAYER.inv[i] != None]
     raw_input()
 
+def attackr(inp):
+    global PLAYER, BOTS, CURRENT_MAP
+    m = ai.getPoss(PLAYER.pos)
+    for i in BOTS.e:
+        if BOTS.e[i].level == CURRENT_MAP.e.id:
+            for z in m:
+                #print z, BOTS.e[i].pos
+                if list(z) == BOTS.e[i].pos:
+                    combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, False, {'printInv':printInv})
+
+
 def _tick_after():
-    global BOTS, CURRENT_MAP
+    global BOTS, CURRENT_MAP, PLAYER
     for i in BOTS.e:
         if BOTS.e[i].level == CURRENT_MAP.e.id:
             if tuple(PLAYER.pos) in ai.getPoss(BOTS.e[i].pos):
                 if BOTS.e[i].atk is True:
-                    BOTS.e[i].attack()
+                    combat.mode(PLAYER, BOTS.e[i], CURRENT_MAP.e)
 
 
 def _tick_loopA():
@@ -103,6 +114,8 @@ def _handle(inp):
         printInv()
     elif inp.startswith("health"):
         PLAYER.health[0] = int(inp2[1])
+    elif inp.startswith("attack"):
+        attackr(inp2)
 
 def initMap(eventz):
     global EVENTS
@@ -156,7 +169,7 @@ def init():
     CURRENT_MAP.e = MAPS[1]
     initMap(CURRENT_MAP.e.events)
     PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
-    BOTS.e[(6,4)] = ai.Bunny("Bunny", PLAYER, [6,4], 1, [30/30], data={'char':".", "maps":MAPS})
+    BOTS.e[(6,4)] = ai.Bunny("Bunny", PLAYER, [6,4], 1, [5,5], False, True, data={'char':".", "maps":MAPS})
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
     GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1], {'setMap':setMap})

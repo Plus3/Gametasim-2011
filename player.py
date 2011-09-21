@@ -71,6 +71,15 @@ class Player():
 			print "You picked up a", self.inv[slot].name, "it's been stored in Slot #"+str(slot)
 			raw_input("[OK]")
 	
+	def use(self, slot, weapon=True):
+		if self.inv[slot].weapon == weapon:
+			if self.inv[slot].hits > 0:
+				self.inv[slot].hits -= 1
+				damage = (1,self.inv[slot].damage)
+			else:
+				damage = (0,0)
+		return damage
+
 	def looseHealth(self, amount):
 		self.health[0] += int(amount)*int(-1)
 	
