@@ -1,0 +1,13 @@
+- Add "portals"
+- Add custom commands
+
+- Add dialog
+- Add items
+
+- Work on story
+- Add basic story
+
+FIXMES:
+Fixup move()
+Bots clip through walls (add hitchecking to ai)
+Fix ai

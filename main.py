@@ -184,7 +184,7 @@ def init():
     CURRENT_MAP.e = MAPS[1]
     initMap(CURRENT_MAP.e.events)
     PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
-    BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS})
+    BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':10,'char':".", "maps":MAPS})
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
     GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1], {'setMap':setMap})

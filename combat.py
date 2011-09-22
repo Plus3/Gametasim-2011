@@ -1,4 +1,4 @@
-import random
+import random, sys
 
 def fight(player, attacker, mode, data):
 	meDead = False
@@ -10,6 +10,13 @@ def fight(player, attacker, mode, data):
 	elif attacker.health[0] < 0:
 		youDead = True
 	while meDead is not True and youDead is not True:
+
+		if player.health[0] <= 0:
+			meDead = True
+			print "You've died!"
+			raw_input("[Exit]")
+			break
+       		#sys.exit()
 
 		if attacker.health[0] <= 0:
 			youDead = True
@@ -72,7 +79,7 @@ def fight(player, attacker, mode, data):
 				print attacker.name, "attacked you for", attacker.data["attack"], "hit points!"
 
 		y = random.randint(1,50)
-		if y == 23:
+		if y == 23 and mode=="attack":
 			print attacker.name, "escaped!"
 			attacker.pr = False
 			raw_input("[exit]")
@@ -82,6 +89,8 @@ def fight(player, attacker, mode, data):
 
 	if youDead == True and dely == False:
 		data['delBot'](attacker.name)
+	elif meDead == True:
+		sys.exit()
 
 	#raw_input("hold")
 def battle(player, attacker, Map, attacked=True, data={}):
