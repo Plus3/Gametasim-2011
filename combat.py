@@ -16,7 +16,6 @@ def fight(player, attacker, mode, data):
 			print "You've died!"
 			raw_input("[Exit]")
 			break
-       		#sys.exit()
 
 		if attacker.health[0] <= 0:
 			youDead = True
@@ -50,19 +49,16 @@ def fight(player, attacker, mode, data):
 				if d[0] == 0:
 					print "The weapon is broken!"
 				elif d[0] == 1:
-					#print d[1]
-					#print attacker.health
 					attacker.health[0] -= d[1]
 					print "You attacked",attacker.name,"with",player.inv[citem].name,"for",d[1],"hit!"
 					print attacker.name,"health:",str(attacker.health[0])+"/"+str(attacker.health[1])
-					#raw_input()
 		elif todo.startswith("exit"):
 			if mode == "attack":
 				print attacker.name, "ran away!"
 				data['delBot'](attacker.name)
 				dely = True
 			elif mode == "defense":
-				y = random.randint(1,10)
+				y = random.randint(1,5)
 				if y == 5:
 					print "You run away!"
 					attacker.pr = False
@@ -72,7 +68,6 @@ def fight(player, attacker, mode, data):
 				else:
 					print "Nice try punk!"
 			
-		
 		if mode == "defense":
 			if attacker.health[0] > 0:
 				player.health[0] -= attacker.data["attack"]
@@ -92,7 +87,6 @@ def fight(player, attacker, mode, data):
 	elif meDead == True:
 		sys.exit()
 
-	#raw_input("hold")
 def battle(player, attacker, Map, attacked=True, data={}):
 	if attacked is True:
 		print "\n"+attacker.name, "initated an battle!"
