@@ -7,6 +7,7 @@ class Player():
 		self.level = level.e
 		self.lvlid = lvlid
 		self.xp = 0
+		self.money = [0,50]
 		self.data = data
 		self.health = [50,50]
 		self.lastPos = []
@@ -77,6 +78,14 @@ class Player():
 			else:
 				damage = (0,0)
 		return damage
+
+	def moneyAdd(self, amount):
+		new = self.money[0] + amount
+		if new > self.money[1]:
+			self.money[0] = self.money[1]
+		else:
+			self.money[0] = new
+
 
 	def looseHealth(self, amount):
 		self.health[0] -= int(amount)

@@ -109,6 +109,9 @@ def Combat(player, attacker, mode, data):
 			xpp = xpp1*attacker.data['level']
 		player.xp += xpp
 		print "You %s %s gaining %s XP!" % (wordy(), attacker.name, xpp)
+		x = random.randint(2,10)
+		print "You loot %s and find %s gold coins" % (attacker.name, x)
+		player.moneyAdd(x)
 		data['delBot'](attacker.name)
 
 

@@ -20,6 +20,7 @@ class Game():
         self.currentmap = dat['map']
         self.player.pos = dat['pos']
         self.data['setMap'](int(dat['map']), False)
+        self.data['money'] = dat['money']
 
         for i in dat['bots']:
             if i in self.bots.e:
@@ -35,7 +36,8 @@ class Game():
             'lvlid':self.player.lvlid,
             'bots':self.kobots.e,
             'xp':self.player.xp,
-            'map':self.currentmap
+            'map':self.currentmap,
+            'money':self.player.money
         }
         f = open(File, "w")
         pickle.dump(d, f)
@@ -72,5 +74,6 @@ def pB(pa, pb):
 def printInv(PLAYER):
     print "HEALTH:", str(PLAYER.health[0])+"/"+str(PLAYER.health[1])
     print "INVENTORY:", [PLAYER.inv[i].name for i in PLAYER.inv if PLAYER.inv[i] != None]
+    print "MONEY: %s/%s" % (PLAYER.money[0], PLAYER.money[1])
     print "XP: %s" % (PLAYER.xp)
     raw_input()
