@@ -1,98 +1,155 @@
-import random, sys
+import random, sys, time
 
-def fight(player, attacker, mode, data):
-	meDead = False
-	youDead = False
-	dely = False
-	citem = None
-	if player.health[0] < 0:
-		meDead = True
-	elif attacker.health[0] < 0:
-		youDead = True
+def wordy():
+	words = ["murdered", "slaughtered", "killed", "slayed", "polished off"]
+	random.shuffle(words)
+	return words[0]
+
+def hitPoint(hit):
+	if int(hit) == 1:
+		return "1 hit point"
+	else:
+		return "%s hit points" % (hit)
+
+def hit(player, attacker, hit, r=True):
+	if r != False:
+		attacker.health[0] -= hit
+		print "You attacked %s for %s! %s's health: %s/%s" % (attacker.name, hitPoint(hit), attacker.name, attacker.health[0], attacker.health[1])
+	player.health[0] -= attacker.data['attack']
+	print "%s attacked you for %s!" % (attacker.name, hitPoint(attacker.data['attack']))
+	return None
+	
+def console():
+	return raw_input("[VS] => ").split(" ")
+
+def checkHealth(obj):
+	if obj.health[0] <= 0:
+		return True
+	else:
+		return False
+
+def Defense(player, attacker, data):
+	meDead = checkHealth(player)
+	youDead = checkHealth(attacker)
+
 	while meDead is not True and youDead is not True:
-
-		if player.health[0] <= 0:
-			meDead = True
-			print "You've died!"
-			raw_input("[Exit]")
-			break
-
-		if attacker.health[0] <= 0:
-			youDead = True
-			print attacker.name,"has died!"
-			attacker.pr = False
-			data['delBot'](attacker.name)
-			dely = True
-			raw_input("")
-			break
-
-		todo = raw_input("[BATTLE]=>")
-		xtodo = todo.split(" ")
-		if todo.startswith("use"):
+		todo = console()
+		doHit = True
+		if todo[0].startswith("use"):
 			try:
-				xitem = int(xtodo[1])
-				if player.inv[xitem] != None:
-					if player.inv[xitem].weapon is True:
-						print "Using "+player.inv[xitem].name
-						citem = xitem
-					else:
-						print "Unknown item!"
-			except:
-				print "Unknown item!"
-		elif todo.startswith("inv"):
-			data['printInv']()
-		elif todo.startswith("a") or todo.startswith("attack"):
-			if citem is None:
-				print "You must select an item with use!"
-			else:
-				d = player.use(citem)
-				if d[0] == 0:
-					print "The weapon is broken!"
-				elif d[0] == 1:
-					attacker.health[0] -= d[1]
-					print "You attacked",attacker.name,"with",player.inv[citem].name,"for",d[1],"hit!"
-					print attacker.name,"health:",str(attacker.health[0])+"/"+str(attacker.health[1])
-		elif todo.startswith("exit"):
-			if mode == "attack":
-				print attacker.name, "ran away!"
-				data['delBot'](attacker.name)
-				dely = True
-			elif mode == "defense":
-				y = random.randint(1,5)
-				if y == 5:
-					print "You run away!"
-					attacker.pr = False
-					data['delBot'](attacker.name)
-					dely = True
-					break
+				_item = int(todo[1])
+				if player.inv[_item] != None and player.inv[_item].weapon == True:
+					print "Using "+player.inv[_item].name
+					item = _item
+				elif _item == "fists":
+					pass
 				else:
-					print "Nice try punk!"
-			
-		if mode == "defense":
-			if attacker.health[0] > 0:
-				player.health[0] -= attacker.data["attack"]
-				print attacker.name, "attacked you for", attacker.data["attack"], "hit points!"
+					print "Unknown Item"
+			except:
+				print "Unknown Item"
+		elif todo[0].startswith('inv'):
+			hitr = False
+			data['printInv'](player)
+		elif todo[0].startswith("a"):
+			if item is None:
+				print "You must select an item to use! If you don't have a sword try 'use fists'"
+			else:
+				use = player.use(item)
+				if use[0] == 1 and doHit != False:
+					hit(player, attacker, use[1])
+				else:
+					print "The weapon is broken!"
+					hit(player, attacker, 0, False)
+					citem = None
+		elif todo[0].startswith('exit'):
+			print "You try to run away...",
+			time.sleep(.9)
+			x = random.randint(1,5)
+			if x == 5:
+				print "You got away from",attacker.name+"!"
+				data['delBot'](attacker.name)
+				break
+			else:
+				print "Nice try!"
+				hit(player, attacker, 0, False)
+		else:
+			print "Unknown command!"
+			x = random.randint(1,5)
+			if x == 5:
+				hit(player,attacker,0,False)
+		
+		meDead = checkHealth(player)
+		youDead = checkHealth(attacker)
 
-		y = random.randint(1,50)
-		if y == 23 and mode=="attack":
-			print attacker.name, "escaped!"
-			attacker.pr = False
-			raw_input("[exit]")
-			data['delBot'](attacker.name)
-			dely = True
-			break
-
-	if youDead == True and dely == False:
-		data['delBot'](attacker.name)
-	elif meDead == True:
+	if meDead is True:
+		print "%s %s you!" %(attacker.name, wordy())
 		sys.exit()
+	elif youDead is True:
+		print "You %s %s" % (wordy(), attacker.name)
+		data['delBot'](attacker.name)
+
+	raw_input("[Exit]")
+
+def Offense(player, attacker, data):
+	meDead = checkHealth(player)
+	youDead = checkHealth(attacker)
+	item = None
+	
+	while meDead is not True and youDead is not True:
+		todo = console()
+		doHit = True
+		if todo[0].startswith("use"):
+			try:
+				_item = int(todo[1])
+				if player.inv[_item] != None and player.inv[_item].weapon == True:
+					print "Using "+player.inv[_item].name
+					item = _item
+				elif _item == "fists":
+					pass
+				else:
+					print "Unknown Item"
+			except:
+				print "Unknown Item"
+		elif todo[0].startswith('inv'):
+			hitr = False
+			data['printInv'](player)
+		elif todo[0].startswith("a"):
+			if item is None:
+				print "You must select an item to use! If you don't have a sword try 'use fists'"
+			else:
+				use = player.use(item)
+				if use[0] == 1 and doHit != False:
+					hit(player, attacker, use[1])
+				else:
+					print "The weapon is broken!"
+					hit(player, attacker, 0, False)
+					citem = None
+		elif todo[0].startswith('exit'):
+			print attacker.name, "runs away!"
+			data['delBot'](attacker.name)
+			break
+		else:
+			print "Unknown command!"
+
+		
+		meDead = checkHealth(player)
+		youDead = checkHealth(attacker)
+
+	if meDead is True:
+		print "%s %s you!" %(attacker.name, wordy())
+		sys.exit()
+	elif youDead is True:
+		print "You %s %s" % (wordy(), attacker.name)
+		data['delBot'](attacker.name)
+
+	raw_input("[Exit]")
 
 def battle(player, attacker, Map, attacked=True, data={}):
 	if attacked is True:
 		print "\n"+attacker.name, "initated an battle!"
-		fight(player,attacker,"defense",data)
+		Defense(player,attacker,data)
 	else:
 		print "\nAttacking", attacker.name
-		fight(player,attacker,"attack",data)
+		Offense(player,attacker,data)
 
 

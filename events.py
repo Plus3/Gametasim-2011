@@ -7,9 +7,33 @@ class Event():
 		self.data = data
 		self.once = once
 		self.fired = False
+		self.types = {
+			'msg':self.MSG,
+			'end':self.END,
+			'pickup':self.PICKUP,
+			'changemap':self.CHANGEMAP,
+			'door':self.DOOR
+		}
+	def MSG(self):
+		raw_input(self.data['msg'])
 	
+	def END(self):
+		raw_input(self.data['msg'])
+		self.data['exit']()
+	
+	def PICKUP(self):
+		self.data['player'].pickupItem(self.data['item'])
+	
+	def CHANGEMAP(self):
+		self.data['setter'](self.data['map'], pos=self.data['pos'])
+
+	def DOOR(self):
+		p = self.data['player']
+		go = False
+
 	def go(self):
 		self.fired = True
+
 		if self.type == "msg":
 			print self.data['msg']
 			raw_input("")

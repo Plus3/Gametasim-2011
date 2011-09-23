@@ -5,7 +5,7 @@ class Game():
         self.name = name
         self.player = player
         self.maps = maps
-        self.bots = bots.e
+        self.bots = bots
         self.currentmap = currentmap
         self.savedata = {}
         self.configdata = {}
@@ -15,7 +15,7 @@ class Game():
         self.name = dat['name']
         self.player.health = dat['health']
         self.player.inv = dat['inv']
-        self.bots = dat['bots']
+        self.bots.e = dat['bots']
 
     def writeSave(self, File):
         d = {
@@ -24,7 +24,7 @@ class Game():
             'pos':self.player.pos,
             'inv':self.player.inv,
             'lvlid':self.player.lvlid,
-            'bots':self.bots
+            'bots':self.bots.e
         }
         f = open(File, "w")
         pickle.dump(d, f)
@@ -57,3 +57,8 @@ def pB(pa, pb):
     xs = range(p1f[0] + 1, p2f[0]) or [p1f[0]]
     ys = range(p1f[1] + 1, p2f[1]) or [p1f[1]]
     return [(x,y) for x in xs for y in ys]
+
+def printInv(PLAYER):
+    print "HEALTH:", str(PLAYER.health[0])+"/"+str(PLAYER.health[1])
+    print "INVENTORY:", [PLAYER.inv[i].name for i in PLAYER.inv if PLAYER.inv[i] != None]
+    raw_input()

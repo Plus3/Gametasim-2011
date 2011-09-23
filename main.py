@@ -43,34 +43,31 @@ def Exit(clean=True):
         GAME.writeSave(S_FILE)
     sys.exit()
 
-def printInv():
-    print "HEALTH:", str(PLAYER.health[0])+"/"+str(PLAYER.health[1])
-    print "INVENTORY:", [PLAYER.inv[i].name for i in PLAYER.inv if PLAYER.inv[i] != None]
-    raw_input()
-
 def attackr(inp):
     global PLAYER, BOTS, CURRENT_MAP
     m = ai.getPoss(PLAYER.pos)
-    for i in BOTS.e:
-        if BOTS.e[i].level == CURRENT_MAP.e.id:
-            for z in m:
-                #print z, BOTS.e[i].pos
-                if list(z) == BOTS.e[i].pos:
-                    combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, False, {'printInv':printInv, 'delBot':delBot})
+    try:
+        for i in BOTS.e:
+            if BOTS.e[i].level == CURRENT_MAP.e.id:
+                for z in m:
+                    if list(z) == BOTS.e[i].pos:
+                        combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, False, {'printInv':utils.printInv, 'delBot':delBot})
+    except:
+        pass
 
-
-def _tick_after():
+def _tickAfter():
     global BOTS, CURRENT_MAP, PLAYER
     for i in BOTS.e:
         if BOTS.e[i].level == CURRENT_MAP.e.id:
             if tuple(PLAYER.pos) in ai.getPoss(BOTS.e[i].pos):
                 if BOTS.e[i].atk is True:
-                    combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':printInv, 'delBot':delBot})
+                    combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':utils.printInv, 'delBot':delBot})
                     break
-    return ""
+    return None
 
+def _tickFinal(): pass
 
-def _tick_loopA():
+def _tickBefore():
     global EVENTS, BOTS, CURRENT_MAP, PLAYER
 
     def resPos():
@@ -96,13 +93,10 @@ def _tick_loopA():
         if BOTS.e[i].level == CURRENT_MAP.e.id:
             BOTS.e[i].move()
 
-def _tick(count=1, c=0):
-   global TICK
-   while count > c:
-      c+=1
-      TICK+=1
-      _tick_loopA()
-      
+def _tick():
+    global TICK
+    TICK+=1
+        
 def _handle(inp):
     inp2 = inp.split(" ")
     if inp.startswith("quit") or inp.startswith("exit"):
@@ -126,7 +120,7 @@ def _handle(inp):
     elif inp.startswith("set"):
         PLAYER.setPos(eval(inp2[1]))
     elif inp.startswith("inv"):
-        printInv()
+        printInv(PLAYER)
     elif inp.startswith("health"):
         PLAYER.health[0] = int(inp2[1])
     elif inp.startswith("attack"):
@@ -161,6 +155,7 @@ def initEvents():
         EVENTS[i].data["cmap"] = CURRENT_MAP
         EVENTS[i].data['setter'] = setMap 
         EVENTS[i].data['setChar'] = setChar
+        EVENTS[i].data['exit'] = Exit
 
 def setMap(ID, rPlayer=True, pos=[2,2]):
     global CURRENT_MAP, MAPS, PLAYER, EVENTS
@@ -226,15 +221,17 @@ def loop():
     global PLAYER, TICK, CURRENT_MAP, USR_INP
     while True:
        _tick()
+       _tickBefore()
        _cls()
        print "DEBUG:"
        print "Position: ",PLAYER.pos,"Last:",PLAYER.lastPos
        print "Tick #: ", TICK
        print "Map ID: ", CURRENT_MAP.e.id
        CURRENT_MAP.e.render()
-       _tick_after()
+       _tickAfter()
        USR_INP = raw_input("\n=> ")
        _handle(USR_INP)
+       _tickFinal()
 
 if __name__ == "__main__":
     _blank = init()
