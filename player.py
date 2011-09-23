@@ -79,7 +79,7 @@ class Player():
 		return damage
 
 	def looseHealth(self, amount):
-		self.health[0] += int(amount)*int(-1)
+		self.health[0] -= int(amount)
 	
 	def attacked(self, bot):
 		self.health[0] -= bot.data['attack']
