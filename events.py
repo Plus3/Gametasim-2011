@@ -57,7 +57,7 @@ class Event():
 			if self.data['changeChar'][0] is True:
 				self.data['setChar'](self.data['changeChar'][2], self.pos, self.data['changeChar'][1])
 		else:
-			p.pos = p.lastpos
+			p.pos = p.lastPos
 			raw_input(self.data['msg'])
 
 	def go(self):
