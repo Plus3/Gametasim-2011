@@ -61,4 +61,5 @@ def pB(pa, pb):
 def printInv(PLAYER):
     print "HEALTH:", str(PLAYER.health[0])+"/"+str(PLAYER.health[1])
     print "INVENTORY:", [PLAYER.inv[i].name for i in PLAYER.inv if PLAYER.inv[i] != None]
+    print "XP: %s" % (PLAYER.xp)
     raw_input()

@@ -1,5 +1,14 @@
 import random, sys, time
 
+def itemCheck(item):
+	x = {
+	0:10,
+	1:5,
+	2:5,
+	3:8
+	}
+	return x[item]
+
 def wordy():
 	words = ["murdered", "slaughtered", "killed", "slayed", "polished off"]
 	random.shuffle(words)
@@ -37,31 +46,35 @@ def Combat(player, attacker, mode, data):
 		todo = console()
 		doHit = True
 		if todo[0].startswith("use"):
-			try:
+			if 1==1:
 				_item = int(todo[1])
-				if player.inv[_item] != None and player.inv[_item].weapon == True:
+				if _item == 0:
+					print "Using fists!"
+					item = 0
+				elif player.inv[_item] != None and player.inv[_item].weapon == True:
 					print "Using "+player.inv[_item].name
 					item = _item
-				elif _item == "fists":
-					pass
 				else:
 					print "Unknown Item"
-			except:
-				print "Unknown Item"
+			#except Exception, e:
+			#	print "Unknown Item"
 		elif todo[0].startswith('inv'):
 			hitr = False
 			data['printInv'](player)
 		elif todo[0].startswith("a"):
 			if item is None:
-				print "You must select an item to use! If you don't have a sword try 'use fists'"
+				print "You must select an item to use! If you don't have a sword try 'use 0'"
 			else:
-				use = player.use(item)
-				if use[0] == 1 and doHit != False:
-					hit(player, attacker, use[1])
+				if item == 0:
+					hit(player, attacker, .5)
 				else:
-					print "The weapon is broken!"
-					hit(player, attacker, 0, False)
-					citem = None
+					use = player.use(item)
+					if use[0] == 1 and doHit != False:
+						hit(player, attacker, use[1])
+					else:
+						print "The weapon is broken!"
+						hit(player, attacker, 0, False)
+						item=none
 		elif todo[0].startswith('exit'):
 			if mode == "offense":
 				print attacker.name, "runs away!"
@@ -69,7 +82,7 @@ def Combat(player, attacker, mode, data):
 				break
 			elif mode == "defense":
 				print "You try to run away...",
-				time.sleep(.9)
+				#time.sleep(.9)
 				x = random.randint(1,5)
 				if x == 5:
 					print "You got away from",attacker.name+"!"
@@ -88,12 +101,21 @@ def Combat(player, attacker, mode, data):
 		print "%s %s you!" %(attacker.name, wordy())
 		sys.exit()
 	elif youDead is True:
-		print "You %s %s" % (wordy(), attacker.name)
+		if mode == "defense":
+			xpp1 = 5+itemCheck(item)
+			xpp = xpp1*attacker.data['level']
+		elif mode == "offense":
+			xpp1 = 3+itemCheck(item)
+			xpp = xpp1*attacker.data['level']
+		player.xp += xpp
+		print "You %s %s gaining %s XP!" % (wordy(), attacker.name, xpp)
 		data['delBot'](attacker.name)
+
 
 	raw_input("[Exit]")
 
 def battle(player, attacker, Map, attacked=True, data={}):
+	data["cls"]()
 	if attacked is True:
 		print "\n"+attacker.name, "initated a battle!"
 		Combat(player,attacker,"defense",data)

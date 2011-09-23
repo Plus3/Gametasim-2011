@@ -51,18 +51,12 @@ def attackr(inp):
             if BOTS.e[i].level == CURRENT_MAP.e.id:
                 for z in m:
                     if list(z) == BOTS.e[i].pos:
-                        combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, False, {'printInv':utils.printInv, 'delBot':delBot})
+                        combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, False, {'printInv':utils.printInv, 'delBot':delBot, 'cls':_cls})
     except:
         pass
 
 def _tickAfter():
     global BOTS, CURRENT_MAP, PLAYER
-    for i in BOTS.e:
-        if BOTS.e[i].level == CURRENT_MAP.e.id:
-            if tuple(PLAYER.pos) in ai.getPoss(BOTS.e[i].pos):
-                if BOTS.e[i].atk is True:
-                    combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':utils.printInv, 'delBot':delBot})
-                    break
     return None
 
 def _tickFinal(): pass
@@ -92,6 +86,13 @@ def _tickBefore():
     for i in BOTS.e:
         if BOTS.e[i].level == CURRENT_MAP.e.id:
             BOTS.e[i].move()
+    
+    for i in BOTS.e:
+        if BOTS.e[i].level == CURRENT_MAP.e.id:
+            if tuple(PLAYER.pos) in ai.getPoss(BOTS.e[i].pos):
+                if BOTS.e[i].atk is True:
+                    combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':utils.printInv, 'delBot':delBot, 'cls':_cls})
+                    break
 
 def _tick():
     global TICK
@@ -120,7 +121,7 @@ def _handle(inp):
     elif inp.startswith("set"):
         PLAYER.setPos(eval(inp2[1]))
     elif inp.startswith("inv"):
-        printInv(PLAYER)
+        utils.printInv(PLAYER)
     elif inp.startswith("health"):
         PLAYER.health[0] = int(inp2[1])
     elif inp.startswith("attack"):
@@ -179,7 +180,7 @@ def init():
     CURRENT_MAP.e = MAPS[1]
     initMap(CURRENT_MAP.e.events)
     PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
-    BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS})
+    BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS, "level":1})
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
     GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1], BOTS, {'setMap':setMap})

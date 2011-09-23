@@ -142,7 +142,7 @@ testlevel2_hit = {
 (10, 2): ['#', 0, 'wall']}
 
 testlevel2_events = {
-(10,5): [(10,5), "door", {"msg":"A door stands in your way!", "msg2":"You unlock the door with your small key!", "req":4, "changeChar":(True," ", 2)}, False],
+(10,5): [(10,5), "xpdoor", {"msg":"A door stands in your way! You must have 20+ XP to pass!", "msg2":"You have enough XP to pass!", "req":20, "changeChar":(True," ", 2)}, False],
 (2,2): [(2,2), "changemap", {"map":1, "pos":[12,2]}, False]
 }
 

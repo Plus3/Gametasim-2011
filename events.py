@@ -12,7 +12,8 @@ class Event():
 			'end':self.END,
 			'pickup':self.PICKUP,
 			'changemap':self.CHANGEMAP,
-			'door':self.DOOR
+			'door':self.DOOR,
+			'xpdoor':self.XPDOOR
 		}
 	def MSG(self):
 		raw_input(self.data['msg'])
@@ -46,6 +47,17 @@ class Event():
 				self.data['setChar'](self.data['changeChar'][2], self.pos, self.data['changeChar'][1])
 		else:	
 			p.pos = p.lastPos
+			raw_input(self.data['msg'])
+	
+	def XPDOOR(self):
+		p = self.data['player']
+		if int(p.xp) >= int(self.data['req']):
+			raw_input(self.data['msg2'])
+			self.once = True
+			if self.data['changeChar'][0] is True:
+				self.data['setChar'](self.data['changeChar'][2], self.pos, self.data['changeChar'][1])
+		else:
+			p.pos = p.lastpos
 			raw_input(self.data['msg'])
 
 	def go(self):
