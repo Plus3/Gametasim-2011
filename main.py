@@ -18,6 +18,7 @@ EVENTS = {}
 ITEMS = {}
 BOTS = GlobalVar("BOTS", {})
 S_FILE = "save.dat"
+KO_BOTS = GlobalVar("BOTS", {})
 
 try:
     SAVE_FILE = open(S_FILE, "rw")
@@ -29,11 +30,13 @@ def delBot(name, iid=False):
     if name is not False:
         for i in BOTS.e:
             if BOTS.e[i].name == name:
+                KO_BOTS.e[i] = BOTS.e[i]
                 del BOTS.e[i]
                 break
     elif iid is not False:
         for i in BOTS.e:
             if BOTS.e[i].id == iid:
+                KO_BOTS.e[i] = BOTS.e[i]
                 del BOTS.e[i]
                 break
 
@@ -62,7 +65,9 @@ def _tickAfter():
 def _tickFinal(): pass
 
 def _tickBefore():
-    global EVENTS, BOTS, CURRENT_MAP, PLAYER
+    global EVENTS, BOTS, CURRENT_MAP, PLAYER, MAP_ID, GAME
+
+    GAME.currentmap = CURRENT_MAP.e.id
 
     def resPos():
         print "Player position is BAD. (Hackz?)"
@@ -160,7 +165,10 @@ def initEvents():
 
 def setMap(ID, rPlayer=True, pos=[2,2]):
     global CURRENT_MAP, MAPS, PLAYER, EVENTS
+    print "setting map"
+    print CURRENT_MAP.e.id, ID
     if CURRENT_MAP.e.id != ID:
+        print "setting map 2"
         CURRENT_MAP.e = MAPS[int(ID)]
         PLAYER.level = CURRENT_MAP.e
         PLAYER.lvlid = ID
@@ -174,7 +182,7 @@ def retMap(ID):
     return MAPS[ID]
 
 def init():
-    global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS
+    global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS
     MAPS[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_clean, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, {'BOTS':BOTS.e})
     MAPS[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_clean, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, {'BOTS':BOTS.e})
     CURRENT_MAP.e = MAPS[1]
@@ -183,7 +191,7 @@ def init():
     BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS, "level":1})
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
-    GAME = Game("Gametasim", PLAYER, MAPS, MAPS[1], BOTS, {'setMap':setMap})
+    GAME = Game("Gametasim", PLAYER, MAPS, 1, BOTS, KO_BOTS, {'setMap':setMap})
     initEvents()
     return None
 

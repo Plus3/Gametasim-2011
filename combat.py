@@ -46,7 +46,7 @@ def Combat(player, attacker, mode, data):
 		todo = console()
 		doHit = True
 		if todo[0].startswith("use"):
-			if 1==1:
+			try:
 				_item = int(todo[1])
 				if _item == 0:
 					print "Using fists!"
@@ -56,8 +56,8 @@ def Combat(player, attacker, mode, data):
 					item = _item
 				else:
 					print "Unknown Item"
-			#except Exception, e:
-			#	print "Unknown Item"
+			except Exception, e:
+				print "Unknown Item"
 		elif todo[0].startswith('inv'):
 			hitr = False
 			data['printInv'](player)

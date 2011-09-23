@@ -1,11 +1,12 @@
 import os, pickle
 
 class Game():
-    def __init__(self, name, player, maps, currentmap, bots, data={}):
+    def __init__(self, name, player, maps, currentmap, bots, kobots, data={}):
         self.name = name
         self.player = player
         self.maps = maps
         self.bots = bots
+        self.kobots = kobots
         self.currentmap = currentmap
         self.savedata = {}
         self.configdata = {}
@@ -15,7 +16,15 @@ class Game():
         self.name = dat['name']
         self.player.health = dat['health']
         self.player.inv = dat['inv']
-        self.bots.e = dat['bots']
+        self.player.xp = dat['xp']
+        self.currentmap = dat['map']
+        self.player.pos = dat['pos']
+        self.data['setMap'](int(dat['map']), False)
+
+        for i in dat['bots']:
+            if i in self.bots.e:
+                self.kobots.e[i] = self.bots.e[i]
+                del self.bots.e[i]
 
     def writeSave(self, File):
         d = {
@@ -24,7 +33,9 @@ class Game():
             'pos':self.player.pos,
             'inv':self.player.inv,
             'lvlid':self.player.lvlid,
-            'bots':self.bots.e
+            'bots':self.kobots.e,
+            'xp':self.player.xp,
+            'map':self.currentmap
         }
         f = open(File, "w")
         pickle.dump(d, f)
