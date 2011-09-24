@@ -3,3 +3,6 @@
 - Allow for full game saving (including events)
 - Rework main menu (better game saving)
 - Upgrade SOUNDS system
+
+BUGS:
+- Weird behavior when loading Buggy.dat

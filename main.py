@@ -54,7 +54,7 @@ def Exit(clean=True):
     global GAME, S_FILE
     if clean == True:
         for i in SOUNDS.e:
-            SOUNDS.e[i].kill()
+            SOUNDS.e[i].stop()
         GAME.writeSave(S_FILE)
     sys.exit()
 
