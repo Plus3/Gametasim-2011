@@ -16,7 +16,7 @@ CURRENT_MAP = GlobalVar("CURRENT_MAP", "")
 PLAYER = ""
 EVENTS = {}
 ITEMS = {}
-SOUNDS = {}
+SOUNDS = GlobalVar("SOUNDS", {})
 BOTS = GlobalVar("BOTS", {})
 S_FILE = "save.dat"
 KO_BOTS = GlobalVar("BOTS", {})
@@ -27,10 +27,10 @@ except:
     SAVE_FILE = open(S_FILE, "w")
 
 def devPlay(sound):
-    SOUNDS[sound].play()
+    SOUNDS.e[sound].play()
 
 def devStop(sound):
-    SOUNDS[sound].stop()
+    SOUNDS.e[sound].stop()
 
 def delBot(name, iid=False):
     global BOTS
@@ -50,6 +50,8 @@ def delBot(name, iid=False):
 def Exit(clean=True):
     global GAME, S_FILE
     if clean == True:
+        for i in SOUNDS.e:
+            SOUNDS.e[i].kill()
         GAME.writeSave(S_FILE)
     sys.exit()
 
@@ -166,13 +168,14 @@ def setChar(Map, pos, char):
     r.Map[pos[1]] = "".join(line)
       
 def initEvents():
-    global PLAYER, CURRENT_MAP, EVENTS, MAPS
+    global PLAYER, CURRENT_MAP, EVENTS, MAPS, SOUNDS
     for i in EVENTS:
         EVENTS[i].data["player"] = PLAYER
         EVENTS[i].data["cmap"] = CURRENT_MAP
         EVENTS[i].data['setter'] = setMap 
         EVENTS[i].data['setChar'] = setChar
         EVENTS[i].data['exit'] = Exit
+        EVENTS[i].data['sounds'] = SOUNDS
 
 def setMap(ID, rPlayer=True, pos=[2,2]):
     global CURRENT_MAP, MAPS, PLAYER, EVENTS
@@ -203,7 +206,7 @@ def init():
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
     GAME = Game("Gametasim", PLAYER, MAPS, 1, BOTS, KO_BOTS, {'setMap':setMap})
-    SOUNDS["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
+    SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
     initEvents()
     return None
 

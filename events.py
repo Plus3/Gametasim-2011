@@ -1,4 +1,5 @@
 import sys, os, reqs
+import sound
 
 class Event():
 	def __init__(self, pos, kind, data, once):
@@ -13,7 +14,9 @@ class Event():
 			'pickup':self.PICKUP,
 			'changemap':self.CHANGEMAP,
 			'door':self.DOOR,
-			'xpdoor':self.XPDOOR
+			'xpdoor':self.XPDOOR,
+			'chest':self.CHEST,
+			'play':self.PLAY
 		}
 	def MSG(self):
 		raw_input(self.data['msg'])
@@ -59,6 +62,13 @@ class Event():
 		else:
 			p.pos = p.lastPos
 			raw_input(self.data['msg'])
+
+	def CHEST(self):
+		pass
+	
+	def PLAY(self):
+		if self.data['sound'] in self.data['sounds'].e:
+			self.data['sounds'].e[self.data['sound']].play()
 
 	def go(self):
 		self.fired = True

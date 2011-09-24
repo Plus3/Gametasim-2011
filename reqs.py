@@ -143,7 +143,8 @@ testlevel2_hit = {
 
 testlevel2_events = {
 (10,5): [(10,5), "door", {"msg":"A door stands in your way!", "msg2":"You unlock the door and pass through!", "req":4, "changeChar":(True," ", 2)}, False],
-(2,2): [(2,2), "changemap", {"map":1, "pos":[12,2]}, False]
+(2,2): [(2,2), "changemap", {"map":1, "pos":[12,2]}, False],
+(6,3): [(6,3), "play", {'sound':'pok1'}, True]
 }
 
 testlevel = {
