@@ -1,6 +1,6 @@
 #IMPORTS
 import sys, os, time, pickle
-import mapper, utils, reqs, player, events, menu, ai, combat
+import mapper, utils, reqs, player, events, menu, ai, combat, sound
 from player import Player
 from utils import GlobalVar, Game
 
@@ -16,6 +16,7 @@ CURRENT_MAP = GlobalVar("CURRENT_MAP", "")
 PLAYER = ""
 EVENTS = {}
 ITEMS = {}
+SOUNDS = {}
 BOTS = GlobalVar("BOTS", {})
 S_FILE = "save.dat"
 KO_BOTS = GlobalVar("BOTS", {})
@@ -24,6 +25,12 @@ try:
     SAVE_FILE = open(S_FILE, "rw")
 except:
     SAVE_FILE = open(S_FILE, "w")
+
+def devPlay(sound):
+    SOUNDS[sound].play()
+
+def devStop(sound):
+    SOUNDS[sound].stop()
 
 def delBot(name, iid=False):
     global BOTS
@@ -131,6 +138,10 @@ def _handle(inp):
         PLAYER.health[0] = int(inp2[1])
     elif inp.startswith("attack"):
         attackr(inp2)
+    elif inp.startswith("play"):
+        devPlay(inp2[1])
+    elif inp.startswith("stop"):
+        devStop(inp2[1])
 
 def initMap(eventz):
     global EVENTS
@@ -182,7 +193,7 @@ def retMap(ID):
     return MAPS[ID]
 
 def init():
-    global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS
+    global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS, SOUNDS
     MAPS[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_clean, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, {'BOTS':BOTS.e})
     MAPS[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_clean, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, {'BOTS':BOTS.e})
     CURRENT_MAP.e = MAPS[1]
@@ -192,6 +203,7 @@ def init():
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
     GAME = Game("Gametasim", PLAYER, MAPS, 1, BOTS, KO_BOTS, {'setMap':setMap})
+    SOUNDS["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
     initEvents()
     return None
 
