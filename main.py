@@ -4,6 +4,9 @@ import mapper, utils, reqs, player, events, menu, ai, combat, sound
 from player import Player
 from utils import GlobalVar, Game
 
+_Version_ = 0.1
+_Author_ = "@B1naryth1ef"
+
 #VARS AS FUNCS
 _cls = utils.CLS
 
