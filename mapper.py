@@ -44,5 +44,4 @@ def hitMap(Mapz, dic={}, _y=0, _x=0):
 				dic[(_x,_y)] = ['@', 1, 'portal']
 			else:
 				pass
-	print dic
 	return dic
