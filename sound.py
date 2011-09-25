@@ -10,4 +10,6 @@ class Sound():
 		self.process = subprocess.Popen(["afplay", self.file])
 	
 	def stop(self):
-		self.process.kill()
+		if self.process != None:
+			try: self.process.kill()
+			except: pass

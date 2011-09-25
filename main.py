@@ -1,6 +1,6 @@
 #IMPORTS
 import sys, os, time, pickle
-import mapper, utils, reqs, player, events, menu, ai, combat, sound
+import mapper, utils, reqs, player, events, ai, combat, sound
 from player import Player
 from utils import GlobalVar, Game
 
@@ -200,8 +200,8 @@ def retMap(ID):
 
 def init():
     global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS, SOUNDS
-    MAPS[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_clean, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, {'BOTS':BOTS.e})
-    MAPS[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_clean, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, {'BOTS':BOTS.e})
+    MAPS[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, {'BOTS':BOTS.e})
+    MAPS[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, {'BOTS':BOTS.e})
     CURRENT_MAP.e = MAPS[1]
     initMap(CURRENT_MAP.e.events)
     PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})

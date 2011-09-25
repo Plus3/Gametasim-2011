@@ -1,10 +1,9 @@
 import reqs
 
 class Map():
-	def __init__(self, ID, Map, clean, hit, player, events, data={}):
+	def __init__(self, ID, Map, hit, player, events, data={}):
 		self.id = ID
 		self.Map = Map
-		self.cMap = clean
 		self.hMap = hit
 		self.data = data
 		self.player = player
@@ -12,26 +11,29 @@ class Map():
 
 	def render(self):
 		#print "Bot pos:", self.data['BOTS'][(3,3)].pos
-
-		for y in self.cMap:
+		_y = 0
+		for y in self.Map:
+			_y += 1
+			_x = 0
 			print ""
-			for x in self.cMap[y]:
-				if [x,y] == self.player.pos:
+			for x in self.Map[_y]:
+				_x += 1
+				if [_x,_y] == self.player.pos:
 					print "X",
 				elif self.data['BOTS'] != {}:
 					for m in self.data['BOTS']:
 						if self.data['BOTS'][m].level == self.id:
-							if self.data['BOTS'][m].pos == [x,y]:
+							if self.data['BOTS'][m].pos == [_x,_y]:
 								if self.data['BOTS'][m].pr is True:
 									print self.data['BOTS'][m].data['char'],
 								else:
-									print self.Map[y][x-1],
+									print self.Map[_y][_x-1],
 							else:
-								print self.Map[y][x-1],
+								print self.Map[_y][_x-1],
 						else:
-							print self.Map[y][x-1],
+							print self.Map[_y][_x-1],
 				else:
-					print self.Map[y][x-1],
+					print self.Map[_y][_x-1],
 				
 def clean(inp, new={}, _y=0, _x=0):
 	print inp
