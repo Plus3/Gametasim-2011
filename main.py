@@ -29,11 +29,8 @@ try:
 except:
     SAVE_FILE = open(S_FILE, "w")
 
-def devPlay(sound):
-    SOUNDS.e[sound].play()
-
-def devStop(sound):
-    SOUNDS.e[sound].stop()
+devPlay = lambda sound: SOUNDS.e[sound].play()
+devStop = lambda sound: SOUNDS.e[sound].stop()
 
 def delBot(name, iid=False):
     global BOTS
