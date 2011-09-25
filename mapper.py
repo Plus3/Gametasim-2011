@@ -10,7 +10,6 @@ class Map():
 		self.events = events
 
 	def render(self):
-		#print "Bot pos:", self.data['BOTS'][(3,3)].pos
 		_y = 0
 		for y in self.Map:
 			_y += 1
@@ -22,31 +21,12 @@ class Map():
 					print "X",
 				elif self.data['BOTS'] != {}:
 					for m in self.data['BOTS']:
-						if self.data['BOTS'][m].level == self.id:
-							if self.data['BOTS'][m].pos == [_x,_y]:
-								if self.data['BOTS'][m].pr is True:
-									print self.data['BOTS'][m].data['char'],
-								else:
-									print self.Map[_y][_x-1],
-							else:
-								print self.Map[_y][_x-1],
+						if self.data['BOTS'][m].level == self.id and self.data['BOTS'][m].pos == [_x,_y] and self.data['BOTS'][m].pr is True:
+							print self.data['BOTS'][m].data['char'],
 						else:
 							print self.Map[_y][_x-1],
 				else:
 					print self.Map[_y][_x-1],
-				
-def clean(inp, new={}, _y=0, _x=0):
-	print inp
-	for i in inp:
-		_y += 1
-		_x = 0
-		app = []
-		for n in inp[i]:
-			_x += 1
-			app.append(_x)
-		new[_y] = app
-	print new
-	return new
 
 def hitMap(Mapz, dic={}, _y=0, _x=0):
 	for y in Mapz:
@@ -57,24 +37,12 @@ def hitMap(Mapz, dic={}, _y=0, _x=0):
 			if x == "#":
 				dic[(_x,_y)] = ["#", 0, 'wall']
 			elif x == " ":
-				dic[(_x,_y)] = ["#", 1, '']
+				dic[(_x,_y)] = [" ", 1, '']
+			elif x == "-":
+				dic[(_x,_y)] = ['-', 1, 'door']
+			elif x == "@":
+				dic[(_x,_y)] = ['@', 1, 'portal']
 			else:
 				pass
 	print dic
 	return dic
-
-def renderMap(Map, pos=[1,1]):
-	for y in Map:
-		print ""
-		for x in Map[y]:
-			if [x,y] == pos:
-				print "X",
-			else:
-				print reqs.testlevel[y][x-1],
-
-def loader(Map):
-	print "CLEAN:"
-	print clean(Map)
-	raw_input()
-	print "HITMAP:"
-	print hitMap(Map)
