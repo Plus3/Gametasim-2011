@@ -1,5 +1,10 @@
 
-
+itemz = {
+	0:{'xp':10},
+	1:{'xp':5},
+	2:{'xp':5},
+	3:{'xp':8}
+}
 
 class Item():
 	def __init__(self, iid, data={}):
