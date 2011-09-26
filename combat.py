@@ -1,13 +1,6 @@
-import random, sys, time
+import random, sys, time, items
 
-def itemCheck(item):
-	x = {
-	0:10,
-	1:5,
-	2:5,
-	3:8
-	}
-	return x[item]
+itemCheck = lambda item: items.itemz[item]['xp']
 
 def wordy():
 	words = ["murdered", "slaughtered", "killed", "slayed", "polished off"]
@@ -15,10 +8,8 @@ def wordy():
 	return words[0]
 
 def hitPoint(hit):
-	if int(hit) == 1:
-		return "1 hit point"
-	else:
-		return "%s hit points" % (hit)
+	if int(hit) == 1: return "1 hit point"
+	else: return "%s hit points" % (hit)
 
 def hit(player, attacker, hit, r=True):
 	if r != False:
@@ -82,7 +73,6 @@ def Combat(player, attacker, mode, data):
 				break
 			elif mode == "defense":
 				print "You try to run away...",
-				#time.sleep(.9)
 				x = random.randint(1,5)
 				if x == 5:
 					print "You got away from",attacker.name+"!"
@@ -113,8 +103,6 @@ def Combat(player, attacker, mode, data):
 		print "You loot %s and find %s gold coins" % (attacker.name, x)
 		player.moneyAdd(x)
 		data['delBot'](attacker.name)
-
-
 	raw_input("[Exit]")
 
 def battle(player, attacker, Map, attacked=True, data={}):
