@@ -31,8 +31,19 @@ except:
 
 devPlay = lambda sound: SOUNDS.e[sound].play()
 devStop = lambda sound: SOUNDS.e[sound].stop()
+_tick = lambda: TICK+1
+ 
+def hax(pos):
+    """Takes in a player pos and returns True if the player is out of map bounds. Input: [x,y] or (x,y)"""
+    if sum(pos) <= 0:
+        return True
+    elif tuple(pos) in CURRENT_MAP.e.hMap and CURRENT_MAP.e.hMap[tuple(pos)][1] == 0:
+        return True
+    elif tuple(pos) not in CURRENT_MAP.e.hMap:
+        return True
 
 def delBot(name, iid=False):
+    """Removes a bot from the playing field and moves it to KO_BOTS"""
     global BOTS
     if name is not False:
         for i in BOTS.e:
@@ -48,6 +59,7 @@ def delBot(name, iid=False):
                 break
 
 def Exit(clean=True):
+    """Exits, writing saves and stoping sounds if input is True, otherwise just exits."""
     global GAME, S_FILE
     if clean == True:
         for i in SOUNDS.e:
@@ -80,25 +92,24 @@ def _tickBefore():
 
     def resPos():
         print "Player position is BAD. (Hackz?)"
-        raw_input()
-        PLAYER.pos = [2,2]
+        x = raw_input()
+        if x == "skip":
+            return None
+        else:
+            PLAYER.pos = [2,2]
 
     if PLAYER.health[0] < 1:
        print "You died! DEBUG: ", PLAYER.health
        raw_input("[Exit]")
        sys.exit()
-
-    if tuple(PLAYER.pos) in CURRENT_MAP.e.hMap:
-       if CURRENT_MAP.e.hMap[tuple(PLAYER.pos)][1] == "0":
-           resPos()
-    else:
-        resPos()
+    
+    if hax(PLAYER.pos) is True: resPos()
 
     if tuple(PLAYER.pos) in EVENTS.keys():
       EVENTS[tuple(PLAYER.pos)].fire()
 
     for i in BOTS.e:
-        if BOTS.e[i].level == CURRENT_MAP.e.id:
+        if BOTS.e[i].level == CURRENT_MAP.e.id and BOTS.e[i].pr == True:
             BOTS.e[i].move()
     
     for i in BOTS.e:
@@ -107,10 +118,6 @@ def _tickBefore():
                 if BOTS.e[i].atk is True:
                     combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':utils.printInv, 'delBot':delBot, 'cls':_cls})
                     break
-
-def _tick():
-    global TICK
-    TICK+=1
         
 def _handle(inp):
     inp2 = inp.split(" ")
@@ -244,7 +251,7 @@ def menu():
 def loop():
     global PLAYER, TICK, CURRENT_MAP, USR_INP
     while True:
-       _tick()
+       TICK = _tick()
        _tickBefore()
        _cls()
        print "DEBUG:"

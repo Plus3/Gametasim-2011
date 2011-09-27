@@ -13,8 +13,14 @@ class Item():
 		self.data = data
 		self.used = False
 		self.pickedup = False
-		self.weapon = False
 		self.type = None
+
+		#Weapon vars
+		self.weapon = False
+
+		#Light vars
+		self.light = False
+		self.on = False
 
 	def init(self):
 		def fists(self):
@@ -53,6 +59,16 @@ class Item():
 			elif self.id == 4.2:
 				self.name = "Boss Key"
 
+		def light(self):
+			self.name = "Unknown Light!"
+			self.light = True
+			self.on = False
+		
+		def torch(self):
+			self.name = "Torch"
+			self.light = True
+			self.on = False
+
 		types = {
 			0:fists,
 			1:woodSword,
@@ -60,7 +76,9 @@ class Item():
 			3:fireSword,
 			4:key, #SMALL
 			4.1:key, #BIG
-			4.2:key #BOSS
+			4.2:key, #BOSS
+			5:light,
+			5.1:torch
 		}
 		types[self.id](self)
 		self.pickedup = True
