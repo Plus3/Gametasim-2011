@@ -13,6 +13,7 @@ class Game():
         self.data = data
     
     def regSave(self, dat):
+        """Load a save file (actually a dictionary)"""
         self.name = dat['name']
         self.player.health = dat['health']
         self.player.inv = dat['inv']
