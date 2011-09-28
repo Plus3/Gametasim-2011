@@ -1,4 +1,4 @@
-import os, pickle
+import os, pickle, events
 
 class Game():
     def __init__(self, name, player, maps, currentmap, bots, kobots, data={}):
@@ -7,11 +7,12 @@ class Game():
         self.maps = maps
         self.bots = bots
         self.kobots = kobots
+        self.events = data['EVENTS']
         self.currentmap = currentmap
         self.savedata = {}
         self.configdata = {}
         self.data = data
-    
+        
     def regSave(self, dat):
         """Load a save file (actually a dictionary)"""
         self.name = dat['name']
@@ -22,6 +23,12 @@ class Game():
         self.player.pos = dat['pos']
         self.data['setMap'](int(dat['map']), False)
         self.data['money'] = dat['money']
+        
+        #0: pos, 1:kind, 2:data, 3:once, 4:fired
+        
+        for i in dat['events']:
+            self.events.e[i[0]] = events.Event(i[0], i[1], i[2], i[3])
+            self.events.e[i[0]].fired = i[4]
 
         for i in dat['bots']:
             if i in self.bots.e:
@@ -29,6 +36,10 @@ class Game():
                 del self.bots.e[i]
 
     def writeSave(self, File):
+        ev = []
+        for r in self.events.e:
+            i = self.events.e[re]
+            ev.append([i.pos, i.kind, i.data, i.once, i.fired])
         d = {
             'name':self.name,
             'health':self.player.health,
@@ -38,7 +49,8 @@ class Game():
             'bots':self.kobots.e,
             'xp':self.player.xp,
             'map':self.currentmap,
-            'money':self.player.money
+            'money':self.player.money,
+            'events':ev
         }
         f = open(File, "w")
         pickle.dump(d, f)

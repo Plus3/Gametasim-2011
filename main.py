@@ -17,7 +17,7 @@ GAME = ""
 MAPS = {}
 CURRENT_MAP = GlobalVar("CURRENT_MAP", "")
 PLAYER = ""
-EVENTS = {}
+EVENTS = GlobalVar("EVENTS", {})
 ITEMS = {}
 SOUNDS = GlobalVar("SOUNDS", {})
 BOTS = GlobalVar("BOTS", {})
@@ -105,8 +105,8 @@ def _tickBefore():
     
     if hax(PLAYER.pos) is True: resPos()
 
-    if tuple(PLAYER.pos) in EVENTS.keys():
-      EVENTS[tuple(PLAYER.pos)].fire()
+    if tuple(PLAYER.pos) in EVENTS.e.keys():
+      EVENTS.e[tuple(PLAYER.pos)].fire()
 
     for i in BOTS.e:
         if BOTS.e[i].level == CURRENT_MAP.e.id and BOTS.e[i].pr == True:
@@ -159,7 +159,7 @@ def initMap(eventz):
         l = r[2]
         l['player'] = ''
         x = events.Event(r[0], r[1], l, r[3])
-        EVENTS[r[0]] = x  
+        EVENTS.e[r[0]] = x  
   
 def setChar(Map, pos, char):
     global MAPS  
@@ -176,13 +176,13 @@ def setChar(Map, pos, char):
       
 def initEvents():
     global PLAYER, CURRENT_MAP, EVENTS, MAPS, SOUNDS
-    for i in EVENTS:
-        EVENTS[i].data["player"] = PLAYER
-        EVENTS[i].data["cmap"] = CURRENT_MAP
-        EVENTS[i].data['setter'] = setMap 
-        EVENTS[i].data['setChar'] = setChar
-        EVENTS[i].data['exit'] = Exit
-        EVENTS[i].data['sounds'] = SOUNDS
+    for i in EVENTS.e:
+        EVENTS.e[i].data["player"] = PLAYER
+        EVENTS.e[i].data["cmap"] = CURRENT_MAP
+        EVENTS.e[i].data['setter'] = setMap 
+        EVENTS.e[i].data['setChar'] = setChar
+        EVENTS.e[i].data['exit'] = Exit
+        EVENTS.e[i].data['sounds'] = SOUNDS
 
 def setMap(ID, rPlayer=True, pos=[2,2]):
     global CURRENT_MAP, MAPS, PLAYER, EVENTS
@@ -193,7 +193,7 @@ def setMap(ID, rPlayer=True, pos=[2,2]):
         CURRENT_MAP.e = MAPS[int(ID)]
         PLAYER.level = CURRENT_MAP.e
         PLAYER.lvlid = ID
-        EVENTS = {}
+        EVENTS.e = {}
         initMap(CURRENT_MAP.e.events)
         initEvents()
         if rPlayer is True:
@@ -212,7 +212,7 @@ def init():
     BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS, "level":1})
     MAPS[1].player = PLAYER
     MAPS[2].player = PLAYER
-    GAME = Game("Gametasim", PLAYER, MAPS, 1, BOTS, KO_BOTS, {'setMap':setMap})
+    GAME = Game("Gametasim", PLAYER, MAPS, 1, BOTS, KO_BOTS, {'setMap':setMap, 'EVENTS':EVENTS})
     SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
     initEvents()
     return None
