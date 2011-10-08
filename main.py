@@ -60,11 +60,11 @@ def delBot(name, iid=False):
 
 def Exit(clean=True):
     """Exits, writing saves and stoping sounds if input is True, otherwise just exits."""
-    global GAME, S_FILE, EVENTS
+    global GAME, S_FILE, EVENTS, PLAYER
     if clean == True:
         for i in SOUNDS.e:
             SOUNDS.e[i].stop()
-        GAME.writeSave(S_FILE)
+        GAME.writeSave(os.path.join(os.getcwd(), "data", "saves", PLAYER.name+'.dat'))
         r = open('maps.dat', 'w')
         pickle.dump({1:MAPS.e[1], 2:MAPS.e[2], 'bots':BOTS}, r)
     sys.exit()
@@ -212,7 +212,7 @@ def init(dat=None):
         MAPS.e[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, {'BOTS':BOTS.e})
         CURRENT_MAP.e = MAPS.e[1]
         initMap(CURRENT_MAP.e.events)
-        PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
+        PLAYER = Player(raw_input("Your Name: "), [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
         BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1})
         MAPS.e[1].player = PLAYER
         MAPS.e[2].player = PLAYER
@@ -227,13 +227,24 @@ def init(dat=None):
         MAPS.e[1] = mapz[1]
         MAPS.e[2] = mapz[2]
         CURRENT_MAP.e = MAPS.e[1]   
-        PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
+        PLAYER = Player(dat[1], [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
         MAPS.e[1].player = PLAYER
         MAPS.e[2].player = PLAYER
         GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
         SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
         initEvents()
-        GAME.regSave(dat)
+        GAME.regSave(dat[0])
+
+def findSaves(home=os.getcwd()):
+    fn = []
+    try:
+        for i in os.listdir(os.path.join(home, "data", 'saves')):
+            if i.endswith('.dat') and not i.startswith("_"):
+                fn.append(os.path.join(home, 'data', 'saves', i))
+        return fn
+    except:
+        os.mkdir(os.path.join(home, 'data', 'saves'))
+        return findSaves()
 
 def title():
     _cls()
@@ -246,29 +257,31 @@ def title():
 def menu():
     global SAVE_FILE, GAME, NEW_GAME
     title()
-    try:
-        dat = pickle.load(SAVE_FILE)
-        print "Save data for player "+dat['name']+" has been found!"
-        cho = raw_input("[U]se [N]ew [D]elete\n=> ").lower()
-        if cho == "u":
+    saves = findSaves()
+    if len(saves) > 0:
+        d1 = raw_input("[U]se save OR [C]reate new game? ").lower()
+        if d1 == 'u':
             NEW_GAME = False
-            return dat
-        elif cho == "n":
+            print "Avalible Game Saves:"
+            x = 0
+            m = {}
+            for i in saves:
+                x += 1
+                m[x] = (i, i.split("/")[-1].split(".dat")[0])
+                print "[%s] " % (x)+i.split("/")[-1].split(".dat")[0]
+            d2 = raw_input("What save? ")
+            try: 
+                f = open(m[int(d2)][0], "rw")
+                return (pickle.load(f), m[int(d2)][1])
+            except Exception, e:
+                print "Error!", e
+                menu()
+        elif d1 == "c":
             NEW_GAME = True
-            print "Dumping data..."
-        elif cho == "d":
-            NEW_GAME = True
-            f = open(SAVE_FILE, "w")
-            f.close()
-            sys.exit()
-        else:
-            print "Unknown input!"
-            time.sleep(.5)
-            title()
-            #FIXME Should loop back to menu?
-    except:
-        return None
-
+            return (None, None)
+    else:
+        NEW_GAME = True
+    
 def loop():
     global PLAYER, TICK, CURRENT_MAP, USR_INP
     while True:

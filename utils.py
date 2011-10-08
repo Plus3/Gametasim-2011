@@ -36,6 +36,7 @@ class Game():
                 del self.bots.e[i]
 
     def writeSave(self, File):
+       # raw_input(File)
         ev = []
         for r in self.events.e:
             i = self.events.e[r]
