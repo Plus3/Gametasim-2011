@@ -11,19 +11,19 @@ _Author_ = "@B1naryth1ef"
 _cls = utils.CLS
 
 #GLOBALS
+NEW_GAME = False
 TICK = 0
 USR_INP = ""
 GAME = ""
-MAPS = {}
+MAPS = GlobalVar("MAPS", {})
 CURRENT_MAP = GlobalVar("CURRENT_MAP", "")
 PLAYER = ""
-EVENTS = {}
+EVENTS = GlobalVar("EVENTS", {})
 ITEMS = {}
 SOUNDS = GlobalVar("SOUNDS", {})
 BOTS = GlobalVar("BOTS", {})
 S_FILE = "save.dat"
 KO_BOTS = GlobalVar("BOTS", {})
-
 try:
     SAVE_FILE = open(S_FILE, "rw")
 except:
@@ -60,11 +60,13 @@ def delBot(name, iid=False):
 
 def Exit(clean=True):
     """Exits, writing saves and stoping sounds if input is True, otherwise just exits."""
-    global GAME, S_FILE
+    global GAME, S_FILE, EVENTS
     if clean == True:
         for i in SOUNDS.e:
             SOUNDS.e[i].stop()
         GAME.writeSave(S_FILE)
+        r = open('maps.dat', 'w')
+        pickle.dump({1:MAPS.e[1], 2:MAPS.e[2]}, r)
     sys.exit()
 
 def attackr(inp):
@@ -105,8 +107,8 @@ def _tickBefore():
     
     if hax(PLAYER.pos) is True: resPos()
 
-    if tuple(PLAYER.pos) in EVENTS.keys():
-      EVENTS[tuple(PLAYER.pos)].fire()
+    if tuple(PLAYER.pos) in EVENTS.e.keys():
+      EVENTS.e[tuple(PLAYER.pos)].fire()
 
     for i in BOTS.e:
         if BOTS.e[i].level == CURRENT_MAP.e.id and BOTS.e[i].pr == True:
@@ -159,11 +161,11 @@ def initMap(eventz):
         l = r[2]
         l['player'] = ''
         x = events.Event(r[0], r[1], l, r[3])
-        EVENTS[r[0]] = x  
+        EVENTS.e[r[0]] = x  
   
 def setChar(Map, pos, char):
     global MAPS  
-    r = MAPS[Map]
+    r = MAPS.e[Map]
     line = []
     itr = 0
     for i in r.Map[pos[1]]:
@@ -176,46 +178,64 @@ def setChar(Map, pos, char):
       
 def initEvents():
     global PLAYER, CURRENT_MAP, EVENTS, MAPS, SOUNDS
-    for i in EVENTS:
-        EVENTS[i].data["player"] = PLAYER
-        EVENTS[i].data["cmap"] = CURRENT_MAP
-        EVENTS[i].data['setter'] = setMap 
-        EVENTS[i].data['setChar'] = setChar
-        EVENTS[i].data['exit'] = Exit
-        EVENTS[i].data['sounds'] = SOUNDS
+    for i in EVENTS.e:
+        EVENTS.e[i].data["player"] = PLAYER
+        EVENTS.e[i].data["cmap"] = CURRENT_MAP
+        EVENTS.e[i].data['setter'] = setMap 
+        EVENTS.e[i].data['setChar'] = setChar
+        EVENTS.e[i].data['exit'] = Exit
+        EVENTS.e[i].data['sounds'] = SOUNDS
 
 def setMap(ID, rPlayer=True, pos=[2,2]):
     global CURRENT_MAP, MAPS, PLAYER, EVENTS
     print "setting map"
     print CURRENT_MAP.e.id, ID
-    if CURRENT_MAP.e.id != ID:
+    # if CURRENT_MAP.e.id != ID:
+    if True:
         print "setting map 2"
-        CURRENT_MAP.e = MAPS[int(ID)]
+        CURRENT_MAP.e = MAPS.e[int(ID)]
         PLAYER.level = CURRENT_MAP.e
         PLAYER.lvlid = ID
-        EVENTS = {}
+        EVENTS.e = {}
         initMap(CURRENT_MAP.e.events)
         initEvents()
         if rPlayer is True:
             PLAYER.pos = pos
 
 def retMap(ID):
-    return MAPS[ID]
+    return MAPS.e[ID]
 
-def init():
+def init(dat=None):
     global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS, SOUNDS
-    MAPS[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, {'BOTS':BOTS.e})
-    MAPS[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, {'BOTS':BOTS.e})
-    CURRENT_MAP.e = MAPS[1]
-    initMap(CURRENT_MAP.e.events)
-    PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
-    BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS, "level":1})
-    MAPS[1].player = PLAYER
-    MAPS[2].player = PLAYER
-    GAME = Game("Gametasim", PLAYER, MAPS, 1, BOTS, KO_BOTS, {'setMap':setMap})
-    SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
-    initEvents()
-    return None
+    if NEW_GAME is True:
+        MAPS.e[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, {'BOTS':BOTS.e})
+        MAPS.e[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, {'BOTS':BOTS.e})
+        CURRENT_MAP.e = MAPS.e[1]
+        initMap(CURRENT_MAP.e.events)
+        PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
+        BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1})
+        MAPS.e[1].player = PLAYER
+        MAPS.e[2].player = PLAYER
+        GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap})
+        SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
+        initEvents()
+    elif NEW_GAME is False:
+        r = open('maps.dat', 'rw')
+        mapz = pickle.load(r)
+        r.close()
+        MAPS.e[1] = mapz[1]
+        MAPS.e[2] = mapz[2]
+        CURRENT_MAP.e = MAPS.e[1]
+        #initMap(CURRENT_MAP.e.events)
+        PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
+        BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1})
+        MAPS.e[1].player = PLAYER
+        MAPS.e[2].player = PLAYER
+        GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap})
+        SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
+        EVENTS.e = mapz['eve']
+        initEvents()
+        GAME.regSave(dat)
 
 def title():
     _cls()
@@ -226,24 +246,27 @@ def title():
     print ""
 
 def menu():
-    global SAVE_FILE, GAME
+    global SAVE_FILE, GAME, NEW_GAME
     title()
     try:
         dat = pickle.load(SAVE_FILE)
         print "Save data for player "+dat['name']+" has been found!"
         cho = raw_input("[U]se [N]ew [D]elete\n=> ").lower()
         if cho == "u":
-            print "Using data..."
-            GAME.regSave(dat)
+            NEW_GAME = False
+            return dat
         elif cho == "n":
+            NEW_GAME = True
             print "Dumping data..."
         elif cho == "d":
+            NEW_GAME = True
             f = open(SAVE_FILE, "w")
             f.close()
+            sys.exit()
         else:
             print "Unknown input!"
             time.sleep(.5)
-            menu()
+            title()
             #FIXME Should loop back to menu?
     except:
         return None
@@ -265,8 +288,8 @@ def loop():
        _tickFinal()
 
 if __name__ == "__main__":
-    _blank = init()
     _blank = menu()
+    _blank = init(_blank)
     _blank = loop()
 
     

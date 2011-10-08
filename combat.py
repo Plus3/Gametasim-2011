@@ -3,7 +3,7 @@ import random, sys, time, items
 itemCheck = lambda item: items.itemz[item]['xp']
 
 def wordy():
-	words = ["murdered", "slaughtered", "killed", "slayed", "polished off"]
+	words = ["murdered", "slaughtered", "killed", "slayed", "polished off", "f**ked over", "bopped", "dumped in the river"]
 	random.shuffle(words)
 	return words[0]
 
