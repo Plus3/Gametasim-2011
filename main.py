@@ -66,7 +66,7 @@ def Exit(clean=True):
             SOUNDS.e[i].stop()
         GAME.writeSave(S_FILE)
         r = open('maps.dat', 'w')
-        pickle.dump({1:MAPS.e[1], 2:MAPS.e[2]}, r)
+        pickle.dump({1:MAPS.e[1], 2:MAPS.e[2], 'bots':BOTS}, r)
     sys.exit()
 
 def attackr(inp):
@@ -223,17 +223,15 @@ def init(dat=None):
         r = open('maps.dat', 'rw')
         mapz = pickle.load(r)
         r.close()
+        BOTS = mapz['bots']
         MAPS.e[1] = mapz[1]
         MAPS.e[2] = mapz[2]
-        CURRENT_MAP.e = MAPS.e[1]
-        #initMap(CURRENT_MAP.e.events)
+        CURRENT_MAP.e = MAPS.e[1]   
         PLAYER = Player("Jimmy", [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
-        BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1})
         MAPS.e[1].player = PLAYER
         MAPS.e[2].player = PLAYER
         GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
         SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
-        #EVENTS.e = mapz['eve']
         initEvents()
         GAME.regSave(dat)
 
