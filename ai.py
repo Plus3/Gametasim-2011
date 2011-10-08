@@ -98,9 +98,11 @@ class Bot():
 		self.player = player
 		self.data = data
 		self.atk = attack
+		self.doMove = True
 		self.bat = bat
 		self.health = health
 		self.pr = True
+		self.currentMap = data['current']
 	
 	def move(self):
 		if self.pr is True:

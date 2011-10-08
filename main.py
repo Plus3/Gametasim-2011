@@ -4,7 +4,7 @@ import mapper, utils, reqs, player, events, ai, combat, sound
 from player import Player
 from utils import GlobalVar, Game
 
-_Version_ = 0.1
+_Version_ = 0.2
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -213,7 +213,10 @@ def init(dat=None):
         CURRENT_MAP.e = MAPS.e[1]
         initMap(CURRENT_MAP.e.events)
         PLAYER = Player(raw_input("Your Name: "), [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
-        BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1})
+        BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1, 'current':CURRENT_MAP})
+        #BOTS.e[(10,4)] = ai.Enemy(2, "Ye Old Ogre", PLAYER, [10,4], 2, [10,10], True, True, data={'attack':3.5,'char':"O", "maps":MAPS.e, "level":2, 'current':CURRENT_MAP})
+        #BOTS.e[(10,4)].doMove = False
+        #BOTS.e[(10,4)].pr = False
         MAPS.e[1].player = PLAYER
         MAPS.e[2].player = PLAYER
         GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
@@ -250,7 +253,7 @@ def title():
     _cls()
     print "Welcome to GAMETASIM - 2011"
     print "By: Andrei Z"
-    print "Status: In Development"
+    print "Version: %s" % (_Version_)
     print "Online @ github.com/b1naryth1ef/Gametasim-2011"
     print ""
 
