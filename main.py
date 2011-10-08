@@ -216,7 +216,7 @@ def init(dat=None):
         BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1})
         MAPS.e[1].player = PLAYER
         MAPS.e[2].player = PLAYER
-        GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap})
+        GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
         SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
         initEvents()
     elif NEW_GAME is False:
@@ -231,9 +231,9 @@ def init(dat=None):
         BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1})
         MAPS.e[1].player = PLAYER
         MAPS.e[2].player = PLAYER
-        GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap})
+        GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
         SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
-        EVENTS.e = mapz['eve']
+        #EVENTS.e = mapz['eve']
         initEvents()
         GAME.regSave(dat)
 

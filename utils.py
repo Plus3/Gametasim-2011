@@ -7,7 +7,7 @@ class Game():
         self.maps = maps
         self.bots = bots
         self.kobots = kobots
-        self.events = data['EVENTS']
+        self.events = data['events']
         self.currentmap = currentmap
         self.savedata = {}
         self.configdata = {}
@@ -38,7 +38,7 @@ class Game():
     def writeSave(self, File):
         ev = []
         for r in self.events.e:
-            i = self.events.e[re]
+            i = self.events.e[r]
             ev.append([i.pos, i.kind, i.data, i.once, i.fired])
         d = {
             'name':self.name,
