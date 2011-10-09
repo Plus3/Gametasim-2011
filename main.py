@@ -267,42 +267,36 @@ def menu():
     title()
     saves = findSaves()
     if len(saves) > 0:
-        d1 = raw_input("[U]se save, [C]reate new game or [D]elete save\n =>").lower()
-        if d1 == 'u':
+        d1 = raw_input("[U]se save, [C]reate new game or [D]elete save\n => ").lower()
+        if d1 == 'u' or d1 == 'd':
             NEW_GAME = False
-            print "Avalible Game Saves:"
+            print "Game saves: "
             x = 0
             m = {}
             for i in saves:
                 x += 1
                 m[x] = (i, i.split("/")[-1].split(".dat")[0])
                 print "[%s] " % (x)+i.split("/")[-1].split(".dat")[0]
-            d2 = raw_input("Which save?")
-            try: 
-                f = open(m[int(d2)][0], "rw")
-                return (pickle.load(f), m[int(d2)][1])
-            except Exception, e:
-                print "Error!", e
-                menu()
+            d2 = raw_input("Which save? ")
+            if d1 == "u":
+                try:
+                    f = open(m[int(d2)][0], "rw")
+                    return (pickle.load(f), m[int(d2)][1])
+                except Exception, e:
+                    print "Error!", e
+                    menu()
+            elif d1 == "d":
+                try:
+                    print "Deleting save..."
+                    os.remove(m[int(d2)][0])
+                    menu()
+                except Exception, e:
+                    print 'Error!',e
+                    menu()
         elif d1 == "c":
             NEW_GAME = True
             return (None, None)
-        elif d1 == "d":
-            NEW_GAME = False
-            m = {}
-            x = 0
-            for i in saves:
-                x += 1
-                m[x] = (i, i.split("/")[-1].split(".dat")[0])
-                print "[%s] " % (x)+i.split("/")[-1].split(".dat")[0]
-            d2 = raw_input("Which save?")
-            try:
-                print "Deleting save..."
-                os.remove(m[int(d2)][0])
-                menu()
-            except Exception, e:
-                print 'Error!',e
-                menu()
+
     else:
         NEW_GAME = True
     
