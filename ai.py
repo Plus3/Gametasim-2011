@@ -97,25 +97,27 @@ class Bot():
 		self.level = level
 		self.player = player
 		self.data = data
-		self.atk = attack
-		self.doMove = True
+		self.atk = attack #If false, the bot will not attack players (aka passive)
+		self.doMove = True #If false, the bot will not require move computation (nor move) on each tick
 		self.bat = bat
 		self.health = health
-		self.pr = True
+		self.pr = True #If false, the bot will not be printed.
 		self.currentMap = data['current']
+		self.alive = True #If false, the bot is technically dead and will not act on any events
 	
 	def move(self):
-		if self.pr is True:
+		if self.pr is True and self.doMove is True and self.alive is True:
 			nPos = ai(self.pos, self.player.pos, self.data['maps'][self.level])
 			if nPos != None:
 				self.pos = list(nPos)
 
 class Enemy(Bot):
 	def attack(self):
-		print ""
-		print self.data['atkmsg']
-		self.player.attacked(self)
-		raw_input()
+		if self.alive is True:
+			print ""
+			print self.data['atkmsg']
+			self.player.attacked(self)
+			raw_input()
 
 class Passive(Bot):
 	def move(self):
@@ -129,7 +131,7 @@ class NPC(Bot):
 
 class Bunny(Bot):
 	def move(self):
-		if self.pr is True:
+		if self.pr is True and self.alive is True:
 			nPos = temp(self.pos, self.data['maps'][self.level], self.player)
 			if nPos != None:
 				self.pos = list(nPos)

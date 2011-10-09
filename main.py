@@ -49,13 +49,13 @@ def delBot(name, iid=False):
         for i in BOTS.e:
             if BOTS.e[i].name == name:
                 KO_BOTS.e[i] = BOTS.e[i]
-                del BOTS.e[i]
+                BOTS.e[i].alive = False
                 break
     elif iid is not False:
         for i in BOTS.e:
             if BOTS.e[i].id == iid:
                 KO_BOTS.e[i] = BOTS.e[i]
-                del BOTS.e[i]
+                BOTS.e[i].alive = False
                 break
 
 def Exit(clean=True):
@@ -111,13 +111,13 @@ def _tickBefore():
       EVENTS.e[tuple(PLAYER.pos)].fire()
 
     for i in BOTS.e:
-        if BOTS.e[i].level == CURRENT_MAP.e.id and BOTS.e[i].pr == True:
+        if BOTS.e[i].level == CURRENT_MAP.e.id and BOTS.e[i].pr == True and BOTS.e[i].alive is True:
             BOTS.e[i].move()
     
     for i in BOTS.e:
         if BOTS.e[i].level == CURRENT_MAP.e.id:
             if tuple(PLAYER.pos) in ai.getPoss(BOTS.e[i].pos):
-                if BOTS.e[i].atk is True:
+                if BOTS.e[i].atk is True and BOTS.e[i].alive is True:
                     combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':utils.printInv, 'delBot':delBot, 'cls':_cls})
                     break
         
@@ -208,14 +208,16 @@ def retMap(ID):
 def init(dat=None):
     global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS, SOUNDS
     if NEW_GAME is True:
-        MAPS.e[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, {'BOTS':BOTS.e})
-        MAPS.e[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, {'BOTS':BOTS.e})
+        MAPS.e[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, GlobalVar("BOTS1", {}), {'BOTS':BOTS.e})
+        MAPS.e[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, GlobalVar("BOTS2", {}), {'BOTS':BOTS.e})
         CURRENT_MAP.e = MAPS.e[1]
         initMap(CURRENT_MAP.e.events)
         PLAYER = Player(raw_input("Your Name: "), [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
         BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1, 'current':CURRENT_MAP})
-        #BOTS.e[(10,4)] = ai.Enemy(2, "Ye Old Ogre", PLAYER, [10,4], 2, [10,10], True, True, data={'attack':3.5,'char':"O", "maps":MAPS.e, "level":2, 'current':CURRENT_MAP})
-        #BOTS.e[(10,4)].doMove = False
+        BOTS.e[(10,4)] = ai.Enemy(2, "Ye Old Ogre", PLAYER, [10,4], 2, [10,10], True, True, data={'attack':3.5,'char':"O", "maps":MAPS.e, "level":2, 'current':CURRENT_MAP})
+        BOTS.e[(10,4)].doMove = False
+        MAPS.e[1].bots.e[(6,4)] = BOTS.e[(6,4)]
+        MAPS.e[2].bots.e[(10,4)] = BOTS.e[(10,4)]
         #BOTS.e[(10,4)].pr = False
         MAPS.e[1].player = PLAYER
         MAPS.e[2].player = PLAYER
