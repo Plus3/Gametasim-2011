@@ -11,6 +11,7 @@ _Author_ = "@B1naryth1ef"
 _cls = utils.CLS
 
 #GLOBALS
+useAudio = True
 NEW_GAME = False
 TICK = 0
 USR_INP = ""
@@ -29,8 +30,12 @@ try:
 except:
     SAVE_FILE = open(S_FILE, "w")
 
-devPlay = lambda sound: SOUNDS.e[sound].play()
-devStop = lambda sound: SOUNDS.e[sound].stop()
+if useAudio is True:
+    devPlay = lambda sound: SOUNDS.e[sound].play()
+    devStop = lambda sound: SOUNDS.e[sound].stop()
+else:
+    devPlay = lambda x: x
+    devStop = lambda x: x
 _tick = lambda: TICK+1
  
 def hax(pos):
@@ -62,8 +67,9 @@ def Exit(clean=True):
     """Exits, writing saves and stoping sounds if input is True, otherwise just exits."""
     global GAME, S_FILE, EVENTS, PLAYER
     if clean == True:
-        for i in SOUNDS.e:
-            SOUNDS.e[i].stop()
+        if useAudio is True:
+            for i in SOUNDS.e:
+                SOUNDS.e[i].stop()
         GAME.writeSave(os.path.join(os.getcwd(), "data", "saves", PLAYER.name+'.dat'))
         r = open('maps.dat', 'w')
         pickle.dump({1:MAPS.e[1], 2:MAPS.e[2], 'bots':BOTS}, r)
@@ -78,12 +84,9 @@ def attackr(inp):
                 for z in m:
                     if list(z) == BOTS.e[i].pos:
                         combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, False, {'printInv':utils.printInv, 'delBot':delBot, 'cls':_cls})
-    except:
-        pass
+    except: pass
 
-def _tickAfter():
-    global BOTS, CURRENT_MAP, PLAYER
-    return None
+def _tickAfter(): pass
 
 def _tickFinal(): pass
 
@@ -206,7 +209,7 @@ def retMap(ID):
     return MAPS.e[ID]
 
 def init(dat=None):
-    global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS, SOUNDS
+    global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS, SOUNDS, useAudio
     if NEW_GAME is True:
         MAPS.e[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, GlobalVar("BOTS1", {}), {'BOTS':BOTS.e})
         MAPS.e[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, GlobalVar("BOTS2", {}), {'BOTS':BOTS.e})
@@ -222,7 +225,7 @@ def init(dat=None):
         MAPS.e[1].player = PLAYER
         MAPS.e[2].player = PLAYER
         GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
-        SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
+        SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav', useAudio)
         initEvents()
     elif NEW_GAME is False:
         r = open('maps.dat', 'rw')
@@ -236,7 +239,7 @@ def init(dat=None):
         MAPS.e[1].player = PLAYER
         MAPS.e[2].player = PLAYER
         GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
-        SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav')
+        SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav', useAudio)
         initEvents()
         GAME.regSave(dat[0])
 
