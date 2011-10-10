@@ -5,6 +5,7 @@ from player import Player
 from utils import GlobalVar, Game
 
 _Version_ = 0.2
+_Revision_ = 0
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -258,7 +259,7 @@ def title():
     _cls()
     print "Welcome to GAMETASIM - 2011"
     print "By: Andrei Z"
-    print "Version: %s" % (_Version_)
+    print "Version %s, Revision %s" % (_Version_, _Revision_)
     print "Online @ github.com/b1naryth1ef/Gametasim-2011"
     print ""
 
@@ -293,12 +294,8 @@ def menu():
                 except Exception, e:
                     print 'Error!',e
                     menu()
-        elif d1 == "c":
-            NEW_GAME = True
-            return (None, None)
-
-    else:
-        NEW_GAME = True
+        elif d1 == "c": NEW_GAME = True
+    else: NEW_GAME = True
     
 def loop():
     global PLAYER, TICK, CURRENT_MAP, USR_INP
@@ -317,8 +314,16 @@ def loop():
        _tickFinal()
 
 if __name__ == "__main__":
-    _blank = menu()
-    _blank = init(_blank)
-    _blank = loop()
+    try:
+        _blank = menu()
+        _blank = init(_blank)
+        _blank = loop()
+    except KeyboardInterrupt, e:
+        _cls()
+        x = raw_input("\n[S]ave or [Q]uit\n=> ").lower()
+        if x == "s": Exit()
+        else: sys.exit()
+    except Exception, e:
+        print "General Error:",e
 
     
