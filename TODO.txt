@@ -1,8 +1,6 @@
 - Fix AI
 - Upgrade BOTS system
-- Rework main menu (better game saving)
 - Upgrade SOUNDS system
-- Save map (which means re-rendering hitmap eachtime?)
 
 BUGS:
 - Weird behavior when loading Buggy.dat

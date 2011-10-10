@@ -2,6 +2,17 @@ import utils
 import random
 from math import *
 
+def meistehai(me, you, Map):
+	mePos = getPoss(me)
+	youPos = getPoss(you)
+	final = {}
+
+	for i in mePos:
+		final[dist(i, you)] = i
+	
+	y = min(final.keys())
+	return final[y]
+
 def getPoss(point):
 	li = []
 
@@ -41,39 +52,19 @@ def dist(a,b):
 	return sqrt(abs(rx))
 
 def ai(me,you,Map):
-	#print Map.id
 	meP = getPoss(me)
 	youP = getPoss(you)
-	#for a in meP:
-	#	for b in youP:
-	#		if a[0] != b[0] and a[1] != b[1]:
-	#			y = [i for i,x in enumerate(meP) if x == a]
-	#			if y != []:
-	#				meP.pop(y[0])
-
-	#print meP
-	#raw_input()
 	d = {}
-	#print meP
-	for a in meP:
-		d[dist(a,you)] = a
-
-	#raw_input("blag")
+	for a in meP: d[dist(a,you)] = a
 	while d != {}:
 		try:
 			c = min(d.keys())
 			if Map.hMap[d[c]][1] == 1:
-				if Map.player.pos != list(d[c]):
-					#print "retunred", d[c]
-					return d[c]
-				else:
-					del d[c]
-			else:
-				del d[c]
-		except:
-			pass
+				if Map.player.pos != list(d[c]): return d[c]
+				else: del d[c]
+			else: del d[c]
+		except: pass
 	return None
-	#youP = getPOss(you)
 
 def temp(myPos, Map, Player):
 	l = getPoss(myPos)
@@ -81,10 +72,8 @@ def temp(myPos, Map, Player):
 	for i in l:
 		if list(i) == Player.pos:
 			break
-
 		try:
 			if Map.hMap[i][1] == 1:
-			
 				return i
 		except:
 			pass
@@ -108,6 +97,7 @@ class Bot():
 	def move(self):
 		if self.pr is True and self.doMove is True and self.alive is True:
 			nPos = ai(self.pos, self.player.pos, self.data['maps'][self.level])
+			nPos2 = meistehai(self.pos, self.player.pos, None)
 			if nPos != None:
 				self.pos = list(nPos)
 
@@ -133,8 +123,9 @@ class Bunny(Bot):
 	def move(self):
 		if self.pr is True and self.alive is True:
 			nPos = temp(self.pos, self.data['maps'][self.level], self.player)
+			nPos2 = meistehai(self.pos, self.player, none)
 			if nPos != None:
-				self.pos = list(nPos)
+				self.pos = list(nPos2)
 	
 	def attack(self):
 		pass

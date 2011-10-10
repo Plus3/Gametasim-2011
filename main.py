@@ -5,7 +5,7 @@ from player import Player
 from utils import GlobalVar, Game
 
 _Version_ = 0.2
-_Revision_ = 1
+_Revision_ = 2
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -39,7 +39,6 @@ else:
     devStop = lambda x: x
 _tick = lambda: TICK+1
 getInput = lambda msg: raw_input(msg).lower()
-#def getInput(msg): return raw_input(msg).lower()
 
 def hax(pos):
     """Takes in a player pos and returns True if the player is out of map bounds. Input: [x,y] or (x,y)"""
@@ -100,7 +99,7 @@ def _tickBefore():
 
     def resPos():
         print "Player position is BAD. (Hackz?)"
-        x = getInput()
+        x = raw_input()
         if x == "skip":
             return None
         else:
@@ -108,7 +107,7 @@ def _tickBefore():
 
     if PLAYER.health[0] < 1:
        print "You died! DEBUG: ", PLAYER.health
-       getInput("[Exit]")
+       raw_input("[Exit]")
        sys.exit()
     
     if hax(PLAYER.pos) is True: resPos()
@@ -196,7 +195,6 @@ def setMap(ID, rPlayer=True, pos=[2,2]):
     global CURRENT_MAP, MAPS, PLAYER, EVENTS
     print "setting map"
     print CURRENT_MAP.e.id, ID
-    # if CURRENT_MAP.e.id != ID:
     if True:
         print "setting map 2"
         CURRENT_MAP.e = MAPS.e[int(ID)]
@@ -208,8 +206,9 @@ def setMap(ID, rPlayer=True, pos=[2,2]):
         if rPlayer is True:
             PLAYER.pos = pos
 
+
 def retMap(ID):
-    return MAPS.e[ID]
+     return MAPS.e[ID]
 
 def init(dat=None):
     global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS, SOUNDS, useAudio
@@ -322,7 +321,6 @@ if __name__ == "__main__":
         _blank = loop()
     except KeyboardInterrupt, e:
         _cls()
-        #x = raw_input("\n[S]ave or [Q]uit\n=> ").lower()
         x = getInput('\n[S]ave or [Q]uit\n=> ')
         if x == "s": Exit()
         else: sys.exit()

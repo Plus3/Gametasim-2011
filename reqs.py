@@ -1,5 +1,3 @@
-#import events
-
 testlevel2 = {
 1:"#################",
 2:"#@ ##########   #",
@@ -230,6 +228,3 @@ testlevel_events = {
 (6,4): [(6,4), "pickup", {"item":4}, True],
 (12,2): [(12,2), "changemap", {"map":2, "pos":[2,2]}, False]
 }
-
-
-

@@ -46,7 +46,7 @@ class Item():
 		
 		def fireSword(self):
 			self.name = "Fire Sword"
-			self.damage = 3
+			self.damage = 5
 			self.hits = 100
 			self.weapon = True
 			self.xp = 8

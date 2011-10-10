@@ -68,7 +68,7 @@ class Player():
 
 		if notify is True:
 			print "You picked up a", self.inv[slot].name, "it's been stored in Slot #"+str(slot)
-			raw_input("[OK]")
+			x = raw_input("[OK]")
 	
 	def use(self, slot, weapon=True):
 		if self.inv[slot].weapon == weapon:
