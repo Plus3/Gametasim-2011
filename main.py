@@ -5,7 +5,7 @@ from player import Player
 from utils import GlobalVar, Game
 
 _Version_ = 0.2
-_Revision_ = 0
+_Revision_ = 1
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -38,7 +38,9 @@ else:
     devPlay = lambda x: x
     devStop = lambda x: x
 _tick = lambda: TICK+1
- 
+getInput = lambda msg: raw_input(msg).lower()
+#def getInput(msg): return raw_input(msg).lower()
+
 def hax(pos):
     """Takes in a player pos and returns True if the player is out of map bounds. Input: [x,y] or (x,y)"""
     if sum(pos) <= 0:
@@ -98,7 +100,7 @@ def _tickBefore():
 
     def resPos():
         print "Player position is BAD. (Hackz?)"
-        x = raw_input()
+        x = getInput()
         if x == "skip":
             return None
         else:
@@ -106,7 +108,7 @@ def _tickBefore():
 
     if PLAYER.health[0] < 1:
        print "You died! DEBUG: ", PLAYER.health
-       raw_input("[Exit]")
+       getInput("[Exit]")
        sys.exit()
     
     if hax(PLAYER.pos) is True: resPos()
@@ -216,7 +218,7 @@ def init(dat=None):
         MAPS.e[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, GlobalVar("BOTS2", {}), {'BOTS':BOTS.e})
         CURRENT_MAP.e = MAPS.e[1]
         initMap(CURRENT_MAP.e.events)
-        PLAYER = Player(raw_input("Your Name: "), [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
+        PLAYER = Player(getInput("Your Name: "), [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
         BOTS.e[(6,4)] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1, 'current':CURRENT_MAP})
         BOTS.e[(10,4)] = ai.Enemy(2, "Ye Old Ogre", PLAYER, [10,4], 2, [10,10], True, True, data={'attack':3.5,'char':"O", "maps":MAPS.e, "level":2, 'current':CURRENT_MAP})
         BOTS.e[(10,4)].doMove = False
@@ -268,7 +270,7 @@ def menu():
     title()
     saves = findSaves()
     if len(saves) > 0:
-        d1 = raw_input("[U]se save, [C]reate new game or [D]elete save\n => ").lower()
+        d1 = getInput("[U]se save, [C]reate new game or [D]elete save\n => ")
         if d1 == 'u' or d1 == 'd':
             NEW_GAME = False
             print "Game saves: "
@@ -300,18 +302,18 @@ def menu():
 def loop():
     global PLAYER, TICK, CURRENT_MAP, USR_INP
     while True:
-       TICK = _tick()
-       _tickBefore()
-       _cls()
-       print "DEBUG:"
-       print "Position: ",PLAYER.pos,"Last:",PLAYER.lastPos
-       print "Tick #: ", TICK
-       print "Map ID: ", CURRENT_MAP.e.id
-       CURRENT_MAP.e.render()
-       _tickAfter()
-       USR_INP = raw_input("\n=> ")
-       _handle(USR_INP)
-       _tickFinal()
+        TICK = _tick()
+        _tickBefore()
+        _cls()
+        print "DEBUG:"
+        print "Position: ",PLAYER.pos,"Last:",PLAYER.lastPos
+        print "Tick #: ", TICK
+        print "Map ID: ", CURRENT_MAP.e.id
+        CURRENT_MAP.e.render()
+        _tickAfter()
+        USR_INP = raw_input('\n=> ')
+        _handle(USR_INP)
+        _tickFinal()
 
 if __name__ == "__main__":
     try:
@@ -320,7 +322,8 @@ if __name__ == "__main__":
         _blank = loop()
     except KeyboardInterrupt, e:
         _cls()
-        x = raw_input("\n[S]ave or [Q]uit\n=> ").lower()
+        #x = raw_input("\n[S]ave or [Q]uit\n=> ").lower()
+        x = getInput('\n[S]ave or [Q]uit\n=> ')
         if x == "s": Exit()
         else: sys.exit()
     except Exception, e:
