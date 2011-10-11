@@ -23,18 +23,14 @@ def getPoss(point):
 	li.append((x+1,y))
 	li.append((x,y-1))
 	li.append((x,y+1))
-
+	
 	return li
 
 def sub(a,b):
-	if sum(a) > sum(b):
-		return sum(a)-sum(b)
-	elif sum(a) < sum(b):
-		return sum(b) - sum(a)
+	if sum(a) > sum(b): return sum(a)-sum(b)
+	elif sum(a) < sum(b): return sum(b) - sum(a)
 
 def dist(a,b):
-	#print sum(a)
-	#print sum(b)
 	if sum(a) < sum(b):
 		rm = b[0]-a[0]
 		rz = b[1]-a[1]
@@ -44,11 +40,9 @@ def dist(a,b):
 	else:
 		rm = 0
 		rz = 0
-	#print rm,rz
 	r1 = rm^2
 	r2 = rz^2
 	rx = r1+r2
-	#print rx
 	return sqrt(abs(rx))
 
 def ai(me,you,Map):
@@ -70,13 +64,9 @@ def temp(myPos, Map, Player):
 	l = getPoss(myPos)
 	random.shuffle(l)
 	for i in l:
-		if list(i) == Player.pos:
-			break
-		try:
-			if Map.hMap[i][1] == 1:
-				return i
-		except:
-			pass
+		if list(i) == Player.pos: break
+		try: if Map.hMap[i][1] == 1: return i
+		except: pass
 	
 class Bot():
 	def __init__(self, iid, name, player, pos, level, health, attack=True, bat=True, data={}):
@@ -104,8 +94,7 @@ class Bot():
 class Enemy(Bot):
 	def attack(self):
 		if self.alive is True:
-			print ""
-			print self.data['atkmsg']
+			print "\n", self.data['atkmsg']
 			self.player.attacked(self)
 			raw_input()
 

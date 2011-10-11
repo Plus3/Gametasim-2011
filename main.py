@@ -4,7 +4,7 @@ import mapper, utils, reqs, player, events, ai, combat, sound
 from player import Player
 from utils import GlobalVar, Game
 
-_Version_ = 0.2
+_Version_ = 0.3
 _Revision_ = 2
 _Author_ = "@B1naryth1ef"
 

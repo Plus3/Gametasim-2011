@@ -3,7 +3,7 @@ import random, sys, time, items
 itemCheck = lambda item: items.itemz[item]['xp']
 
 def wordy():
-	words = ["murdered", "slaughtered", "killed", "slayed", "polished off", "f**ked over", "bopped", "dumped in the river"]
+	words = ["murdered", "slaughtered", "killed", "slayed", "polished off", "f**ked over", "bopped", "dumped in the river", "popped"]
 	random.shuffle(words)
 	return words[0]
 
@@ -18,15 +18,12 @@ def hit(player, attacker, hit, r=True):
 	player.health[0] -= attacker.data['attack']
 	print "%s attacked you for %s!" % (attacker.name, hitPoint(attacker.data['attack']))
 	return None
-	
-def console():
-	return raw_input("[VS] => ").split(" ")
+
+console = lambda: raw_input("[VS] => ").split(" ")
 
 def checkHealth(obj):
-	if obj.health[0] <= 0:
-		return True
-	else:
-		return False
+	if obj.health[0] <= 0: return True
+	else: return False
 
 def Combat(player, attacker, mode, data):
 	meDead = checkHealth(player)
@@ -53,11 +50,9 @@ def Combat(player, attacker, mode, data):
 			hitr = False
 			data['printInv'](player)
 		elif todo[0].startswith("a"):
-			if item is None:
-				print "You must select an item to use! If you don't have a sword try 'use 0'"
+			if item is None: print "You must select an item to use! If you don't have a sword try 'use 0'"
 			else:
-				if item == 0:
-					hit(player, attacker, .5)
+				if item == 0: hit(player, attacker, .5)
 				else:
 					use = player.use(item)
 					if use[0] == 1 and doHit != False:
@@ -81,8 +76,7 @@ def Combat(player, attacker, mode, data):
 				else:
 					print "Nice try!"
 					hit(player, attacker, 0, False)
-		else:
-			print "Unknown command!"
+		else: print "Unknown command!"
 		
 		meDead = checkHealth(player)
 		youDead = checkHealth(attacker)

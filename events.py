@@ -18,26 +18,22 @@ class Event():
 			'chest':self.CHEST,
 			'play':self.PLAY
 		}
-	def MSG(self):
-		raw_input(self.data['msg'])
+	def MSG(self): raw_input(self.data['msg'])
 	
 	def END(self):
 		raw_input(self.data['msg'])
 		self.data['exit']()
 	
-	def PICKUP(self):
-		self.data['player'].pickupItem(self.data['item'])
+	def PICKUP(self): self.data['player'].pickupItem(self.data['item'])
 	
-	def CHANGEMAP(self):
-		self.data['setter'](self.data['map'], pos=self.data['pos'])
+	def CHANGEMAP(self): self.data['setter'](self.data['map'], pos=self.data['pos'])
 
 	def DOOR(self):
 		p = self.data['player']
 		im = None
 		go = False
 		for i in p.inv:
-			if p.inv[i] == None:
-				pass
+			if p.inv[i] == None: pass
 			elif p.inv[i].id == self.data['req']:
 				im = i
 				go = True
@@ -63,8 +59,7 @@ class Event():
 			p.pos = p.lastPos
 			raw_input(self.data['msg'])
 
-	def CHEST(self):
-		pass
+	def CHEST(self): pass
 	
 	def PLAY(self):
 		if self.data['sound'] in self.data['sounds'].e:
@@ -72,15 +67,10 @@ class Event():
 
 	def go(self):
 		self.fired = True
-		if self.kind in self.types:
-			self.types[self.kind]()
+		if self.kind in self.types: self.types[self.kind]()
 			
 	def fire(self):
-		if self.once is True:
-			if self.fired is False:
-				self.go()
-		elif self.once is False:
-			self.go()
-		else:
-			pass
+		if self.once is True and self.fired is False: self.go()
+		elif self.once is False: self.go()
+		else: pass
 	
