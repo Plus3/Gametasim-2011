@@ -19,16 +19,26 @@ def getPoss(point):
 	x = point[0]
 	y = point[1]
 
-	li.append((x-1,y))
+	if x-1 < 0: li.append((x-1,y))
 	li.append((x+1,y))
-	li.append((x,y-1))
+	if y-1 < 0: li.append((x,y-1))
 	li.append((x,y+1))
-	
+
 	return li
 
 def sub(a,b):
 	if sum(a) > sum(b): return sum(a)-sum(b)
 	elif sum(a) < sum(b): return sum(b) - sum(a)
+
+
+def testR(a,b):
+	if a[0] > b[0]: pass #me[x] is more then you[x] (MOVE LEFT)
+	elif a[0] == b[0]: pass #no l/r
+	else: pass #you[x] is more then me[x] (MOVE RIGHT)
+
+	if a[1] > b[1]: pass #MOVE DOWN
+	elif a[1] == b[1]: pass #no up/down
+	else: pass #MOVE UP
 
 def dist(a,b):
 	if sum(a) < sum(b):
@@ -65,7 +75,8 @@ def temp(myPos, Map, Player):
 	random.shuffle(l)
 	for i in l:
 		if list(i) == Player.pos: break
-		try: if Map.hMap[i][1] == 1: return i
+		try: 
+			if Map.hMap[i][1] == 1: return i
 		except: pass
 	
 class Bot():

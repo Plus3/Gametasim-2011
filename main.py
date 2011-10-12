@@ -319,12 +319,7 @@ if __name__ == "__main__":
         _blank = menu()
         _blank = init(_blank)
         _blank = loop()
-    except KeyboardInterrupt, e:
-        _cls()
-        x = getInput('\n[S]ave or [Q]uit\n=> ')
-        if x == "s": Exit()
-        else: sys.exit()
-    except Exception, e:
-        print "General Error:",e
+    except KeyboardInterrupt, e: sys.exit()
+    except Exception, e: print "General Error:",e
 
     
