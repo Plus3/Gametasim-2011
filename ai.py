@@ -30,15 +30,47 @@ def sub(a,b):
 	if sum(a) > sum(b): return sum(a)-sum(b)
 	elif sum(a) < sum(b): return sum(b) - sum(a)
 
+def axisX(a,b): 
+	if a[0] > b[0]: return -1 #me[x] is more then you[x] (MOVE LEFT)
+	elif a[0] == b[0]: return None #no l/r
+	else: return 1 #you[x] is more then me[x] (MOVE RIGHT)
 
-def testR(a,b):
-	if a[0] > b[0]: pass #me[x] is more then you[x] (MOVE LEFT)
-	elif a[0] == b[0]: pass #no l/r
-	else: pass #you[x] is more then me[x] (MOVE RIGHT)
+def axisY(a,b): 
+	if a[1] > b[1]: return -1 #MOVE DOWN
+	elif a[1] == b[1]: None #no up/down
+	else: return 1 #MOVE UP
 
-	if a[1] > b[1]: pass #MOVE DOWN
-	elif a[1] == b[1]: pass #no up/down
-	else: pass #MOVE UP
+def checkPos(pos, hitmap):
+	if hitmap[tuple(pos)][1] == 1: return True
+	elif hitmap[tuple(pos)][1] == 0: return False
+	else: return None
+
+def testR(a,b, hitmap):
+	nX = axisX(a,b)
+	nY = axisY(a,b)
+	if nX != None:
+		newX = a[0] + nX
+	if nY != None:
+		newY = a[1] + nY
+
+	if axisX(a,b) != None:
+		if checkPos([newX, a[1]], hitmap) is True:
+			#raw_input("RETURNING X: %s" % ([newX, a[1]]))
+			return [newX, a[1]]
+
+	if axisY(a,b) != None:
+		if checkPos([a[0], newY], hitmap) is True: 
+			#raw_input('RETURNING Y: %s' % ([a[0], newY]))
+			return [a[0], newY]
+		else:
+			x = ai(a,b,hitmap)
+			#raw_input("RETURNING ELSE: %s" % (x))
+			return x
+	else:
+		x = ai(a,b,hitmap)
+		#raw_input("RETURNING ELSE: %s" % (x))
+		return x
+	
 
 def dist(a,b):
 	if sum(a) < sum(b):
@@ -99,8 +131,12 @@ class Bot():
 		if self.pr is True and self.doMove is True and self.alive is True:
 			nPos = ai(self.pos, self.player.pos, self.data['maps'][self.level])
 			nPos2 = meistehai(self.pos, self.player.pos, None)
+			nPos3 = testR(self.pos, self.player.pos, self.data['maps'][self.level].hMap)
+			#newy = [self.pos[0]+nPos3[0], self.pos[1]+nPos3[1]]
 			if nPos != None:
-				self.pos = list(nPos)
+				if nPos3 != None:
+					self.pos = nPos3
+
 
 class Enemy(Bot):
 	def attack(self):

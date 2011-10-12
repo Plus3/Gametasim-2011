@@ -4,8 +4,8 @@ import mapper, utils, reqs, player, events, ai, combat, sound
 from player import Player
 from utils import GlobalVar, Game
 
-_Version_ = 0.3
-_Revision_ = 2
+_Version_ = 0.2
+_Revision_ = 3
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -83,8 +83,7 @@ def attackr(inp):
     try:
         for i in BOTS.e:
             if BOTS.e[i].level == CURRENT_MAP.e.id:
-                for z in m:
-                    if list(z) == BOTS.e[i].pos:
+                if tuple(BOTS.e[i].pos) in m:
                         combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, False, {'printInv':utils.printInv, 'delBot':delBot, 'cls':_cls})
     except: pass
 
@@ -121,7 +120,7 @@ def _tickBefore():
     
     for i in BOTS.e:
         if BOTS.e[i].level == CURRENT_MAP.e.id:
-            if tuple(PLAYER.pos) in ai.getPoss(BOTS.e[i].pos):
+            if tuple(BOTS.e[i].pos) in ai.getPoss(PLAYER.pos) or BOTS.e[i].pos == PLAYER.pos:
                 if BOTS.e[i].atk is True and BOTS.e[i].alive is True:
                     combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':utils.printInv, 'delBot':delBot, 'cls':_cls})
                     break
