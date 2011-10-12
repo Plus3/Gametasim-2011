@@ -24,6 +24,7 @@ class Item():
 
 	def init(self):
 		def fists(self):
+			self.id = 0
 			self.name = "Fists"
 			self.damage = .5
 			self.hist = 1000
@@ -31,6 +32,7 @@ class Item():
 			self.xp = 10
 
 		def woodSword(self):
+			self.id = 1
 			self.name = "Wood Sword"
 			self.damage = 1
 			self.hits = 30
@@ -38,6 +40,7 @@ class Item():
 			self.xp = 5
 
 		def ironSword(self):
+			self.id = 2
 			self.name = "Iron Sword"
 			self.damage = 2
 			self.hits = 50
@@ -45,6 +48,7 @@ class Item():
 			self.xp = 5
 		
 		def fireSword(self):
+			self.id = 3
 			self.name = "Fire Sword"
 			self.damage = 5
 			self.hits = 100
@@ -60,11 +64,13 @@ class Item():
 				self.name = "Boss Key"
 
 		def light(self):
+			self.id = 5
 			self.name = "Unknown Light!"
 			self.light = True
 			self.on = False
 		
 		def torch(self):
+			self.id = 5.1
 			self.name = "Torch"
 			self.light = True
 			self.on = False

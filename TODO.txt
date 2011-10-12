@@ -1,5 +1,3 @@
-- Fix AI
-- Upgrade BOTS system
 - Upgrade SOUNDS system
 
 BUGS:
