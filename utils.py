@@ -63,12 +63,9 @@ class GlobalVar():
 
 def CLS(numlines=100):
     '''Clear the screen in an os friendly way'''
-    if os.name == "posix":
-        os.system('clear')
-    elif os.name in ("nt", "dos", "ce"):
-        os.system('CLS')
-    else:
-        print '\n' * numlines
+    if os.name == "posix": os.system('clear')
+    elif os.name in ("nt", "dos", "ce"): os.system('CLS')
+    else: print '\n' * numlines
 
 def pB(pa, pb):
     '''Get the points between two points'''
@@ -84,9 +81,11 @@ def pB(pa, pb):
     ys = range(p1f[1] + 1, p2f[1]) or [p1f[1]]
     return [(x,y) for x in xs for y in ys]
 
-def printInv(PLAYER):
+def printInv(PLAYER, x=0):
+    print "INVENTORY:"
+    for i in PLAYER.inv:
+        if PLAYER.inv[i] != None: print "Slot %s: %s" % (i, PLAYER.inv[i].name)
     print "HEALTH:", str(PLAYER.health[0])+"/"+str(PLAYER.health[1])
-    print "INVENTORY:", [PLAYER.inv[i].name for i in PLAYER.inv if PLAYER.inv[i] != None]
     print "MONEY: %s/%s" % (PLAYER.money[0], PLAYER.money[1])
     print "XP: %s" % (PLAYER.xp)
     raw_input()

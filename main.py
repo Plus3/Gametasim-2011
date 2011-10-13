@@ -1,11 +1,11 @@
 #IMPORTS
 import sys, os, time, pickle
-import mapper, utils, reqs, player, events, ai, combat, sound
+import mapper, utils, reqs, player, events, ai, combat, sound, tutorial
 from player import Player
 from utils import GlobalVar, Game
 
 _Version_ = 0.3
-_Revision_ = 0
+_Revision_ = 1
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -126,7 +126,7 @@ def _tickBefore():
             if tuple(BOTS.e[i].pos) in ai.getPoss(PLAYER.pos) or BOTS.e[i].pos == PLAYER.pos:
                 if BOTS.e[i].atk is True and BOTS.e[i].alive is True:
                     combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':utils.printInv, 'delBot':delBot, 'cls':_cls})
-                    break
+                    break #@DEV If more then one bot attacks, should we let it happen? Or ignore one like we are doing now?
         
 def _handle(inp):
     """Parse/handle a user input"""
@@ -218,11 +218,16 @@ def retMap(ID): return MAPS.e[ID]
 def init(dat=None):
     global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS, SOUNDS, useAudio
     if NEW_GAME is True:
+        name = getInput("Your Name: ")
+        m = getInput("Play the tutorial? [Y/N]: ")
+        if m == "y": tutorial.start()
+        elif m == "n": pass
+        else: init()
         MAPS.e[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, GlobalVar("BOTS1", {}), {'BOTS':BOTS.e})
         MAPS.e[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, GlobalVar("BOTS2", {}), {'BOTS':BOTS.e})
         CURRENT_MAP.e = MAPS.e[1]
         initMap(CURRENT_MAP.e.events)
-        PLAYER = Player(getInput("Your Name: "), [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
+        PLAYER = Player(name, [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
         BOTS.e[0] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1, 'current':CURRENT_MAP})
         BOTS.e[1] = ai.Enemy(2, "Ye Old Ogre", PLAYER, [10,4], 2, [10,10], True, True, data={'attack':3.5,'char':"O", "maps":MAPS.e, "level":2, 'current':CURRENT_MAP})
         BOTS.e[1].doMove = False
