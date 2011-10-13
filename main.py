@@ -19,13 +19,14 @@ USR_INP = ""
 GAME = ""
 MAPS = GlobalVar("MAPS", {})
 CURRENT_MAP = GlobalVar("CURRENT_MAP", "")
-PLAYER = ""
 EVENTS = GlobalVar("EVENTS", {})
-ITEMS = {}
 SOUNDS = GlobalVar("SOUNDS", {})
 BOTS = GlobalVar("BOTS", {})
-S_FILE = "save.dat"
 KO_BOTS = GlobalVar("BOTS", {})
+ITEMS = {}
+S_FILE = "save.dat"
+PLAYER = ""
+
 try:
     SAVE_FILE = open(S_FILE, "rw")
 except:
@@ -78,6 +79,7 @@ def Exit(clean=True):
     sys.exit()
 
 def attackr(inp):
+    """Checks if player can attack a bot, and attacks it if they can"""
     global PLAYER, BOTS, CURRENT_MAP
     m = ai.getPoss(PLAYER.pos)
     try:
@@ -92,6 +94,7 @@ def _tickAfter(): pass
 def _tickFinal(): pass
 
 def _tickBefore():
+    """_tick manager for Before events"""
     global EVENTS, BOTS, CURRENT_MAP, PLAYER, MAP_ID, GAME
 
     GAME.currentmap = CURRENT_MAP.e.id
@@ -126,6 +129,7 @@ def _tickBefore():
                     break
         
 def _handle(inp):
+    """Parse/handle a user input"""
     inp2 = inp.split(" ")
     if inp.startswith("quit") or inp.startswith("exit"):
         Exit()
@@ -159,6 +163,7 @@ def _handle(inp):
         devStop(inp2[1])
 
 def initMap(eventz):
+    """Initiates a map"""
     global EVENTS
     for i in eventz:
         r = eventz[i]
@@ -168,6 +173,7 @@ def initMap(eventz):
         EVENTS.e[r[0]] = x  
   
 def setChar(Map, pos, char):
+    """Sets a char"""
     global MAPS  
     r = MAPS.e[Map]
     line = []
@@ -181,6 +187,7 @@ def setChar(Map, pos, char):
     r.Map[pos[1]] = "".join(line)
       
 def initEvents():
+    """Add data stuffz to all our events"""
     global PLAYER, CURRENT_MAP, EVENTS, MAPS, SOUNDS
     for i in EVENTS.e:
         EVENTS.e[i].data["player"] = PLAYER
@@ -191,6 +198,7 @@ def initEvents():
         EVENTS.e[i].data['sounds'] = SOUNDS
 
 def setMap(ID, rPlayer=True, pos=[2,2]):
+    """Set a map"""
     global CURRENT_MAP, MAPS, PLAYER, EVENTS
     print "setting map"
     print CURRENT_MAP.e.id, ID
@@ -205,9 +213,7 @@ def setMap(ID, rPlayer=True, pos=[2,2]):
         if rPlayer is True:
             PLAYER.pos = pos
 
-
-def retMap(ID):
-     return MAPS.e[ID]
+def retMap(ID): return MAPS.e[ID]
 
 def init(dat=None):
     global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS, SOUNDS, useAudio
@@ -222,7 +228,6 @@ def init(dat=None):
         BOTS.e[1].doMove = False
         MAPS.e[1].bots.e[0] = BOTS.e[0]
         MAPS.e[2].bots.e[1] = BOTS.e[1]
-        #BOTS.e[(10,4)].pr = False
         MAPS.e[1].player = PLAYER
         MAPS.e[2].player = PLAYER
         GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
@@ -245,6 +250,7 @@ def init(dat=None):
         GAME.regSave(dat[0])
 
 def findSaves(home=os.getcwd()):
+    """Find save files, and return a list of them"""
     fn = []
     try:
         for i in os.listdir(os.path.join(home, "data", 'saves')):
@@ -256,6 +262,7 @@ def findSaves(home=os.getcwd()):
         return findSaves()
 
 def title():
+    """Title sequence"""
     _cls()
     print "Welcome to GAMETASIM - 2011"
     print "By: Andrei Z"
@@ -264,6 +271,7 @@ def title():
     print ""
 
 def menu():
+    """Main menu"""
     global SAVE_FILE, GAME, NEW_GAME
     title()
     saves = findSaves()
@@ -298,6 +306,7 @@ def menu():
     else: NEW_GAME = True
     
 def loop():
+    """ITZ ALL IN HERE!"""
     global PLAYER, TICK, CURRENT_MAP, USR_INP
     while True:
         TICK = _tick()

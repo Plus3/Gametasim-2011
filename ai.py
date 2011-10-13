@@ -23,7 +23,6 @@ def getPoss(point):
 	li.append((x+1,y))
 	if y-1 < 0: li.append((x,y-1))
 	li.append((x,y+1))
-
 	return li
 
 def sub(a,b):
