@@ -214,6 +214,10 @@ def setMap(ID, rPlayer=True, pos=[2,2]):
             PLAYER.pos = pos
 
 def retMap(ID): return MAPS.e[ID]
+def regMapz():
+    global PLAYER, MAPS
+    for i in MAPS.e:
+        MAPS.e[i].player = PLAYER
 
 def init(dat=None):
     global PLAYER, CURRENT_MAP, EVENTS, GAME, MAPS, BOTS, KO_BOTS, SOUNDS, useAudio
@@ -225,16 +229,22 @@ def init(dat=None):
         else: init()
         MAPS.e[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, GlobalVar("BOTS1", {}), {'BOTS':BOTS.e})
         MAPS.e[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, GlobalVar("BOTS2", {}), {'BOTS':BOTS.e})
+        MAPS.e[3] = mapper.Map(3, reqs.testlevel3, reqs.testlevel3_hit, PLAYER, reqs.testlevel3_events, GlobalVar("BOTS3", {}), {'BOTS':BOTS.e})
         CURRENT_MAP.e = MAPS.e[1]
         initMap(CURRENT_MAP.e.events)
         PLAYER = Player(name, [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
-        BOTS.e[0] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1, 'current':CURRENT_MAP})
-        BOTS.e[1] = ai.Enemy(2, "Ye Old Ogre", PLAYER, [10,4], 2, [10,10], True, True, data={'attack':3.5,'char':"O", "maps":MAPS.e, "level":2, 'current':CURRENT_MAP})
-        BOTS.e[1].doMove = False
-        MAPS.e[1].bots.e[0] = BOTS.e[0]
-        MAPS.e[2].bots.e[1] = BOTS.e[1]
-        MAPS.e[1].player = PLAYER
-        MAPS.e[2].player = PLAYER
+        BOTS.e[1] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1, 'current':CURRENT_MAP})
+        BOTS.e[2] = ai.Enemy(2, "Ye Old Ogre", PLAYER, [10,4], 2, [10,10], True, True, data={'attack':3.5,'char':"O", "maps":MAPS.e, "level":2, 'current':CURRENT_MAP})
+        BOTS.e[3] = ai.Enemy(3, "Evil Bunny", PLAYER, [2,2], 3, [8,8], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
+        BOTS.e[4] = ai.Enemy(4, "Evil Bunny", PLAYER, [8,4], 3, [8,8], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
+        BOTS.e[5] = ai.Enemy(5, "Evil Bunny", PLAYER, [7,7], 3, [15,15], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
+        BOTS.e[2].doMove = False
+        MAPS.e[1].bots.e[1] = BOTS.e[1]
+        MAPS.e[2].bots.e[2] = BOTS.e[2]
+        MAPS.e[3].bots.e[3] = BOTS.e[3]
+        MAPS.e[3].bots.e[4] = BOTS.e[4]
+        MAPS.e[3].bots.e[5] = BOTS.e[5]
+        regMapz()
         GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
         SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav', useAudio)
         initEvents()

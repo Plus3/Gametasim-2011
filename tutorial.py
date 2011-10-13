@@ -1,4 +1,4 @@
-import utils
+import utils, time
 
 _cls = utils.CLS
 
@@ -12,3 +12,11 @@ def start():
 	print "@ : Portal [door]"
 	print "X : You!"
 	raw_input('')
+
+def animate(ani):
+	_cls()
+	for x in ani:
+		for y in x:
+			print y
+		time.sleep(.5)
+		_cls() 
