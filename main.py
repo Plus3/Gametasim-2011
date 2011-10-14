@@ -5,7 +5,7 @@ from player import Player
 from utils import GlobalVar, Game
 
 _Version_ = 0.3
-_Revision_ = 1
+_Revision_ = 2
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -75,7 +75,7 @@ def Exit(clean=True):
                 SOUNDS.e[i].stop()
         GAME.writeSave(os.path.join(os.getcwd(), "data", "saves", PLAYER.name+'.dat'))
         r = open('maps.dat', 'w')
-        pickle.dump({1:MAPS.e[1], 2:MAPS.e[2], 'bots':BOTS}, r)
+        pickle.dump({1:MAPS.e[1], 2:MAPS.e[2], 3:MAPS.e[3], 'bots':BOTS}, r)
     sys.exit()
 
 def attackr(inp):
@@ -225,8 +225,7 @@ def init(dat=None):
         name = getInput("Your Name: ")
         m = getInput("Play the tutorial? [Y/N]: ")
         if m == "y": tutorial.start()
-        elif m == "n": pass
-        else: init()
+        else: pass
         MAPS.e[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, GlobalVar("BOTS1", {}), {'BOTS':BOTS.e})
         MAPS.e[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, GlobalVar("BOTS2", {}), {'BOTS':BOTS.e})
         MAPS.e[3] = mapper.Map(3, reqs.testlevel3, reqs.testlevel3_hit, PLAYER, reqs.testlevel3_events, GlobalVar("BOTS3", {}), {'BOTS':BOTS.e})
@@ -236,14 +235,14 @@ def init(dat=None):
         BOTS.e[1] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1, 'current':CURRENT_MAP})
         BOTS.e[2] = ai.Enemy(2, "Ye Old Ogre", PLAYER, [10,4], 2, [10,10], True, True, data={'attack':3.5,'char':"O", "maps":MAPS.e, "level":2, 'current':CURRENT_MAP})
         BOTS.e[3] = ai.Enemy(3, "Evil Bunny", PLAYER, [2,2], 3, [8,8], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
-        BOTS.e[4] = ai.Enemy(4, "Evil Bunny", PLAYER, [8,4], 3, [8,8], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
-        BOTS.e[5] = ai.Enemy(5, "Evil Bunny", PLAYER, [7,7], 3, [15,15], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
+        #BOTS.e[4] = ai.Enemy(4, "Evil Bunny", PLAYER, [8,4], 3, [8,8], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
+        #BOTS.e[5] = ai.Enemy(5, "Evil Bunny", PLAYER, [7,7], 3, [15,15], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
         BOTS.e[2].doMove = False
         MAPS.e[1].bots.e[1] = BOTS.e[1]
         MAPS.e[2].bots.e[2] = BOTS.e[2]
         MAPS.e[3].bots.e[3] = BOTS.e[3]
-        MAPS.e[3].bots.e[4] = BOTS.e[4]
-        MAPS.e[3].bots.e[5] = BOTS.e[5]
+        #MAPS.e[3].bots.e[4] = BOTS.e[4]
+        #MAPS.e[3].bots.e[5] = BOTS.e[5]
         regMapz()
         GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
         SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav', useAudio)
@@ -255,6 +254,7 @@ def init(dat=None):
         BOTS = mapz['bots']
         MAPS.e[1] = mapz[1]
         MAPS.e[2] = mapz[2]
+        MAPS.e[3] = mapz[3]
         CURRENT_MAP.e = MAPS.e[1]   
         PLAYER = Player(dat[1], [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
         MAPS.e[1].player = PLAYER
@@ -322,7 +322,7 @@ def menu():
     
 def loop():
     """ITZ ALL IN HERE!"""
-    global PLAYER, TICK, CURRENT_MAP, USR_INP
+    global PLAYER, TICK, CURRENT_MAP, USR_INP, BOTS
     while True:
         TICK = _tick()
         _tickBefore()
@@ -331,6 +331,7 @@ def loop():
         print "Position: ",PLAYER.pos,"Last:",PLAYER.lastPos
         print "Tick #: ", TICK
         print "Map ID: ", CURRENT_MAP.e.id
+        #print "BOTZ: ", [(BOTS.e[i].name, BOTS.e[i].alive) for i in BOTS.e]
         CURRENT_MAP.e.render()
         _tickAfter()
         USR_INP = raw_input('\n=> ')
@@ -343,6 +344,6 @@ if __name__ == "__main__":
         _blank = init(_blank)
         _blank = loop()
     except KeyboardInterrupt, e: sys.exit()
-    except Exception, e: print "General Error:",e
+    #except Exception, e: print "General Error:",e
 
     

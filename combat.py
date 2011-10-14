@@ -1,6 +1,8 @@
 import random, sys, time, items
 
-itemCheck = lambda item: items.itemz[item]['xp']
+def itemCheck(item):
+	try: return items.itemz[item]['xp']
+	except: return 0
 
 def wordy():
 	words = ["murdered", "slaughtered", "killed", "slayed", "polished off", "f**ked over", "bopped", "dumped in the river", "popped"]
@@ -96,7 +98,7 @@ def Combat(player, attacker, mode, data):
 		x = random.randint(2,10)
 		print "You loot %s and find %s gold coins" % (attacker.name, x)
 		player.moneyAdd(x)
-		data['delBot'](attacker.name)
+		data['delBot'](False, attacker.id)
 	raw_input("[Exit]")
 
 def battle(player, attacker, Map, attacked=True, data={}):

@@ -39,16 +39,20 @@ def testR(a,b, hitmap):
 
 	if axisX(a,b) != None:
 		if checkPos([newX, a[1]], hitmap) is True:
+			print "1"
 			return [newX, a[1]]
 	if axisY(a,b) != None:
 		if checkPos([a[0], newY], hitmap) is True: 
+			print "2"
 			return [a[0], newY]
-		else:
-			x = ai(a,b,hitmap)
-			return x
-	else:
-		x = ai(a,b,hitmap)
-		return x
+		else: pass
+			# print "3"
+			# x = ai(a,b,hitmap)
+			# return x
+	else: pass
+		# print '4'
+		# x = ai(a,b,hitmap)
+		# return x
 	
 def dist(a,b):
 	if sum(a) < sum(b):
@@ -100,6 +104,7 @@ class Bot():
 		if self.pr is True and self.doMove is True and self.alive is True:
 			nPos = testR(self.pos, self.player.pos, self.data['maps'][self.level].hMap)
 			if nPos != None:
+				#raw_input('From: %s TOO: %s' % (self.pos, nPos))
 				self.pos = nPos
 
 
