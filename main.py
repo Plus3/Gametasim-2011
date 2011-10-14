@@ -3,9 +3,10 @@ import sys, os, time, pickle
 import mapper, utils, reqs, player, events, ai, combat, sound, tutorial
 from player import Player
 from utils import GlobalVar, Game
+import random
 
-_Version_ = 0.3
-_Revision_ = 2
+_Version_ = 0.4
+_Revision_ = 0
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -99,6 +100,11 @@ def _tickBefore():
 
     GAME.currentmap = CURRENT_MAP.e.id
 
+    if random.randint(1,50) == 25:
+        amount = random.randint(1,10)
+        raw_input("You found $%s!" % (amount)) 
+        PLAYER.moneyAdd(amount)
+
     def resPos():
         print "Player position is BAD. (Hackz?)"
         x = raw_input()
@@ -127,7 +133,12 @@ def _tickBefore():
                 if BOTS.e[i].atk is True and BOTS.e[i].alive is True:
                     combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':utils.printInv, 'delBot':delBot, 'cls':_cls})
                     break #@DEV If more then one bot attacks, should we let it happen? Or ignore one like we are doing now?
-        
+
+def itemFire(iid):
+    global PLAYER, ITEMS
+    if iid in ITEMS:
+        PLAYER.eat(ITEMS[iid])
+
 def _handle(inp):
     """Parse/handle a user input"""
     inp2 = inp.split(" ")
@@ -149,6 +160,9 @@ def _handle(inp):
         if len(inp2) <= 1: n = 1
         else: n = int(inp2[1])
         PLAYER.move(x=int(n))
+    elif inp2[0]=="use":
+        if len(inp2) <= 1: raw_input("Must supply inventory slot number!")
+        else: itemFire(int(inp2[1]))
     elif inp.startswith("set"):
         PLAYER.setPos(eval(inp2[1]))
     elif inp.startswith("inv"):
@@ -235,14 +249,14 @@ def init(dat=None):
         BOTS.e[1] = ai.Enemy(1, "Evil Bunny", PLAYER, [6,4], 1, [5,5], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":1, 'current':CURRENT_MAP})
         BOTS.e[2] = ai.Enemy(2, "Ye Old Ogre", PLAYER, [10,4], 2, [10,10], True, True, data={'attack':3.5,'char':"O", "maps":MAPS.e, "level":2, 'current':CURRENT_MAP})
         BOTS.e[3] = ai.Enemy(3, "Evil Bunny", PLAYER, [2,2], 3, [8,8], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
-        #BOTS.e[4] = ai.Enemy(4, "Evil Bunny", PLAYER, [8,4], 3, [8,8], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
-        #BOTS.e[5] = ai.Enemy(5, "Evil Bunny", PLAYER, [7,7], 3, [15,15], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
+        BOTS.e[4] = ai.Enemy(4, "Evil Bunny", PLAYER, [8,4], 3, [8,8], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
+        BOTS.e[5] = ai.Enemy(5, "Evil Bunny", PLAYER, [7,7], 3, [15,15], True, True, data={'attack':1,'char':".", "maps":MAPS.e, "level":3, 'current':CURRENT_MAP})
         BOTS.e[2].doMove = False
         MAPS.e[1].bots.e[1] = BOTS.e[1]
         MAPS.e[2].bots.e[2] = BOTS.e[2]
         MAPS.e[3].bots.e[3] = BOTS.e[3]
-        #MAPS.e[3].bots.e[4] = BOTS.e[4]
-        #MAPS.e[3].bots.e[5] = BOTS.e[5]
+        MAPS.e[3].bots.e[4] = BOTS.e[4]
+        MAPS.e[3].bots.e[5] = BOTS.e[5]
         regMapz()
         GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
         SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav', useAudio)

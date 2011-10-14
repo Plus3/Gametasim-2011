@@ -14,6 +14,7 @@ class Item():
 		self.used = False
 		self.pickedup = False
 		self.type = None
+		self.useable = False
 
 		#Weapon vars
 		self.weapon = False
@@ -21,6 +22,11 @@ class Item():
 		#Light vars
 		self.light = False
 		self.on = False
+
+		#Food
+		self.heal = 0
+		self.healMsg = None
+		self.isFood = False
 
 	def init(self):
 		def fists(self):
@@ -74,6 +80,27 @@ class Item():
 			self.name = "Torch"
 			self.light = True
 			self.on = False
+			self.useable = True
+			
+		def food(self):
+			self.isFood = True
+			if self.id == 6: pass
+			elif self.id == 6.1:
+				self.name = "Apple"
+				self.heal = 5
+				self.healMsg = "Om nom nom... juicy apple!"
+				self.useable = True
+			elif self.id == 6.2:
+				self.name = "Orange"
+				self.heal = 10
+				self.healMsg = "Mmmmm... Orange."
+				self.useable = True
+			elif self.id == 6.3: 
+				self.name = "Cookie"
+				self.heal = 25
+				self.healMsg = "Tis a cookie!"
+				self.useable = True
+			else: pass
 
 		types = {
 			0:fists,
@@ -84,7 +111,11 @@ class Item():
 			4.1:key, #BIG
 			4.2:key, #BOSS
 			5:light,
-			5.1:torch
+			5.1:torch,
+			6:food,
+			6.1:food, #apple
+			6.2:food, #orange
+			6.3:food #cookie
 		}
 		types[self.id](self)
 		self.pickedup = True
