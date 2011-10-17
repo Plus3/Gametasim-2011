@@ -100,7 +100,7 @@ def _tickBefore():
 
     GAME.currentmap = CURRENT_MAP.e.id
 
-    if random.randint(1,50) == 25:
+    if random.randint(1,50) == 13 and random.randint(1,50) == 37:
         amount = random.randint(1,10)
         raw_input("You found $%s!" % (amount)) 
         PLAYER.moneyAdd(amount)
