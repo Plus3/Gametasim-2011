@@ -99,9 +99,8 @@ def _tickBefore():
     global EVENTS, BOTS, CURRENT_MAP, PLAYER, MAP_ID, GAME
 
     GAME.currentmap = CURRENT_MAP.e.id
-
-    if random.randint(1,50) == 13 and random.randint(1,50) == 37:
-        amount = random.randint(1,10)
+    if random.randint(1,300) == 150:
+        amount = random.randint(10,30)
         raw_input("You found $%s!" % (amount)) 
         PLAYER.moneyAdd(amount)
 
