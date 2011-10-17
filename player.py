@@ -2,16 +2,16 @@ import utils, items
 
 class Player():
 	def __init__(self, name, pos, level, lvlid, data={}):
-		self.name = name
-		self.pos = pos
-		self.level = level.e
-		self.lvlid = lvlid
-		self.xp = 0
-		self.money = [0,50]
-		self.data = data
-		self.health = [50,50]
-		self.lastPos = []
-		self.inv = {
+		self.name = name #The player name
+		self.pos = pos #The player postion (should always be list)
+		self.level = level.e #The current level [@DEV do we still need this?]
+		self.lvlid = lvlid #The current level ID
+		self.xp = 0 #XP Amount
+		self.money = [0,50] #Money (and max amount)
+		self.data = data #Data dump!
+		self.health = [50,50] #Health/max health
+		self.lastPos = [] #Last position
+		self.inv = { 
 			1:None,
 			2:None,
 			3:None,
@@ -34,19 +34,15 @@ class Player():
 				r = False
 		for item in inb:
 			try:
-				if self.level.hMap[item][1] == 0:
-					r = False
-			except:
-				pass
+				if self.level.hMap[item][1] == 0: r = False
+			except: pass
 		return r
 
 	def move(self, x=0, y=0):
 		newPos = [self.pos[0]+x, self.pos[1]+y]
 		pwa = utils.pB(self.pos, newPos)
 		go = self.hitCheck(newPos, pwa)
-		if go == False:
-			pass
-		elif go == True:
+		if go == True:
 			self.lastPos = self.pos
 			self.pos = newPos
 
@@ -75,20 +71,15 @@ class Player():
 			if self.inv[slot].hits > 0:
 				self.inv[slot].hits -= 1
 				damage = (1,self.inv[slot].damage)
-			else:
-				damage = (0,0)
+			else: damage = (0,0)
 		return damage
 
 	def moneyAdd(self, amount):
 		new = self.money[0] + amount
-		if new > self.money[1]:
-			self.money[0] = self.money[1]
-		else:
-			self.money[0] = new
+		if new > self.money[1]: self.money[0] = self.money[1]
+		else: self.money[0] = new
 
-
-	def looseHealth(self, amount):
-		self.health[0] -= int(amount)
+	def looseHealth(self, amount): self.health[0] -= int(amount)
 	
 	def attacked(self, bot):
 		self.health[0] -= bot.data['attack']
@@ -99,3 +90,20 @@ class Player():
 					bot.health[0] -= self.inv[i].damage
 					self.inv[i].hits -= 1
 	
+	def eat(self, iid, rem=True): 
+		if self.inv[iid].isFood is True:
+			self.health[0] += self.inv[iid].healAmount
+			raw_input(self.inv[iid].healMsg)
+			if rem is True:
+				self.inv[iid] = None
+		else: print "You cant eat that!"
+	
+	def hasItem(self, iid):
+		for i in self.inv:
+			if self.inv[i] != None and self.inv[i].id == iid: 
+				return True
+		return False
+	
+	def hasSlot(self, iid):
+		if self.inv[iid] != None and self.inv[iid] != "": return True
+		else: return False

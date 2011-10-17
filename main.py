@@ -3,9 +3,10 @@ import sys, os, time, pickle
 import mapper, utils, reqs, player, events, ai, combat, sound, tutorial
 from player import Player
 from utils import GlobalVar, Game
+import random
 
-_Version_ = 0.3
-_Revision_ = 1
+_Version_ = 0.4
+_Revision_ = 0
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -75,7 +76,7 @@ def Exit(clean=True):
                 SOUNDS.e[i].stop()
         GAME.writeSave(os.path.join(os.getcwd(), "data", "saves", PLAYER.name+'.dat'))
         r = open('maps.dat', 'w')
-        pickle.dump({1:MAPS.e[1], 2:MAPS.e[2], 'bots':BOTS}, r)
+        pickle.dump({1:MAPS.e[1], 2:MAPS.e[2], 3:MAPS.e[3], 'bots':BOTS}, r)
     sys.exit()
 
 def attackr(inp):
@@ -98,6 +99,11 @@ def _tickBefore():
     global EVENTS, BOTS, CURRENT_MAP, PLAYER, MAP_ID, GAME
 
     GAME.currentmap = CURRENT_MAP.e.id
+
+    if random.randint(1,50) == 13 and random.randint(1,50) == 37:
+        amount = random.randint(1,10)
+        raw_input("You found $%s!" % (amount)) 
+        PLAYER.moneyAdd(amount)
 
     def resPos():
         print "Player position is BAD. (Hackz?)"
@@ -127,7 +133,11 @@ def _tickBefore():
                 if BOTS.e[i].atk is True and BOTS.e[i].alive is True:
                     combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':utils.printInv, 'delBot':delBot, 'cls':_cls})
                     break #@DEV If more then one bot attacks, should we let it happen? Or ignore one like we are doing now?
-        
+
+def itemFire(iid):
+    global PLAYER, ITEMS
+    if PLAYER.hasSlot(iid) is True and PLAYER.inv[iid].isFood is True: PLAYER.eat(iid)
+
 def _handle(inp):
     """Parse/handle a user input"""
     inp2 = inp.split(" ")
@@ -149,6 +159,9 @@ def _handle(inp):
         if len(inp2) <= 1: n = 1
         else: n = int(inp2[1])
         PLAYER.move(x=int(n))
+    elif inp2[0]=="use":
+        if len(inp2) <= 1: raw_input("Must supply inventory slot number!")
+        else: itemFire(int(inp2[1]))
     elif inp.startswith("set"):
         PLAYER.setPos(eval(inp2[1]))
     elif inp.startswith("inv"):
@@ -225,8 +238,7 @@ def init(dat=None):
         name = getInput("Your Name: ")
         m = getInput("Play the tutorial? [Y/N]: ")
         if m == "y": tutorial.start()
-        elif m == "n": pass
-        else: init()
+        else: pass
         MAPS.e[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, GlobalVar("BOTS1", {}), {'BOTS':BOTS.e})
         MAPS.e[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, GlobalVar("BOTS2", {}), {'BOTS':BOTS.e})
         MAPS.e[3] = mapper.Map(3, reqs.testlevel3, reqs.testlevel3_hit, PLAYER, reqs.testlevel3_events, GlobalVar("BOTS3", {}), {'BOTS':BOTS.e})
@@ -255,6 +267,7 @@ def init(dat=None):
         BOTS = mapz['bots']
         MAPS.e[1] = mapz[1]
         MAPS.e[2] = mapz[2]
+        MAPS.e[3] = mapz[3]
         CURRENT_MAP.e = MAPS.e[1]   
         PLAYER = Player(dat[1], [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
         MAPS.e[1].player = PLAYER
@@ -322,7 +335,7 @@ def menu():
     
 def loop():
     """ITZ ALL IN HERE!"""
-    global PLAYER, TICK, CURRENT_MAP, USR_INP
+    global PLAYER, TICK, CURRENT_MAP, USR_INP, BOTS
     while True:
         TICK = _tick()
         _tickBefore()
@@ -331,6 +344,7 @@ def loop():
         print "Position: ",PLAYER.pos,"Last:",PLAYER.lastPos
         print "Tick #: ", TICK
         print "Map ID: ", CURRENT_MAP.e.id
+        #print "BOTZ: ", [(BOTS.e[i].name, BOTS.e[i].alive) for i in BOTS.e]
         CURRENT_MAP.e.render()
         _tickAfter()
         USR_INP = raw_input('\n=> ')
@@ -343,6 +357,6 @@ if __name__ == "__main__":
         _blank = init(_blank)
         _blank = loop()
     except KeyboardInterrupt, e: sys.exit()
-    except Exception, e: print "General Error:",e
+    #except Exception, e: print "General Error:",e
 
     

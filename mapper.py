@@ -11,6 +11,10 @@ class Map():
 		self.bots = bots
 
 	def render(self):
+		mr = {}
+		for m in self.bots.e:
+			if self.bots.e[m].level == self.id and self.bots.e[m].pr is True and self.bots.e[m].alive is True:
+				mr[tuple(self.bots.e[m].pos)] = self.bots.e[m].data['char'] 
 		_y = 0
 		for y in self.Map:
 			_y += 1
@@ -19,11 +23,7 @@ class Map():
 			for x in self.Map[_y]:
 				_x += 1
 				if [_x,_y] == self.player.pos: print "X",
-				elif self.data['BOTS'] != {}: 
-					for m in self.bots.e:
-						if self.bots.e[m].level == self.id and self.bots.e[m].pos == [_x, _y] and self.bots.e[m].pr is True and self.bots.e[m].alive is True: 
-							print self.bots.e[m].data['char'],
-						else: print self.Map[_y][_x-1],
+				elif (_x,_y) in mr: print mr[(_x,_y)],
 				else: print self.Map[_y][_x-1],
 
 def hitMap(Mapz, dic={}, _y=0, _x=0):
