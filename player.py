@@ -94,6 +94,13 @@ class Player():
 		if item.isFood is True:
 			self.health[0] += item.heal
 			raw_input(item.healMsg)
-		else:
-			print "You cant eat that!"
+		else: print "You cant eat that!"
+	
+	def hasItem(self, iid):
+		for i in self.inv:
+			if self.inv[i] != None and self.inv[i].id == iid: 
+				print True
+				return True
+		print iid
+		return False
 

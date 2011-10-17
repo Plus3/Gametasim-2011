@@ -1,4 +1,1 @@
-- Upgrade SOUNDS system
-
-BUGS:
-- Weird behavior when loading Buggy.dat
+- Upgrade SOUNDS system [Third party?]
