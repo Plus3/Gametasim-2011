@@ -136,11 +136,7 @@ def _tickBefore():
 
 def itemFire(iid):
     global PLAYER, ITEMS
-    raw_input(ITEMS)
-    ME = PLAYER.hasItem(iid)
-    if ME is True:
-        print True
-        PLAYER.eat(None) #@DEV This should obviously not be eat, but PLAYER.itemFire() or something of the likes
+    if PLAYER.hasSlot(iid) is True and PLAYER.inv[iid].isFood is True: PLAYER.eat(iid)
 
 def _handle(inp):
     """Parse/handle a user input"""

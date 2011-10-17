@@ -24,7 +24,7 @@ class Item():
 		self.on = False
 
 		#Food
-		self.heal = 0
+		self.healAmount = 0
 		self.healMsg = None
 		self.isFood = False
 
@@ -87,17 +87,17 @@ class Item():
 			if self.id == 6: pass
 			elif self.id == 6.1:
 				self.name = "Apple"
-				self.heal = 5
+				self.healAmount = 5
 				self.healMsg = "Om nom nom... juicy apple!"
 				self.useable = True
 			elif self.id == 6.2:
 				self.name = "Orange"
-				self.heal = 10
+				self.healAmount = 10
 				self.healMsg = "Mmmmm... Orange."
 				self.useable = True
 			elif self.id == 6.3: 
 				self.name = "Cookie"
-				self.heal = 25
+				self.healAmount = 25
 				self.healMsg = "Tis a cookie!"
 				self.useable = True
 			else: pass

@@ -90,17 +90,20 @@ class Player():
 					bot.health[0] -= self.inv[i].damage
 					self.inv[i].hits -= 1
 	
-	def eat(self, item): 
-		if item.isFood is True:
-			self.health[0] += item.heal
-			raw_input(item.healMsg)
+	def eat(self, iid, rem=True): 
+		if self.inv[iid].isFood is True:
+			self.health[0] += self.inv[iid].healAmount
+			raw_input(self.inv[iid].healMsg)
+			if rem is True:
+				self.inv[iid] = None
 		else: print "You cant eat that!"
 	
 	def hasItem(self, iid):
 		for i in self.inv:
 			if self.inv[i] != None and self.inv[i].id == iid: 
-				print True
 				return True
-		print iid
 		return False
-
+	
+	def hasSlot(self, iid):
+		if self.inv[iid] != None and self.inv[iid] != "": return True
+		else: return False
