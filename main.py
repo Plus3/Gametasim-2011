@@ -3,8 +3,9 @@ import sys, os, time, pickle
 import mapper, utils, reqs, player, events, ai, combat, sound, tutorial
 from player import Player
 from utils import GlobalVar, Game
+import random
 
-_Version_ = 0.3
+_Version_ = 0.4
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -97,6 +98,10 @@ def _tickBefore():
     global EVENTS, BOTS, CURRENT_MAP, PLAYER, MAP_ID, GAME
 
     GAME.currentmap = CURRENT_MAP.e.id
+    if random.randint(1,300) == 150:
+        amount = random.randint(10,30)
+        raw_input("You found $%s!" % (amount)) 
+        PLAYER.moneyAdd(amount)
 
     def resPos():
         print "Player position is BAD. (Hackz?)"
@@ -124,7 +129,11 @@ def _tickBefore():
                 if BOTS.e[i].atk is True and BOTS.e[i].alive is True:
                     combat.battle(PLAYER, BOTS.e[i], CURRENT_MAP.e, True, {'printInv':utils.printInv, 'delBot':delBot, 'cls':_cls})
                     break #@DEV If more then one bot attacks, should we let it happen? Or ignore one like we are doing now?
-        
+
+def itemFire(iid):
+    global PLAYER, ITEMS
+    if PLAYER.hasSlot(iid) is True and PLAYER.inv[iid].isFood is True: PLAYER.eat(iid)
+
 def _handle(inp):
     """Parse/handle a user input"""
     inp2 = inp.split(" ")
@@ -146,6 +155,9 @@ def _handle(inp):
         if len(inp2) <= 1: n = 1
         else: n = int(inp2[1])
         PLAYER.move(x=int(n))
+    elif inp2[0]=="use":
+        if len(inp2) <= 1: raw_input("Must supply inventory slot number!")
+        else: itemFire(int(inp2[1]))
     elif inp.startswith("set"):
         PLAYER.setPos(eval(inp2[1]))
     elif inp.startswith("inv"):

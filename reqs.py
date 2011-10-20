@@ -290,7 +290,7 @@ testlevel2_hit = {(7, 3): [' ', 1, ''],
 testlevel2_events = {
 (10,5): [(10,5), "door", {"msg":"A door stands in your way!", "msg2":"You unlock the door and pass through!", "req":4, "changeChar":(True," ", 2)}, False],
 (2,2): [(2,2), "changemap", {"map":1, "pos":[12,2]}, False],
-(6,3): [(6,3), "pickup", {'item':2}, True],
+(6,3): [(6,3), "pickup", {'item':6.1}, True],
 (6,4): [(6,4), "changemap", {"map":3, "pos":[2,7]}, False]
 }
 
