@@ -2,3 +2,4 @@
 *.dat
 *~
 *.sw*
+setup.py

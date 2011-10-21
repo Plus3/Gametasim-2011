@@ -1,3 +1,4 @@
+#@DEF (build[python]|version[2.7])
 #IMPORTS
 import sys, os, time, pickle
 import mapper, utils, reqs, player, events, ai, combat, sound, tutorial
@@ -24,13 +25,7 @@ SOUNDS = GlobalVar("SOUNDS", {})
 BOTS = GlobalVar("BOTS", {})
 KO_BOTS = GlobalVar("BOTS", {})
 ITEMS = {}
-S_FILE = "save.dat"
 PLAYER = ""
-
-try:
-    SAVE_FILE = open(S_FILE, "rw")
-except:
-    SAVE_FILE = open(S_FILE, "w")
 
 if useAudio is True:
     devPlay = lambda sound: SOUNDS.e[sound].play()
@@ -68,7 +63,7 @@ def delBot(name, iid=False):
 
 def Exit(clean=True):
     """Exits, writing saves and stoping sounds if input is True, otherwise just exits."""
-    global GAME, S_FILE, EVENTS, PLAYER
+    global GAME, EVENTS, PLAYER
     if clean == True:
         if useAudio is True:
             for i in SOUNDS.e:
@@ -292,7 +287,7 @@ def title():
 
 def menu():
     """Main menu"""
-    global SAVE_FILE, GAME, NEW_GAME
+    global GAME, NEW_GAME
     title()
     saves = findSaves()
     if len(saves) > 0:
