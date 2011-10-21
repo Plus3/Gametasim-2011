@@ -1,3 +1,4 @@
+#@DEF (build[python]|version[2.7])
 #IMPORTS
 import sys, os, time, pickle
 import mapper, utils, reqs, player, events, ai, combat, sound, tutorial
@@ -6,7 +7,6 @@ from utils import GlobalVar, Game
 import random
 
 _Version_ = 0.4
-_Revision_ = 0
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -25,13 +25,7 @@ SOUNDS = GlobalVar("SOUNDS", {})
 BOTS = GlobalVar("BOTS", {})
 KO_BOTS = GlobalVar("BOTS", {})
 ITEMS = {}
-S_FILE = "save.dat"
 PLAYER = ""
-
-try:
-    SAVE_FILE = open(S_FILE, "rw")
-except:
-    SAVE_FILE = open(S_FILE, "w")
 
 if useAudio is True:
     devPlay = lambda sound: SOUNDS.e[sound].play()
@@ -69,7 +63,7 @@ def delBot(name, iid=False):
 
 def Exit(clean=True):
     """Exits, writing saves and stoping sounds if input is True, otherwise just exits."""
-    global GAME, S_FILE, EVENTS, PLAYER
+    global GAME, EVENTS, PLAYER
     if clean == True:
         if useAudio is True:
             for i in SOUNDS.e:
@@ -99,19 +93,16 @@ def _tickBefore():
     global EVENTS, BOTS, CURRENT_MAP, PLAYER, MAP_ID, GAME
 
     GAME.currentmap = CURRENT_MAP.e.id
-
-    if random.randint(1,50) == 13 and random.randint(1,50) == 37:
-        amount = random.randint(1,10)
+    if random.randint(1,300) == 150:
+        amount = random.randint(10,30)
         raw_input("You found $%s!" % (amount)) 
         PLAYER.moneyAdd(amount)
 
     def resPos():
         print "Player position is BAD. (Hackz?)"
         x = raw_input()
-        if x == "skip":
-            return None
-        else:
-            PLAYER.pos = [2,2]
+        if x == "skip": return None
+        else: PLAYER.pos = [2,2]
 
     if PLAYER.health[0] < 1:
        print "You died! DEBUG: ", PLAYER.health
@@ -213,18 +204,15 @@ def initEvents():
 def setMap(ID, rPlayer=True, pos=[2,2]):
     """Set a map"""
     global CURRENT_MAP, MAPS, PLAYER, EVENTS
-    print "setting map"
     print CURRENT_MAP.e.id, ID
-    if True:
-        print "setting map 2"
-        CURRENT_MAP.e = MAPS.e[int(ID)]
-        PLAYER.level = CURRENT_MAP.e
-        PLAYER.lvlid = ID
-        EVENTS.e = {}
-        initMap(CURRENT_MAP.e.events)
-        initEvents()
-        if rPlayer is True:
-            PLAYER.pos = pos
+    CURRENT_MAP.e = MAPS.e[int(ID)]
+    PLAYER.level = CURRENT_MAP.e
+    PLAYER.lvlid = ID
+    EVENTS.e = {}
+    initMap(CURRENT_MAP.e.events)
+    initEvents()
+    if rPlayer is True:
+        PLAYER.pos = pos
 
 def retMap(ID): return MAPS.e[ID]
 def regMapz():
@@ -238,7 +226,6 @@ def init(dat=None):
         name = getInput("Your Name: ")
         m = getInput("Play the tutorial? [Y/N]: ")
         if m == "y": tutorial.start()
-        else: pass
         MAPS.e[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, GlobalVar("BOTS1", {}), {'BOTS':BOTS.e})
         MAPS.e[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, GlobalVar("BOTS2", {}), {'BOTS':BOTS.e})
         MAPS.e[3] = mapper.Map(3, reqs.testlevel3, reqs.testlevel3_hit, PLAYER, reqs.testlevel3_events, GlobalVar("BOTS3", {}), {'BOTS':BOTS.e})
@@ -294,13 +281,13 @@ def title():
     _cls()
     print "Welcome to GAMETASIM - 2011"
     print "By: Andrei Z"
-    print "Version %s, Revision %s" % (_Version_, _Revision_)
+    print "Version %s" % (_Version_)
     print "Online @ github.com/b1naryth1ef/Gametasim-2011"
     print ""
 
 def menu():
     """Main menu"""
-    global SAVE_FILE, GAME, NEW_GAME
+    global GAME, NEW_GAME
     title()
     saves = findSaves()
     if len(saves) > 0:
@@ -344,7 +331,6 @@ def loop():
         print "Position: ",PLAYER.pos,"Last:",PLAYER.lastPos
         print "Tick #: ", TICK
         print "Map ID: ", CURRENT_MAP.e.id
-        #print "BOTZ: ", [(BOTS.e[i].name, BOTS.e[i].alive) for i in BOTS.e]
         CURRENT_MAP.e.render()
         _tickAfter()
         USR_INP = raw_input('\n=> ')
@@ -357,6 +343,6 @@ if __name__ == "__main__":
         _blank = init(_blank)
         _blank = loop()
     except KeyboardInterrupt, e: sys.exit()
-    #except Exception, e: print "General Error:",e
+    except Exception, e: print "General Error:",e
 
     

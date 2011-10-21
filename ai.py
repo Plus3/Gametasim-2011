@@ -29,7 +29,7 @@ def checkPos(pos, hitmap):
 	elif hitmap[tuple(pos)][1] == 0: return False
 	else: return None
 
-def testR(a,b, hitmap):
+def testR(a,b, hitmap, nX=False, nY=False):
 	nX = axisX(a,b)
 	nY = axisY(a,b)
 	if nX != None:
@@ -46,14 +46,31 @@ def testR(a,b, hitmap):
 			print "2"
 			return [a[0], newY]
 		else: pass
+			#return None
 			# print "3"
 			# x = ai(a,b,hitmap)
 			# return x
 	else: pass
+		#return None
 		# print '4'
 		# x = ai(a,b,hitmap)
 		# return x
+
+getPossz = lambda point: [[point[0]-1,point[1]], [point[0]+1,point[1]],[point[0], point[1]-1],[point[0], point[1]+1]]
+
+def theFinalAI(a, b, hmap): 
+	y = getPossz(a)
+	z = {}
+	for i in y: 
+		if checkPos(i, hmap) is False: y.remove(i)
 	
+	if len(y) <= 0:
+		return None
+	else:
+		for i in y:
+			z[tuple(i)] = testR(i, b, hmap)
+	print z
+
 def dist(a,b):
 	if sum(a) < sum(b):
 		rm = b[0]-a[0]
@@ -106,7 +123,6 @@ class Bot():
 			if nPos != None:
 				#raw_input('From: %s TOO: %s' % (self.pos, nPos))
 				self.pos = nPos
-
 
 class Enemy(Bot):
 	def attack(self):

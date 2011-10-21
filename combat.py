@@ -78,6 +78,10 @@ def Combat(player, attacker, mode, data):
 				else:
 					print "Nice try!"
 					hit(player, attacker, 0, False)
+		elif todo[0].startswith('devexit'): break
+		elif todo[0].startswith('devwin'):
+			raw_input("Yay! Cheating is the way to do it!")
+			attacker.health[0] = 0
 		else: print "Unknown command!"
 		
 		meDead = checkHealth(player)
