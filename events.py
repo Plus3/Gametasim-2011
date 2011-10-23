@@ -1,5 +1,5 @@
 import sys, os, reqs
-import sound
+import sound, random, items
 
 class Event():
 	def __init__(self, pos, kind, data, once):
@@ -16,7 +16,8 @@ class Event():
 			'door':self.DOOR,
 			'xpdoor':self.XPDOOR,
 			'chest':self.CHEST,
-			'play':self.PLAY
+			'play':self.PLAY,
+			'mysterybox':self.MYSTERY,
 		}
 	def MSG(self): raw_input(self.data['msg'])
 	
@@ -64,6 +65,18 @@ class Event():
 	def PLAY(self):
 		if self.data['sound'] in self.data['sounds'].e:
 			self.data['sounds'].e[self.data['sound']].play()
+
+	def MYSTERY(self):
+		if random.randint(1,10) != 5:
+			random.shuffle(self.data['items'])
+			raw_input("You found a %s" % (items.Item(self.data['items'][1]).init().name))
+			self.data['player'].pickupItem(self.data['items'][1], False)
+		else:
+			x = random.randint(1,10)
+			self.data['player'].looseHealth(x)
+			print "Ouch! The mystery box takes %s health from you!" % (x)
+		self.data['player'].goBack()
+		self.data['setChar'](self.data['map'], self.pos, " ")
 
 	def go(self):
 		self.fired = True

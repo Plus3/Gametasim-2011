@@ -18,6 +18,8 @@ class Item():
 
 		#Weapon vars
 		self.weapon = False
+		self.xp = 0
+		self.needxp = 0
 
 		#Light vars
 		self.light = False
@@ -33,9 +35,10 @@ class Item():
 			self.id = 0
 			self.name = "Fists"
 			self.damage = .5
-			self.hist = 1000
+			self.hits = 1000
 			self.weapon = True
 			self.xp = 10
+			self.needxp = 0
 
 		def woodSword(self):
 			self.id = 1
@@ -44,6 +47,7 @@ class Item():
 			self.hits = 30
 			self.weapon = True
 			self.xp = 5
+			self.needxp = 0
 
 		def ironSword(self):
 			self.id = 2
@@ -52,6 +56,7 @@ class Item():
 			self.hits = 50
 			self.weapon = True
 			self.xp = 5
+			self.needxp = 10
 		
 		def fireSword(self):
 			self.id = 3
@@ -60,6 +65,7 @@ class Item():
 			self.hits = 100
 			self.weapon = True
 			self.xp = 8
+			self.needxp = 50
 		
 		def key(self):
 			if self.id == 4:
@@ -119,3 +125,4 @@ class Item():
 		}
 		types[self.id](self)
 		self.pickedup = True
+		return self

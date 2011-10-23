@@ -79,7 +79,9 @@ class Player():
 		if new > self.money[1]: self.money[0] = self.money[1]
 		else: self.money[0] = new
 
-	def looseHealth(self, amount): self.health[0] -= int(amount)
+	def looseHealth(self, amount): 
+		if self.health[0]-int(amount) > 0: self.health[0] -= int(amount)
+		else: self.health[0] = 0
 	
 	def attacked(self, bot):
 		self.health[0] -= bot.data['attack']
@@ -107,3 +109,5 @@ class Player():
 	def hasSlot(self, iid):
 		if self.inv[iid] != None and self.inv[iid] != "": return True
 		else: return False
+	
+	def goBack(self): self.pos = self.lastPos

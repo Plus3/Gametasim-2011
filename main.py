@@ -6,7 +6,7 @@ from player import Player
 from utils import GlobalVar, Game
 import random
 
-_Version_ = 0.4
+_Version_ = 0.5
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
@@ -38,12 +38,9 @@ getInput = lambda msg: raw_input(msg).lower()
 
 def hax(pos):
     """Takes in a player pos and returns True if the player is out of map bounds. Input: [x,y] or (x,y)"""
-    if sum(pos) <= 0:
-        return True
-    elif tuple(pos) in CURRENT_MAP.e.hMap and CURRENT_MAP.e.hMap[tuple(pos)][1] == 0:
-        return True
-    elif tuple(pos) not in CURRENT_MAP.e.hMap:
-        return True
+    if sum(pos) <= 0: return True
+    elif tuple(pos) in CURRENT_MAP.e.hMap and CURRENT_MAP.e.hMap[tuple(pos)][1] == 0: return True
+    elif tuple(pos) not in CURRENT_MAP.e.hMap: return True
 
 def delBot(name, iid=False):
     """Removes a bot from the playing field and moves it to KO_BOTS"""
@@ -200,6 +197,7 @@ def initEvents():
         EVENTS.e[i].data['setChar'] = setChar
         EVENTS.e[i].data['exit'] = Exit
         EVENTS.e[i].data['sounds'] = SOUNDS
+        EVENTS.e[i].data['globmaps'] = MAPS
 
 def setMap(ID, rPlayer=True, pos=[2,2]):
     """Set a map"""
@@ -338,11 +336,12 @@ def loop():
         _tickFinal()
 
 if __name__ == "__main__":
-    try:
+    #try:
+    if 1==1:
         _blank = menu()
         _blank = init(_blank)
         _blank = loop()
-    except KeyboardInterrupt, e: sys.exit()
-    except Exception, e: print "General Error:",e
+    #except KeyboardInterrupt, e: sys.exit()
+    #except Exception, e: print "General Error:",e
 
     
