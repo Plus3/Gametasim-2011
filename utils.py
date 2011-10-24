@@ -60,6 +60,11 @@ class GlobalVar():
     def __init__(self, Type, e):
         self.t = Type
         self.e  = e
+    def __str__(self): return self.e
+    def __getitem__(self, index=None): 
+        if index == None: return self.e
+        else: return self.e[index]
+    def set(self, value): self.e = value
 
 def CLS(numlines=100):
     '''Clear the screen in an os friendly way'''

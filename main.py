@@ -253,12 +253,12 @@ def init(dat=None):
         MAPS.e[1] = mapz[1]
         MAPS.e[2] = mapz[2]
         MAPS.e[3] = mapz[3]
-        CURRENT_MAP.e = MAPS.e[1]   
+        CURRENT_MAP.set(MAPS[1])
         PLAYER = Player(dat[1], [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})
-        MAPS.e[1].player = PLAYER
-        MAPS.e[2].player = PLAYER
-        GAME = Game("Gametasim", PLAYER, MAPS.e, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
-        SOUNDS.e["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav', useAudio)
+        MAPS[1].player = PLAYER
+        MAPS[2].player = PLAYER
+        GAME = Game("Gametasim", PLAYER, MAPS, 1, BOTS, KO_BOTS, {'setMap':setMap, 'events':EVENTS})
+        SOUNDS["pok1"] = sound.Sound("pok1", './data/sounds/pok1.wav', useAudio)
         initEvents()
         GAME.regSave(dat[0])
 
@@ -316,6 +316,10 @@ def menu():
                     print 'Error!',e
                     menu()
         elif d1 == "c": NEW_GAME = True
+        elif d1 == "exit": sys.exit()
+        else:
+            raw_input("Huh?") 
+            menu()
     else: NEW_GAME = True
     
 def loop():
