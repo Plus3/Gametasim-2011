@@ -5,7 +5,7 @@ from player import Player
 from utils import GlobalVar, Game
 import random
 
-_Version_ = 0.5
+_Version_ = 0.6
 _Author_ = "@B1naryth1ef"
 
 #VARS AS FUNCS
