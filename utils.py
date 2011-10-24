@@ -59,11 +59,14 @@ class Game():
 class GlobalVar():
     def __init__(self, Type, e):
         self.t = Type
-        self.e  = e
-    def __str__(self): return self.e
+        self.e = e
+    def value(self): return self.e
+    def __str__(self): return repr(self.e)
     def __getitem__(self, index=None): 
         if index == None: return self.e
         else: return self.e[index]
+    def __setitem__(self, key, value): self.e[key] = value
+    def __getitem__(self, key): return self.e[key]
     def set(self, value): self.e = value
 
 def CLS(numlines=100):
