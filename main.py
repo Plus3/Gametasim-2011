@@ -1,4 +1,3 @@
-#@DEF (build[python]|version[2.7])
 #IMPORTS
 import sys, os, time, pickle
 import mapper, utils, reqs, player, events, ai, combat, sound, tutorial
@@ -275,7 +274,6 @@ def findSaves(home=os.getcwd()):
         return findSaves()
 
 def title():
-    """Title sequence"""
     _cls()
     print "Welcome to GAMETASIM - 2011"
     print "By: Andrei Z"
@@ -340,11 +338,10 @@ def loop():
         _tickFinal()
 
 if __name__ == "__main__":
-    #try:
-    if 1==1:
-        _blank = menu()
-        _blank = init(_blank)
-        _blank = loop()
+   # try:
+    _blank = menu()
+    _blank = init(_blank)
+    _blank = loop()
     #except KeyboardInterrupt, e: sys.exit()
     #except Exception, e: print "General Error:",e
 

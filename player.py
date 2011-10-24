@@ -4,7 +4,7 @@ class Player():
 	def __init__(self, name, pos, level, lvlid, data={}):
 		self.name = name #The player name
 		self.pos = pos #The player postion (should always be list)
-		self.level = level.e #The current level [@DEV do we still need this?]
+		self.level = level.value() #The current level [@DEV do we still need this?]
 		self.lvlid = lvlid #The current level ID
 		self.xp = 0 #XP Amount
 		self.money = [0,50] #Money (and max amount)

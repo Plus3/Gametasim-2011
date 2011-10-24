@@ -12,9 +12,9 @@ class Map():
 
 	def render(self):
 		mr = {}
-		for m in self.bots.e:
-			if self.bots.e[m].level == self.id and self.bots.e[m].pr is True and self.bots.e[m].alive is True:
-				mr[tuple(self.bots.e[m].pos)] = self.bots.e[m].data['char'] 
+		for m in self.bots.value():
+			if self.bots[m].level == self.id and self.bots[m].pr is True and self.bots[m].alive is True:
+				mr[tuple(self.bots[m].pos)] = self.bots[m].data['char'] 
 		_y = 0
 		for y in self.Map:
 			_y += 1

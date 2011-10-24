@@ -60,11 +60,25 @@ class Event():
 			p.pos = p.lastPos
 			raw_input(self.data['msg'])
 
-	def CHEST(self): pass
+	def CHEST(self): 
+		def chestScreen(self):
+			x = 0
+			for i in self.data['contains']:
+				x += 1
+				r = items.Item(i)
+				r.init()
+				print "[%s] %s" % (x, r.name)
+			choice = raw_input("Selection => ")
+			if int(choice) > x:
+				raw_input("Invalid selection!")
+				self.data['player'].goBack()
+			else: 
+				self.data['player'].pickupItem(r.id, True)
+		chestScreen(self)
 	
 	def PLAY(self):
-		if self.data['sound'] in self.data['sounds'].e:
-			self.data['sounds'].e[self.data['sound']].play()
+		if self.data['sound'] in self.data['sounds'].value():
+			self.data['sounds'][self.data['sound']].play()
 
 	def MYSTERY(self):
 		if random.randint(1,10) != 5:

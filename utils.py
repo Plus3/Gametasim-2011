@@ -27,18 +27,18 @@ class Game():
         #0: pos, 1:kind, 2:data, 3:once, 4:fired
         
         for i in dat['events']:
-            self.events.e[i[0]] = events.Event(i[0], i[1], i[2], i[3])
-            self.events.e[i[0]].fired = i[4]
+            self.events[i[0]] = events.Event(i[0], i[1], i[2], i[3])
+            self.events[i[0]].fired = i[4]
 
         for i in dat['bots']:
-            if i in self.bots.e:
-                self.kobots.e[i] = self.bots.e[i]
-                del self.bots.e[i]
+            if i in self.bots.value():
+                self.kobots[i] = self.bots[i]
+                del self.bots[i]
 
     def writeSave(self, File):
         ev = []
-        for r in self.events.e:
-            i = self.events.e[r]
+        for r in self.events.value():
+            i = self.events[r]
             ev.append([i.pos, i.kind, i.data, i.once, i.fired])
         d = {
             'name':self.name,
@@ -46,7 +46,7 @@ class Game():
             'pos':self.player.pos,
             'inv':self.player.inv,
             'lvlid':self.player.lvlid,
-            'bots':self.kobots.e,
+            'bots':self.kobots.value(),
             'xp':self.player.xp,
             'map':self.currentmap,
             'money':self.player.money,
