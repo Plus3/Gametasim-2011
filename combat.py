@@ -1,8 +1,6 @@
 import random, sys, time, items
 
-def itemCheck(item):
-	try: return items.itemz[item]['xp']
-	except: return 0
+def itemCheck(item): return items.getInfo(item, 'xp')
 
 def wordy():
 	words = ["murdered", "slaughtered", "killed", "slayed", "polished off", "f**ked over", "bopped", "dumped in the river", "popped"]
@@ -38,10 +36,10 @@ def Combat(player, attacker, mode, data):
 		if todo[0].startswith("use"):
 			try:
 				_item = int(todo[1])
-				if _item == 0:
+				if _item == 0: #@DEV Use fists item
 					print "Using fists!"
 					item = 0
-				elif player.inv[_item] != None and player.inv[_item].weapon == True:
+				elif player.inv[_item] != None and player.inv[_item].type == 'weapon':
 					print "Using "+player.inv[_item].name
 					item = _item
 				else:
@@ -54,7 +52,7 @@ def Combat(player, attacker, mode, data):
 		elif todo[0].startswith("a"):
 			if item is None: print "You must select an item to use! If you don't have a sword try 'use 0'"
 			else:
-				if item == 0: hit(player, attacker, .5)
+				if item == 0: hit(player, attacker, .5) #@DEV This needs to use the default fists item
 				else:
 					use = player.use(item)
 					if use[0] == 1 and doHit != False:

@@ -97,3 +97,11 @@ def printInv(PLAYER, x=0):
     print "MONEY: %s/%s" % (PLAYER.money[0], PLAYER.money[1])
     print "XP: %s" % (PLAYER.xp)
     raw_input()
+
+def canInt(number):
+    try:
+        blah = int(number)
+        return True
+    except:
+        return False
+    

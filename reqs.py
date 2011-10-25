@@ -289,7 +289,7 @@ testlevel2_hit = {(7, 3): [' ', 1, ''],
 (10, 2): ['#', 0, 'wall']}
 
 testlevel2_events = {
-(10,5): [(10,5), "door", {"msg":"A door stands in your way!", "msg2":"You unlock the door and pass through!", "req":4, "changeChar":(True," ", 2)}, False],
+(10,5): [(10,5), "door", {"msg":"A door stands in your way!", "msg2":"You unlock the door and pass through!", "req":4.1, "changeChar":(True," ", 2)}, False],
 (2,2): [(2,2), "changemap", {"map":1, "pos":[12,2]}, False],
 #(6,3): [(6,3), "pickup", {'item':6.1}, True],
 (6,3): [(6,3), "chest", {'contains':[6.1,6.2,6.3]}, False],
@@ -388,6 +388,6 @@ testlevel_hit = {
 
 testlevel_events = {
 (3,3): [(3,3), "pickup", {"item":1}, True],
-(6,4): [(6,4), "pickup", {"item":4}, True],
+(6,4): [(6,4), "pickup", {"item":4.1}, True],
 (12,2): [(12,2), "changemap", {"map":2, "pos":[2,2]}, False]
 }

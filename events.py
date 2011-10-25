@@ -1,5 +1,6 @@
 import sys, os, reqs
 import sound, random, items
+import utils
 
 class Event():
 	def __init__(self, pos, kind, data, once):
@@ -62,18 +63,24 @@ class Event():
 
 	def CHEST(self): 
 		def chestScreen(self):
+			if self.data['contains'] == []: return None
 			x = 0
 			for i in self.data['contains']:
 				x += 1
-				r = items.Item(i)
-				r.init()
-				print "[%s] %s" % (x, r.name)
+				print "[%s] %s" % (x, items.getInfo(i, 'name'))
 			choice = raw_input("Selection => ")
-			if int(choice) > x:
+			if utils.canInt(choice) is True:
+				if int(choice) > x or int(choice) < 0:
+					raw_input("Invalid selection!")
+					self.data['player'].goBack()
+				else:
+					raw_input(choice)
+					self.data['player'].pickupItem(self.data['contains'][int(choice)-1], True)
+					self.data['contains'].pop(int(choice)-1)
+					self.data['player'].goBack()
+			else:
 				raw_input("Invalid selection!")
 				self.data['player'].goBack()
-			else: 
-				self.data['player'].pickupItem(r.id, True)
 		chestScreen(self)
 	
 	def PLAY(self):
@@ -83,7 +90,7 @@ class Event():
 	def MYSTERY(self):
 		if random.randint(1,10) != 5:
 			random.shuffle(self.data['items'])
-			raw_input("You found a %s" % (items.Item(self.data['items'][1]).init().name))
+			raw_input("You found a %s" % (items.getInfo(self.data['items'][1], 'name')))
 			self.data['player'].pickupItem(self.data['items'][1], False)
 		else:
 			x = random.randint(1,10)

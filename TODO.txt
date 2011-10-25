@@ -1,5 +1,7 @@
 - Upgrade SOUNDS system [Third party?]
 - Fix AI system (Need an alternative method of movement...)
 - Add ability to add items to a chest
+- Integrate fists better
 
 - Fix valueError on just pressing enter on chest screen
+- Chests are not persistiant

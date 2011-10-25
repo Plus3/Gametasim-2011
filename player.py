@@ -66,8 +66,8 @@ class Player():
 			print "You picked up a", self.inv[slot].name, "it's been stored in Slot #"+str(slot)
 			x = raw_input("[OK]")
 	
-	def use(self, slot, weapon=True):
-		if self.inv[slot].weapon == weapon:
+	def use(self, slot):
+		if self.inv[slot].type == 'weapon':
 			if self.inv[slot].hits > 0:
 				self.inv[slot].hits -= 1
 				damage = (1,self.inv[slot].damage)
@@ -87,13 +87,13 @@ class Player():
 		self.health[0] -= bot.data['attack']
 		for i in self.inv:
 			if self.inv[i] != None:
-				if self.inv[i].weapon == True:
+				if self.inv[i].type == 'weapon':
 					print "You attack back!!"
 					bot.health[0] -= self.inv[i].damage
 					self.inv[i].hits -= 1
 	
 	def eat(self, iid, rem=True): 
-		if self.inv[iid].isFood is True:
+		if self.inv[iid].type == 'food':
 			self.health[0] += self.inv[iid].healAmount
 			raw_input(self.inv[iid].healMsg)
 			if rem is True:

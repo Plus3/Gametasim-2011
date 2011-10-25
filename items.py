@@ -1,121 +1,119 @@
+import errors 
+itemInfo = {
+	0:  {'name':'Fists', 'damage':.5, 'hits':1000, 'xp':10, 'needxp':0, 'type':'weapon'},
+	1:  {'name':'Wood Sword', 'damage':1, 'hits':30, 'xp':5, 'needxp':0, 'type':'weapon'},
+	2:  {'name':'Iron Sword', 'damage':2, 'hits':50, 'xp':10, 'needxp':10, 'type':'weapon'},
+	3:  {'name':'Fire Sword', 'damage':5, 'hits':100, 'xp':15, 'needxp':50, 'type':'weapon'},
+	4:  {'type':'holder'}, #Unused Holder
+	4.1: {'name':'Small Key', 'type':'key'},
+	4.2: {'name':'Big Key', 'type':'key'},
+	4.3: {'name':'Boss Key', 'type':'key'},
+	5: {'type':'holder'},
+	5.1: {'name':'Torch', 'type':'light', 'usable':True},
+	6: {'type':'holder'},
+	6.1: {'name':'Apple', 'healamount':5, 'healmsg':"Om nom nom... juicy apple!", 'usable':True, 'type': 'food'},
+	6.2: {'name':'Orange', 'healamount':10, 'healmsg':"Eatz teh orange!", 'usable':True, 'type': 'food'},
+	6.3: {'name':'Cookie', 'healamount':25, 'healmsg':"COOOOOOKIIIEEEE MOOOONNNSSSSSTTTEEEERRRR", 'usable':True, 'type': 'food'},
 
-itemz = {
-	0:{'xp':10},
-	1:{'xp':5},
-	2:{'xp':5},
-	3:{'xp':8}
 }
+
+def getInfo(iid, field=None):
+	if field == None: return itemInfo[iid]
+	else: return itemInfo[iid][field]
 
 class Item():
 	def __init__(self, iid, data={}):
 		self.name = ""
 		self.id = iid
+		self.type = itemInfo[iid]['type']
 		self.data = data
 		self.used = False
 		self.pickedup = False
 		self.type = None
 		self.useable = False
+		self.enabled = True
 
 		#Weapon vars
-		self.weapon = False
 		self.xp = 0
 		self.needxp = 0
 
 		#Light vars
-		self.light = False
 		self.on = False
 
 		#Food
 		self.healAmount = 0
 		self.healMsg = None
-		self.isFood = False
 
 	def init(self):
 		def fists(self):
 			self.id = 0
-			self.name = "Fists"
-			self.damage = .5
-			self.hits = 1000
-			self.weapon = True
-			self.xp = 10
-			self.needxp = 0
+			self.name = itemInfo[self.id]['name']
+			self.damage = itemInfo[self.id]['damage']
+			self.hits = itemInfo[self.id]['hits']
+			self.xp = itemInfo[self.id]['xp']
+			self.needxp = itemInfo[self.id]['needxp']
+			self.type = itemInfo[self.id]['type']
 
 		def woodSword(self):
 			self.id = 1
-			self.name = "Wood Sword"
-			self.damage = 1
-			self.hits = 30
-			self.weapon = True
-			self.xp = 5
-			self.needxp = 0
+			self.name = itemInfo[self.id]['name']
+			self.damage = itemInfo[self.id]['damage']
+			self.hits = itemInfo[self.id]['hits']
+			self.xp = itemInfo[self.id]['xp']
+			self.needxp = itemInfo[self.id]['needxp']
+			self.type = itemInfo[self.id]['type']
 
 		def ironSword(self):
 			self.id = 2
-			self.name = "Iron Sword"
-			self.damage = 2
-			self.hits = 50
-			self.weapon = True
-			self.xp = 5
-			self.needxp = 10
+			self.name = itemInfo[self.id]['name']
+			self.damage = itemInfo[self.id]['damage']
+			self.hits = itemInfo[self.id]['hits']
+			self.xp = itemInfo[self.id]['xp']
+			self.needxp = itemInfo[self.id]['needxp']
+			self.type = itemInfo[self.id]['type']
 		
 		def fireSword(self):
 			self.id = 3
-			self.name = "Fire Sword"
-			self.damage = 5
-			self.hits = 100
-			self.weapon = True
-			self.xp = 8
-			self.needxp = 50
+			self.name = itemInfo[self.id]['name']
+			self.damage = itemInfo[self.id]['damage']
+			self.hits = itemInfo[self.id]['hits']
+			self.xp = itemInfo[self.id]['xp']
+			self.needxp = itemInfo[self.id]['needxp']
+			self.type = itemInfo[self.id]['type']
 		
 		def key(self):
-			if self.id == 4:
-				self.name = "Small Key"
-			elif self.id == 4.1:
-				self.name = "Big Key"
-			elif self.id == 4.2:
-				self.name = "Boss Key"
-
-		def light(self):
-			self.id = 5
-			self.name = "Unknown Light!"
-			self.light = True
-			self.on = False
+			if self.id == 4: raise errors.ItemError("ID# 4 is not used for anything!") 
+			else:
+				self.name = itemInfo[self.id]['name']
+				self.type = itemInfo[self.id]['type']
+			
+		def light(self): raise errors.ItemError("ID# 5 is not used for anything!")
 		
 		def torch(self):
 			self.id = 5.1
-			self.name = "Torch"
-			self.light = True
+			self.name = itemInfo[self.id]['name']
+			self.type = itemInfo[self.id]['type']
 			self.on = False
-			self.useable = True
+			self.useable = itemInfo[self.id]['usable']
 			
 		def food(self):
-			self.isFood = True
-			if self.id == 6: pass
-			elif self.id == 6.1:
-				self.name = "Apple"
-				self.healAmount = 5
-				self.healMsg = "Om nom nom... juicy apple!"
-				self.useable = True
-			elif self.id == 6.2:
-				self.name = "Orange"
-				self.healAmount = 10
-				self.healMsg = "Mmmmm... Orange."
-				self.useable = True
-			elif self.id == 6.3: 
-				self.name = "Cookie"
-				self.healAmount = 25
-				self.healMsg = "Tis a cookie!"
-				self.useable = True
-			else: pass
+			if self.id == 6: raise errors.ItemError("ID# 6 is not used for anything!")
+			else:
+				self.name = itemInfo[self.id]['name']
+				self.healAmount = itemInfo[self.id]['healamount']
+				self.healMsg = itemInfo[self.id]['healmsg']
+				self.useable = itemInfo[self.id]['usable']
+				self.type = itemInfo[self.id]['type']
 
 		types = {
 			0:fists,
 			1:woodSword,
 			2:ironSword,
 			3:fireSword,
-			4:key, #SMALL
-			4.1:key, #BIG
-			4.2:key, #BOSS
+			4:key, #Holder
+			4.1:key, #SMALL
+			4.2:key, #BIG
+			4.3:key, #BOSS
 			5:light,
 			5.1:torch,
 			6:food,

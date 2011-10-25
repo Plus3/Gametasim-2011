@@ -123,7 +123,7 @@ def _tickBefore():
 
 def itemFire(iid):
     global PLAYER, ITEMS
-    if PLAYER.hasSlot(iid) is True and PLAYER.inv[iid].isFood is True: PLAYER.eat(iid)
+    if PLAYER.hasSlot(iid) is True and PLAYER.inv[iid].type == "food": PLAYER.eat(iid)
 
 def _handle(inp):
     """Parse/handle a user input"""
