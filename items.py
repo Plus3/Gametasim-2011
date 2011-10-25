@@ -14,6 +14,7 @@ itemInfo = {
 	6.1: {'name':'Apple', 'healamount':5, 'healmsg':"Om nom nom... juicy apple!", 'usable':True, 'type': 'food'},
 	6.2: {'name':'Orange', 'healamount':10, 'healmsg':"Eatz teh orange!", 'usable':True, 'type': 'food'},
 	6.3: {'name':'Cookie', 'healamount':25, 'healmsg':"COOOOOOKIIIEEEE MOOOONNNSSSSSTTTEEEERRRR", 'usable':True, 'type': 'food'},
+	6.4: {'name':'Chicken', 'healamount':20, 'healmsg':"Mmmmmmm.... chicken", 'usable':True, 'type':'food'}
 
 }
 
@@ -119,7 +120,8 @@ class Item():
 			6:food,
 			6.1:food, #apple
 			6.2:food, #orange
-			6.3:food #cookie
+			6.3:food, #cookie
+			6.4:food  #chicken
 		}
 		types[self.id](self)
 		self.pickedup = True

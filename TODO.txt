@@ -2,6 +2,7 @@
 - Fix AI system (Need an alternative method of movement...)
 - Add ability to add items to a chest
 - Integrate fists better
+- Either make persistant events avalible, or move doors etc to objects.
 
 - Fix valueError on just pressing enter on chest screen
 - Chests are not persistiant
