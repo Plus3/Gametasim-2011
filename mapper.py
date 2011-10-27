@@ -1,7 +1,7 @@
-import reqs
+import reqs, objects
 
 class Map():
-	def __init__(self, ID, Map, hit, player, events, bots, data={}):
+	def __init__(self, ID, Map, hit, player, events, obj, bots, data={}):
 		self.id = ID
 		self.Map = Map
 		self.hMap = hit
@@ -9,6 +9,11 @@ class Map():
 		self.player = player
 		self.events = events
 		self.bots = bots
+		self.obj = obj
+
+		for i in obj:
+			obj[i]['obj'] = objects.Object(self.obj[i]['name'], self.obj[i]['pos'], self.obj[i]['kind'], self.obj[i])
+			obj[i]['exec'] = obj[i]['obj'].fire
 
 	def render(self):
 		mr = {}

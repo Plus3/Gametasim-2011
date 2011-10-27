@@ -152,7 +152,7 @@ testlevel3_hit = {(7, 3): ['#', 0, 'wall'],
 (11, 6): ['#', 0, 'wall'],
 (10, 2): [' ', 1, '']}
 
-
+testlevel3_objects = {}
 testlevel3_events = {
 	(2,7): [(2,7), "changemap", {"map":2, "pos":[6,4]}, False],
 	(6,7): [(6,7), "mysterybox", {'map':3, 'items':[6.1, 6.2, 6.3]}, True]
@@ -288,6 +288,8 @@ testlevel2_hit = {(7, 3): [' ', 1, ''],
 (11, 6): [' ', 1, ''],
 (10, 2): ['#', 0, 'wall']}
 
+testlevel2_objects = {}
+
 testlevel2_events = {
 (10,5): [(10,5), "door", {"msg":"A door stands in your way!", "msg2":"You unlock the door and pass through!", "req":4.1, "changeChar":(True," ", 2)}, False],
 (2,2): [(2,2), "changemap", {"map":1, "pos":[12,2]}, False],
@@ -386,6 +388,9 @@ testlevel_hit = {
 (10, 2): [' ', 1, ''],
 (12,2):['@', 1, 'portal']}
 
+testlevel_objects = {
+(3,3): {'name':'Tester', 'pos':(3,3), 'kind':'test', 'test':'blank'}
+}
 testlevel_events = {
 (3,3): [(3,3), "pickup", {"item":1}, True],
 (6,4): [(6,4), "pickup", {"item":4.1}, True],

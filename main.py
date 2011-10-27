@@ -1,6 +1,6 @@
 #IMPORTS
 import sys, os, time, pickle
-import mapper, utils, reqs, player, events, ai, combat, sound, tutorial
+import mapper, utils, reqs, player, events, ai, combat, sound, tutorial, objects
 from player import Player
 from utils import GlobalVar, Game
 import random
@@ -107,8 +107,9 @@ def _tickBefore():
     
     if hax(PLAYER.pos) is True: resPos()
 
-    if tuple(PLAYER.pos) in EVENTS.value().keys():
-      EVENTS.e[tuple(PLAYER.pos)].fire()
+    #Fire events/objects
+    if tuple(PLAYER.pos) in CURRENT_MAP.value().obj: CURRENT_MAP.value().obj[tuple(PLAYER.pos)]['exec'](CURRENT_MAP.value().obj[tuple(PLAYER.pos)]['obj'])
+    if tuple(PLAYER.pos) in EVENTS.value().keys(): EVENTS.e[tuple(PLAYER.pos)].fire()
 
     for i in BOTS.value():
         if BOTS[i].level == CURRENT_MAP.value().id and BOTS[i].pr == True and BOTS[i].alive is True:
@@ -223,9 +224,9 @@ def init(dat=None):
         name = getInput("Your Name: ")
         m = getInput("Play the tutorial? [Y/N]: ")
         if m == "y": tutorial.start()
-        MAPS[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, GlobalVar("BOTS1", {}), {'BOTS':BOTS.value()})
-        MAPS[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, GlobalVar("BOTS2", {}), {'BOTS':BOTS.value()})
-        MAPS[3] = mapper.Map(3, reqs.testlevel3, reqs.testlevel3_hit, PLAYER, reqs.testlevel3_events, GlobalVar("BOTS3", {}), {'BOTS':BOTS.value()})
+        MAPS[1] = mapper.Map(1, reqs.testlevel, reqs.testlevel_hit, PLAYER, reqs.testlevel_events, reqs.testlevel_objects, GlobalVar("BOTS1", {}), {'BOTS':BOTS.value()})
+        MAPS[2] = mapper.Map(2, reqs.testlevel2, reqs.testlevel2_hit, PLAYER, reqs.testlevel2_events, reqs.testlevel2_objects, GlobalVar("BOTS2", {}), {'BOTS':BOTS.value()})
+        MAPS[3] = mapper.Map(3, reqs.testlevel3, reqs.testlevel3_hit, PLAYER, reqs.testlevel3_events, reqs.testlevel3_objects, GlobalVar("BOTS3", {}), {'BOTS':BOTS.value()})
         CURRENT_MAP.set(MAPS[1])
         initMap(CURRENT_MAP.e.events)
         PLAYER = Player(name, [2,2], CURRENT_MAP, 1, {'retMap':retMap, 'setMap':setMap})

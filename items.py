@@ -1,5 +1,6 @@
 import errors 
 itemInfo = {
+	-1: {'name':None, 'damage':0, 'hits':0, 'xp':0, 'needxp':0, 'type':None},
 	0:  {'name':'Fists', 'damage':.5, 'hits':1000, 'xp':10, 'needxp':0, 'type':'weapon'},
 	1:  {'name':'Wood Sword', 'damage':1, 'hits':30, 'xp':5, 'needxp':0, 'type':'weapon'},
 	2:  {'name':'Iron Sword', 'damage':2, 'hits':50, 'xp':10, 'needxp':10, 'type':'weapon'},
@@ -19,6 +20,7 @@ itemInfo = {
 }
 
 def getInfo(iid, field=None):
+	if iid == None: return itemInfo[-1][field]
 	if field == None: return itemInfo[iid]
 	else: return itemInfo[iid][field]
 
